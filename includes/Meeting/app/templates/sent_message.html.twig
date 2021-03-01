@@ -1,0 +1,17 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+    <div id="page-content-div">
+        <h3>{{ page_heading_2 }}</h3>
+        <form action="{{ action }}" method="{{ method }}">
+            <fieldset>
+                <legend>Meeting details</legend>
+                <p>user(s): {{ user }} </p>
+                <p>time: {{ time  }} </p>
+                <p>host: {{ host }} </p>
+
+                <p>{{ error }}</p>
+            </fieldset>
+        </form>
+        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" type="text/css"/>
+    <style>
+        table{
+            table-layout: fixed;
+        }
+        td{
+            width:33%
+        }
+        .today{
+            background: cornflowerblue;
+        }
+    </style>
+    <title>Calendar</title>
+</head>
+
+<body>
+<div class = "container">
+    <div class = "row">
+        <div class = "col-md-12">
+        <?php
+            calendar
+
+        </div>
+            <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+{#            <p <a class = 'btn btn-xs btn-primary' href='?month=".date('m',mktime(0,0,0,$month-1,1,#}
+{#            $year))."&year=".date('Y',mktime(0,0,0,$month-1,1,$year))."Previous Month</a>"</p>#}
+{#            <p <a class = 'btn btn-xs btn-primary' href='?month=".date('m',mktime(0,0,0,$month+1,1,#}
+{#            $year))."&year=".date('Y',mktime(0,0,0,$month+1,1,$year))."Next Month</a>"</p>#}
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

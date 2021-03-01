@@ -1,0 +1,26 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+    <div id="page-content-div">
+        <h3>{{ page_heading_2 }}</h3>
+        <form action="{{ action }}" method="{{ method }}">
+            <fieldset>
+                <legend>Downloaded Message</legend>
+                <p>{{ switch1 }}</p>
+                <p>{{ switch2 }}</p>
+                <p>{{ switch3 }}</p>
+                <p>{{ switch4 }}</p>
+                <p>{{ fan }}</p>
+                <p>{{ temperature }}</p>
+                <p>{{ lastdigit }}</p>
+                <p>{{ sendernum }}</p>
+                <p>{{ recievernum }}</p>
+                <p>{{ datetime }}</p>
+                <p>{{ email }}</p>
+                <br><br>
+                <p>{{ error }}</p>
+            </fieldset>
+        </form>
+        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+        <p class="curr_page"><a href="{{ Send }}">View another message</a></p>
+    </div>
+{% endblock %}

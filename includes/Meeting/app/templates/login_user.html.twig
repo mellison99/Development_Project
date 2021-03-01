@@ -1,0 +1,18 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+    <div id="page-content-div">
+        <h3>{{ page_heading_2 }}</h3>
+        <form action="{{ action }}" method="{{ method }}">
+            <fieldset>
+                <legend>User details</legend>
+                <p>{{ username }} </p>
+                <p>{{ error }}{{ info }}</p>
+                <br><br>
+                <input type="submit" name="logout" value="Logout" href = "{{ logout }}"></a>
+            </fieldset>
+        </form>
+        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+        <p class="curr_page"><a href="{{ send_message }}">Create Meeting</a></p>
+        <p class="curr_page"><a href="{{ view_message }}">WIP</a></p>
+    </div>
+{% endblock %}

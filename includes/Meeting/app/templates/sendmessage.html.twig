@@ -1,0 +1,23 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+    <div id="page-content-div">
+        <h3>{{ page_heading_2 }}</h3>
+        <form action="{{ action }}" method="{{ method }}">
+            <fieldset>
+                <legend>New Meeting Details</legend>
+                <br>
+                <label for="time">Meeting start time:</label>
+                <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
+                <br><br>
+                <label for="user">Add users:</label>
+                <input id="user" name="user" type="string" value="{{ initial_input_box_value }}" size="20" maxlength="60">
+                <br><br>
+                <label for="notes">Notes:</label>
+                <input id="notes" name="notes" type="string" value="{{ initial_input_box_value }}" size="30" maxlength="140">
+                <br><br>
+                <input type="submit"  value="Send" href = "{{ Send }}"></a>
+            </fieldset>
+        </form>
+        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+    </div>
+{% endblock %}
