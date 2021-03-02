@@ -142,3 +142,5 @@ function getNumEmailBySender($app,$email){
     $value = $DetailsModel->getNumEmailBySender($app, $email);
     return $value;
 }
+
+

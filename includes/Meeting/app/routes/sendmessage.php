@@ -37,7 +37,10 @@ $app->post(
             $e = 'error';
             return $e;
         }
+
+       // var_dump($_SESSION['date']);
         $cleaned_parameters = cleanupParameters1($app, $tainted_parameters);
+        //var_dump($cleaned_parameters);
         /*$numberToSend = '+'.$cleaned_parameters['sanitised_num'];
         if(strlen($numberToSend)!= strlen('+447817814149'))
         {
@@ -72,17 +75,20 @@ $app->post(
 
         return $html_output;
     })->setName('sendmessage');
-
 function cleanupParameters1($app, $tainted_parameters)
 {
     $cleaned_parameters = [];
     $validator = $app->getContainer()->get('validator');
     $tainted_time = $tainted_parameters['time'];
+    $tainted_duration = $tainted_parameters['duration'];
     $tainted_notes = $tainted_parameters['notes'];
     $tainted_user = $tainted_parameters['user'];
     $cleaned_parameters['sanitised_time'] = $validator->sanitiseString($tainted_time);
+    $cleaned_parameters['sanitised_duration'] = $validator->sanitiseString($tainted_duration);
+    $cleaned_parameters['sanitised_Id'] = time();
     $cleaned_parameters['sanitised_notes'] = $validator->sanitiseString($tainted_notes);
     $cleaned_parameters['sanitised_user'] = $validator->sanitiseString($tainted_user);
+    $cleaned_parameters['sanitised_date'] = $_SESSION['date'];
 
     return $cleaned_parameters;
 }
@@ -90,11 +96,14 @@ function cleanupParameters1($app, $tainted_parameters)
 function makeM2MString(array $cleaned_parameters,$email){
     $M2MString = '';
     $M2MString .= '';
-    $M2MString .= 'time:';
+    $M2MString .= 'start date:';
+    $M2MString .= $_SESSION['date'];
+    $M2MString .= '  |';
+    $M2MString .= 'start time:';
     $M2MString .= $cleaned_parameters['sanitised_time'];
     $M2MString .= '  |';
-    $M2MString .= 'other users: ';
-    $M2MString .= $cleaned_parameters['sanitised_user'];
+    $M2MString .= 'duration:';
+    $M2MString .= $cleaned_parameters['sanitised_duration'];
     $M2MString .= '  |';
     $M2MString .= 'notes: ';
     $M2MString .= $cleaned_parameters['sanitised_notes'];

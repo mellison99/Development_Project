@@ -93,7 +93,10 @@ class RegisterDetailsModel
         $this->database_wrapper->makeDatabaseConnection();
         $query_string = $this->sql_queries->createNewMeeting();
         $query_parameters = [
+            ':meetingId' => $cleaned_parameters['sanitised_Id'],
+            ':meeting_date' => $cleaned_parameters['sanitised_date'],
             ':meeting_time' => $cleaned_parameters['sanitised_time'],
+            ':meeting_duration' => $cleaned_parameters['sanitised_duration'],
             ':meeting_host' => $email,
             ':notes' => $cleaned_parameters['sanitised_notes']
         ];
@@ -107,7 +110,7 @@ class RegisterDetailsModel
         $query_string = $this->sql_queries->createNewMeetingUser();
         $query_parameters = [
             ':meeting_user' => $cleaned_parameters['sanitised_user'],
-            ':meetingId' => $meetingID
+            ':meetingId' => $cleaned_parameters['sanitised_Id']
 
         ];
         var_dump($query_string);
@@ -132,6 +135,26 @@ class RegisterDetailsModel
      $exists = true;
     }
     return $exists;
+    }
+
+    public function getMeetingbyDateUser($app, $email,$date)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getMeetingByDateUser();
+        //var_dump($query_string);
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_date' => $date,
+            ':user_email_2' => $email,
+            ':meeting_date_2' => $date
+        ];
+        //var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $value = $this->database_wrapper->countRows();
+        //var_dump($value);
+        return $value;
     }
 
     public function getEmailBySender($app, $cleaned_parameters,$pos): array

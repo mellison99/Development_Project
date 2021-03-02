@@ -94,7 +94,7 @@ $app->any(
                 'action' => $action,
                 'page_heading_1' => 'UserLoggedIn',
                 'page_heading_2' => 'UserLoggedIn',
-                'send_message' => LANDING_PAGE . '/sendmessagelandingpage',
+                'send_message' => LANDING_PAGE . '/calendar',
                 'view_message' => LANDING_PAGE. '/downloadedmessageselect',
                 'error' => $error,
                 'info' => $info,

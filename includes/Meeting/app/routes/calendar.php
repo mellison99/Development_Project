@@ -34,6 +34,7 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
 
     //var_dump($currentYear);
     //var_dump($_SESSION);
+
     $startDay =  mktime(0,0,0,$monthInt,1,$currentYear);
     //var_dump(getdate());
     $dateComponents = getdate($startDay);
@@ -47,7 +48,9 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
    }
 
     // var_dump($dateComponents);
-
+//    $_SESSION['month']=$month;
+//    $_SESSION['year']=$year;
+//    var_dump($_SESSION);
 
     $html_output = $this->view->render($response,
         'calendar.html.twig',
@@ -130,7 +133,10 @@ function build_calendar($month, $year){
             $calendar.="<td><h4>$currentDay</h4> <button class='btn btn-danger btn-xs'>N/A</button>";
 
         }else{
-            $calendar.="<td class='$today'><h4>$currentDay</h4> <a href='createMeeting.php?date=".$date."' class='btn btn-success btn-xs'>Book</a>";
+            $_SESSION['date']= date('Y-m-d');
+            $calendar.="<td class='$today'><h4>$currentDay</h4> <a href='sendmessagelandingpage?date=".$date."'>View details</a>";
+
+           // $_SESSION['dayOfWeek'] = ;
         }
 
 //        if($currentDate == $date){

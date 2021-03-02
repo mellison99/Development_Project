@@ -42,7 +42,10 @@ class SQLQueries
     {
         $query_string = "INSERT INTO meeting_data ";
         $query_string .= "SET ";
+        $query_string .= "meetingId = :meetingId,";
+        $query_string .= "meeting_date = :meeting_date,";
         $query_string .= "meeting_time = :meeting_time,";
+        $query_string .= "meeting_duration = :meeting_duration,";
         $query_string .= "meeting_host = :meeting_host,";
         $query_string .= "notes = :notes;";
         return $query_string;
@@ -87,6 +90,26 @@ class SQLQueries
         $query_string .= "message_receiver = :message_receiver,";
         $query_string .= "date_time_received = :date_time_received,";
         $query_string .= "sender_email_address = :sender_email_address;";
+        return $query_string;
+    }
+    public static function getMeetingByDateUser()
+    {
+        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_host, meeting_user.user_email " ;
+        $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
+        $query_string .= "WHERE meeting_user.user_email = :user_email ";
+        $query_string .= "AND meeting_data.meeting_date = :meeting_date ";
+        $query_string .= " OR meeting_data.meeting_host = :user_email_2 ";
+        $query_string .= "AND meeting_data.meeting_date = :meeting_date_2 ";
+
+        return $query_string;
+    }
+
+    public static function getMeetingByUser()
+    {
+        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_host, meeting_user.user_email " ;
+        $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
+        $query_string .= "WHERE meeting_user.user_email = :user_email ";
+        $query_string .= " OR meeting_data.meeting_host = :user_email_2 ;";
         return $query_string;
     }
 

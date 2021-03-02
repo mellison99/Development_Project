@@ -23,6 +23,11 @@ $app->get('/sendmessagelandingpage', function(Request $request, Response $respon
             return $html_output->withHeader('Location', LANDING_PAGE);
     }
 
+    //var_dump($_GET["date"]);
+    $_SESSION['date'] = $_GET["date"];
+    getMeetingbyDateUser($app,$_SESSION['username'],$_SESSION['date']);
+    //var_dump($_SESSION['username']);
+
         $html_output =  $this->view->render($response,
             'sendmessage.html.twig',
             [
@@ -34,8 +39,43 @@ $app->get('/sendmessagelandingpage', function(Request $request, Response $respon
                 'initial_input_box_value' => null,
                 'page_heading_1' => 'Create a meeting',
                 'page_heading_2' => 'Meeting details',
+                'date' => $_GET["date"],
+                'Add'=> LANDING_PAGE .'/sendmessagelandingpage'."?date=".$date,
                 'Send' => LANDING_PAGE . '/sendmessage',
+                'Calendar' => LANDING_PAGE . '/calendar',
             ]);
         processOutput($app, $html_output);
         return $html_output;
     })->setName('sendmessage');
+
+
+
+
+function getMeetingbyDateUser($app,$email,$date)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->getMeetingbyDateUser($app, $email,$date);
+    //var_dump($value);
+    $downloadMessages = [];
+    if($value<0){
+        return "no  messages";
+    }else{
+        for($i =1; $i<=$value+1 ; $i++){
+            $idstring = $i;
+            array_push($downloadMessages,$idstring);
+        }
+        array_pop($downloadMessages);
+        return $downloadMessages;
+    }
+}

@@ -6,12 +6,17 @@
             <fieldset>
                 <legend>New Meeting Details</legend>
                 <br>
+                <h2>Meeting for {{ date }}</h2>
+                <br>
                 <label for="time">Meeting start time:</label>
                 <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
                 <br><br>
+                <label for="time">Meeting duration:</label>
+                <input id="duration" name="duration" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
+                <br><br>
                 <label for="user">Add users:</label>
                 <input id="user" name="user" type="string" value="{{ initial_input_box_value }}" size="20" maxlength="60">
-                <br><br>
+                <input type="submit"  value="Add" href = "{{ Add }}"></a><br><br>
                 <label for="notes">Notes:</label>
                 <input id="notes" name="notes" type="string" value="{{ initial_input_box_value }}" size="30" maxlength="140">
                 <br><br>
@@ -19,5 +24,6 @@
             </fieldset>
         </form>
         <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+        <p class="curr_page"><a href="{{ Calendar }}">Back to calendar view</a></p>
     </div>
 {% endblock %}
