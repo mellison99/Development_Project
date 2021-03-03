@@ -5,7 +5,10 @@
         <form action="{{ action }}" method="{{ method }}">
             <fieldset>
                 <legend>Meeting details</legend>
-                <p>user(s): {{ user }} </p>
+                <p>User List: </p>
+                {% for code, name in user %}
+                    <p value="{{code}}">{{name}}</p>
+                {% endfor %}
                 <p>time: {{ time  }} </p>
                 <p>host: {{ host }} </p>
 
