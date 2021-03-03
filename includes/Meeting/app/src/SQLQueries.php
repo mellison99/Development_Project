@@ -94,7 +94,7 @@ class SQLQueries
     }
     public static function getMeetingByDateUser()
     {
-        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_host, meeting_user.user_email " ;
+        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= "AND meeting_data.meeting_date = :meeting_date ";

@@ -103,18 +103,18 @@ class RegisterDetailsModel
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
 
-    public function setMeetingUserDetails($app, $cleaned_parameters,$meetingID)
+    public function setMeetingUserDetails($app, $cleaned_parameters,$meetingID,$user)
     {
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
         $this->database_wrapper->makeDatabaseConnection();
         $query_string = $this->sql_queries->createNewMeetingUser();
         $query_parameters = [
-            ':meeting_user' => $cleaned_parameters['sanitised_user'],
+            ':meeting_user' => $user,
             ':meetingId' => $cleaned_parameters['sanitised_Id']
 
         ];
-        var_dump($query_string);
-        var_dump($query_parameters);
+        //var_dump($query_string);
+        //var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
 
@@ -154,6 +154,28 @@ class RegisterDetailsModel
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         $value = $this->database_wrapper->countRows();
         //var_dump($value);
+        return $value;
+    }
+
+    public function getMeetingbyDateUserDetails($app, $email, $date, $pos): array
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getMeetingByDateUser();
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_date' => $date,
+            ':user_email_2' => $email,
+            ':meeting_date_2' => $date
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
         return $value;
     }
 

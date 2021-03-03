@@ -37,7 +37,9 @@ $app->post(
             $e = 'error';
             return $e;
         }
-
+      //  var_dump($tainted_parameters['name']);
+        $nameArray = $tainted_parameters['name'];
+        //var_dump(count($nameArray));
        // var_dump($_SESSION['date']);
         $cleaned_parameters = cleanupParameters1($app, $tainted_parameters);
         //var_dump($cleaned_parameters);
@@ -82,12 +84,21 @@ function cleanupParameters1($app, $tainted_parameters)
     $tainted_time = $tainted_parameters['time'];
     $tainted_duration = $tainted_parameters['duration'];
     $tainted_notes = $tainted_parameters['notes'];
-    $tainted_user = $tainted_parameters['user'];
+    $tainted_users = $tainted_parameters['name'];
     $cleaned_parameters['sanitised_time'] = $validator->sanitiseString($tainted_time);
     $cleaned_parameters['sanitised_duration'] = $validator->sanitiseString($tainted_duration);
     $cleaned_parameters['sanitised_Id'] = time();
     $cleaned_parameters['sanitised_notes'] = $validator->sanitiseString($tainted_notes);
-    $cleaned_parameters['sanitised_user'] = $validator->sanitiseString($tainted_user);
+    $sanitised_users = [];
+    //var_dump($tainted_users[0]);
+    $value = sizeOf($tainted_users)-1;
+    //var_dump($value);
+    for($i =0; $i<=$value; $i++){
+        $sanitised_user = $validator->sanitiseString($tainted_users[$i]);
+        array_push($sanitised_users,$sanitised_user);
+    }
+    //var_dump($sanitised_users);
+    $cleaned_parameters['sanitised_user'] = $sanitised_users;
     $cleaned_parameters['sanitised_date'] = $_SESSION['date'];
 
     return $cleaned_parameters;
@@ -137,6 +148,9 @@ function storeMeetingDetails($app, array $cleaned_parameters, string $email)
     $DetailsModel->setDatabaseWrapper($database_wrapper);
 
     $DetailsModel->setMeetingDetails($app, $cleaned_parameters, $email);
+
+
+
 }
 
 function storeMeetingUserDetails($app, array $cleaned_parameters, $meetingID)
@@ -153,8 +167,13 @@ function storeMeetingUserDetails($app, array $cleaned_parameters, $meetingID)
     $DetailsModel->setSqlQueries($sql_queries);
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $userList = $cleaned_parameters['sanitised_user'];
+    $value = count($userList)-1;
+    for($i =0; $i<=$value; $i++){
+        $user = $userList[$i];
+        $DetailsModel->setMeetingUserDetails($app, $cleaned_parameters, $meetingID, $user);
+    }
 
-    $DetailsModel->setMeetingUserDetails($app, $cleaned_parameters, $meetingID);
 }
 
 function getSimbyEmail($app, $email)
@@ -174,7 +193,7 @@ function getSimbyEmail($app, $email)
 
     $DetailsModel->setMeetingUserDetails($app, $email);
     $sim = $DetailsModel->setMeetingUserDetails($app, $email);
-    var_dump($sim);
+    //var_dump($sim);
     return $sim;
 }
 

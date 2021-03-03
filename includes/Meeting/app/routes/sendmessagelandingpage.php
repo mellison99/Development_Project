@@ -25,8 +25,9 @@ $app->get('/sendmessagelandingpage', function(Request $request, Response $respon
 
     //var_dump($_GET["date"]);
     $_SESSION['date'] = $_GET["date"];
-    getMeetingbyDateUser($app,$_SESSION['username'],$_SESSION['date']);
+    $test = getMeetingbyDateUser($app,$_SESSION['username'],$_SESSION['date']);
     //var_dump($_SESSION['username']);
+        //var_dump($test);
 
         $html_output =  $this->view->render($response,
             'sendmessage.html.twig',
@@ -43,6 +44,7 @@ $app->get('/sendmessagelandingpage', function(Request $request, Response $respon
                 'Add'=> LANDING_PAGE .'/sendmessagelandingpage'."?date=".$date,
                 'Send' => LANDING_PAGE . '/sendmessage',
                 'Calendar' => LANDING_PAGE . '/calendar',
+                'meetingsOnDate'=>$test,
             ]);
         processOutput($app, $html_output);
         return $html_output;
@@ -69,13 +71,15 @@ function getMeetingbyDateUser($app,$email,$date)
     //var_dump($value);
     $downloadMessages = [];
     if($value<0){
-        return "no  messages";
+        return "no  meetings";
     }else{
-        for($i =1; $i<=$value+1 ; $i++){
-            $idstring = $i;
+        for($i =0; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getMeetingbyDateUserDetails($app, $email, $date, $i);
             array_push($downloadMessages,$idstring);
         }
         array_pop($downloadMessages);
         return $downloadMessages;
     }
 }
+
+
