@@ -41,7 +41,7 @@ $app->post(
                     return $html_output->withHeader('Location', LANDING_PAGE . '/registeruserlandingpage');
                 }
 
-                if (preg_match('/'.preg_quote('@', '/').'/', $cleaned_parameters['sanitised_email']) == false || substr($cleaned_parameters['sanitised_email'], -6) != '.co.uk')
+                if (preg_match('/'.preg_quote('@', '/').'/', $cleaned_parameters['sanitised_email']) == false )
                 {
                     $error = 'please enter a valid email address';
                     $_SESSION['error'] = $error;
@@ -59,9 +59,9 @@ $app->post(
                     return $html_output->withHeader('Location', LANDING_PAGE . '/registeruserlandingpage');
                 }
 
-                if (strlen($cleaned_parameters['sanitised_sim']) != 11 )
+                if (strlen($cleaned_parameters['sanitised_sim']) != 12 )
                 {
-                    $error = 'please enter a valid UK mobile number of 11 digits    ';
+                    $error = 'please enter a valid UK mobile number of 12 digits (44 code included)    ';
                     $_SESSION['error'] = $error;
                     $html_output =  $this->view->render($response,
                         'register.html.twig');
@@ -190,6 +190,7 @@ function checkNumber($app, $cleaned_parameters)
 
 {
     $result = false;
+
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');

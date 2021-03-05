@@ -42,7 +42,27 @@ $app->post(
         //var_dump(count($nameArray));
        // var_dump($_SESSION['date']);
         $cleaned_parameters = cleanupParameters1($app, $tainted_parameters);
-        //var_dump($cleaned_parameters);
+        if($_POST['time'] == '' || $_POST['duration'] == '' || $_POST['name'][0] == '' )
+        {
+            $error = 'please fill in all details to register';
+            $_SESSION['error'] = $error;
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+
+        }
+
+//        if(checkEmail($app, $cleaned_parameters) == true)
+//                {
+//                    $error = "One or more of the emails specified does not exist ";
+//                    $_SESSION['error'] = $error;
+//                    $html_output =  $this->view->render($response,
+//                        'sent_message.html.twig');
+//                    $date = $_SESSION['date'];
+//                    return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+//                }
+
         /*$numberToSend = '+'.$cleaned_parameters['sanitised_num'];
         if(strlen($numberToSend)!= strlen('+447817814149'))
         {
@@ -50,13 +70,29 @@ $app->post(
             $numberToSend = '+447817814149';
         }*/
         $message_content = makeM2MString($cleaned_parameters,$email);
-        $numberToSend = '+447908940083';
-        //getSimbyEmail($app, $email);
-        sendM2MMessage($app, $message_content, $numberToSend);
-        storeMeetingDetails($app, $cleaned_parameters, $email);
-        $meetingID = 2;
-        storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
+        $numberToSend = '+547908940083';
+        $numbersToMessage = getNumberbyUser($app,$cleaned_parameters);
+        if(checkEmail($app, $cleaned_parameters)==false){
+            $error = 'one or more emails entered do not exist';
+            $_SESSION['error'] = $error;
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+        }
+       // var_dump(checkEmail($app, $cleaned_parameters));
 
+        $meetingID = 2;
+        storeMeetingDetails($app, $cleaned_parameters, $email);
+        storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
+        $amountOfNumbers = count($numbersToMessage);
+        var_dump($amountOfNumbers);
+        var_dump($numbersToMessage[0]);
+        for($i =0; $i<$amountOfNumbers; $i++){
+            var_dump($numbersToMessage[$i]);
+        sendM2MMessage($app, $message_content, $numbersToMessage[$i]);
+        }
+        //getSimbyEmail($app, $email);
         $html_output =  $this->view->render($response,
             'sent_message.html.twig',
             [
@@ -68,7 +104,7 @@ $app->post(
                 'page_heading_1' => 'Create a Meeting',
                 'page_heading_2' => 'Meeting details',
                 'error' => $error,
-               'user'=> $cleaned_parameters['sanitised_user'],
+                'user'=> $cleaned_parameters['sanitised_user'],
                 'time'=> $cleaned_parameters['sanitised_time'],
                 'host'=> $email
             ]);
@@ -128,9 +164,10 @@ function makeM2MString(array $cleaned_parameters,$email){
     return $M2MString;
 }
 function sendM2MMessage($app, $message_content, $numberToSend){
+    var_dump("+".$numberToSend[0]);
     $SoapWrapper = $app->getContainer()->get('SoapWrapper');
     $soap_client_handle = $SoapWrapper->createSoapClient();
-    $soap_client_handle->sendMessage('20_2414628', 'PublicPassword12', $numberToSend,$message_content,false,"SMS");
+    $soap_client_handle->sendMessage('20_2414628', 'PublicPassword12',"+".$numberToSend[0],$message_content,false,"SMS");
 }
 function storeMeetingDetails($app, array $cleaned_parameters, string $email)
 {
@@ -172,11 +209,48 @@ function storeMeetingUserDetails($app, array $cleaned_parameters, $meetingID)
     for($i =0; $i<=$value; $i++){
         $user = $userList[$i];
         $DetailsModel->setMeetingUserDetails($app, $cleaned_parameters, $meetingID, $user);
+        //var_dump(getNumberbyUser($app,$user));
     }
 
 }
+function checkEmail($app, $cleaned_parameters)
 
-function getSimbyEmail($app, $email)
+{
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $userList = $cleaned_parameters['sanitised_user'];
+    $emailChecks = [];
+    $value = count($userList)-1;
+    for($i =0; $i<=$value; $i++){
+        $user = $userList[$i];
+        //var_dump($user);
+        $result = $DetailsModel->checkEmail($app, $user);
+        //var_dump($result);
+        array_push($emailChecks,$result." ");
+        //var_dump(getNumberbyUser($app,$user));
+    }
+    //var_dump($emailChecks);
+    if(in_array(" ",$emailChecks)){
+        $result = false;
+    }
+    else{
+        $result = true;
+    }
+    return $result;
+
+}
+
+
+function getNumberbyUser($app,$cleaned_parameters)
 {
     $store_data_result = null;
 
@@ -190,11 +264,22 @@ function getSimbyEmail($app, $email)
     $DetailsModel->setSqlQueries($sql_queries);
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
-
-    $DetailsModel->setMeetingUserDetails($app, $email);
-    $sim = $DetailsModel->setMeetingUserDetails($app, $email);
-    //var_dump($sim);
-    return $sim;
+    $value = count($cleaned_parameters['sanitised_user']);
+    $email = $cleaned_parameters['sanitised_user'];
+    //var_dump($value);
+    $numbersToMessage = [];
+    if($value<0){
+        return "no numbers to message";
+    }else{
+        for($i =0; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getNumberbyUser($app, $email, $i);
+            //var_dump($idstring);
+            array_push($numbersToMessage,$idstring);
+        }
+        array_pop($numbersToMessage);
+        //var_dump( $numbersToMessage);
+    }
+    return $numbersToMessage;
 }
 
 

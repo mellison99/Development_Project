@@ -50,7 +50,17 @@ class RegisterDetailsModel
             ':user_hashed_password' => $hashed_password
         ];
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
-        var_dump($this);
+        //var_dump($this);
+    }
+
+    public function getUserEmailFromInput(){
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->searchUser();
+        $query_parameters = [
+            ':searchInput' => $cleaned_parameters['sanitised_email']
+            ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
 
     public function setRegisterMetaDetails($app, $cleaned_parameters)
@@ -110,6 +120,7 @@ class RegisterDetailsModel
         $query_string = $this->sql_queries->createNewMeetingUser();
         $query_parameters = [
             ':meeting_user' => $user,
+            ':meeting_ack' => 0,
             ':meetingId' => $cleaned_parameters['sanitised_Id']
 
         ];
@@ -213,6 +224,26 @@ class RegisterDetailsModel
         return $value;
     }
 
+    public function getNumberByUser($app, $cleaned_parameters,$pos)
+    {
+        $value = [];
+        $exists = false;
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getNumberByUser();
+        $query_parameters = [
+            ':user_email' => $cleaned_parameters[$pos]
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $value = $this->database_wrapper->safeFetchRow();
+        }
+
+        return $value;
+
+    }
+
     public function checkNumber($app, $cleaned_parameters)
        {
         $exists = false;
@@ -224,6 +255,25 @@ class RegisterDetailsModel
             ':user_sim_id' => $cleaned_parameters['sanitised_sim']
            ];
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() > 0)
+        {
+            $exists = true;
+        }
+
+        return $exists;
+    }
+
+    public function checkEmail($app, $cleaned_parameters)
+    {
+        $exists = false;
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->checkEmailPresent();
+        $query_parameters = [
+            ':user_email_address' => $cleaned_parameters
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        //var_dump($this->database_wrapper->countRows());
         if ($this->database_wrapper->countRows() > 0)
         {
             $exists = true;

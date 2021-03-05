@@ -23,10 +23,10 @@ $app->get('/downloadedmessageselect', function(Request $request, Response $respo
     }
 
     $email = $_SESSION['username'];
-    $message_details = getMessages($app,$email);
+   // $message_details = getMessages($app,$email);
 
-    $parsed_messages = parseAllMessageData($app,$message_details);
-    $downloaded_messages = RetrieveNumMessageData($app, $email);
+    //$parsed_messages = parseAllMessageData($app,$message_details);
+   // $downloaded_messages = RetrieveNumMessageData($app, $email);
 
     $html_output = $this->view->render($response,
     'downloadmessageselect.html.twig',
@@ -41,8 +41,8 @@ $app->get('/downloadedmessageselect', function(Request $request, Response $respo
       'page_title' => APP_NAME,
       'page_heading_1' => APP_NAME,
       'page_heading_2' => 'Choose a message to download/ View in detail',
-      'country_names' => $parsed_messages,
-      'country_names2'=>$downloaded_messages,
+      'country_names' => "placeholder",
+      'country_names2'=>"placeholder",
       'page_text' => 'Select a message',
     ]);
 
