@@ -22,7 +22,7 @@
                 <br>
                 Existing Meetings today at:
                 {% for code, name in meetingsOnDate %}
-                    <h4 value="{{code}}">{{name[0]}} for {{ name[2] }}</h4>
+                    <h4 value="{{code}}">{{name[0]}} for {{ name[2] }} minutes</h4>
                 {% endfor %}
                 <br>
                 <br>
@@ -30,7 +30,7 @@
                 <label for="time">Meeting start time:</label>
                 <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
                 <br><br>
-                <label for="time">Meeting duration:</label>
+                <label for="time">Meeting duration (minutes):</label>
                 <input id="duration" name="duration" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
                 <br><br>
                 <div class="container">

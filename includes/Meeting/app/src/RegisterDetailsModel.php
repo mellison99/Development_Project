@@ -107,6 +107,8 @@ class RegisterDetailsModel
             ':meeting_date' => $cleaned_parameters['sanitised_date'],
             ':meeting_time' => $cleaned_parameters['sanitised_time'],
             ':meeting_duration' => $cleaned_parameters['sanitised_duration'],
+            ':meeting_start' => $cleaned_parameters['sanitised_start'],
+            ':meeting_end' => $cleaned_parameters['sanitised_end'],
             ':meeting_host' => $email,
             ':notes' => $cleaned_parameters['sanitised_notes']
         ];
@@ -127,6 +129,27 @@ class RegisterDetailsModel
         //var_dump($query_string);
         //var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+    public function checkTimeslot($app, $cleaned_parameters): string
+    {
+        $exists = false;
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->checkTimeslot();
+        $sanitisedStart = $cleaned_parameters['sanitised_start']+60;
+        $sanitisedEnd = $cleaned_parameters['sanitised_end']-60;
+        $query_parameters = [
+            ':meeting_start' => $sanitisedStart,
+            ':meeting_end' => $sanitisedEnd
+        ];
+        var_dump($query_parameters);
+        var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() > 0)
+        {
+            $exists = true;
+        }
+        return $exists;
     }
 
     public function checkTimePresent($app, $cleaned_parameters): string
@@ -158,6 +181,7 @@ class RegisterDetailsModel
         $query_parameters = [
             ':user_email' => $email,
             ':meeting_date' => $date,
+            ':meeting_ack' => 1,
             ':user_email_2' => $email,
             ':meeting_date_2' => $date
         ];
@@ -177,6 +201,7 @@ class RegisterDetailsModel
         $query_parameters = [
             ':user_email' => $email,
             ':meeting_date' => $date,
+            ':meeting_ack' => 1,
             ':user_email_2' => $email,
             ':meeting_date_2' => $date
         ];

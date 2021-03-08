@@ -41,6 +41,11 @@ $app->post(
         $nameArray = $tainted_parameters['name'];
         //var_dump(count($nameArray));
        // var_dump($_SESSION['date']);
+        $yearInString = (substr($_SESSION['date'],0,4));
+        $monthInString=(substr($_SESSION['date'],5,2));
+        $dayInString = (substr($_SESSION['date'],8,2));
+        $monthInInt = (int)$monthInString;
+        $dayInInt = (int)$dayInString;
         $cleaned_parameters = cleanupParameters1($app, $tainted_parameters);
         if($_POST['time'] == '' || $_POST['duration'] == '' || $_POST['name'][0] == '' )
         {
@@ -53,24 +58,10 @@ $app->post(
 
         }
 
-//        if(checkEmail($app, $cleaned_parameters) == true)
-//                {
-//                    $error = "One or more of the emails specified does not exist ";
-//                    $_SESSION['error'] = $error;
-//                    $html_output =  $this->view->render($response,
-//                        'sent_message.html.twig');
-//                    $date = $_SESSION['date'];
-//                    return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
-//                }
 
-        /*$numberToSend = '+'.$cleaned_parameters['sanitised_num'];
-        if(strlen($numberToSend)!= strlen('+447817814149'))
-        {
-            $error .= "number set to default value +447817814149 ";
-            $numberToSend = '+447817814149';
-        }*/
+
+
         $message_content = makeM2MString($cleaned_parameters,$email);
-        $numberToSend = '+547908940083';
         $numbersToMessage = getNumberbyUser($app,$cleaned_parameters);
         if(checkEmail($app, $cleaned_parameters)==false){
             $error = 'one or more emails entered do not exist';
@@ -80,18 +71,31 @@ $app->post(
             $date = $_SESSION['date'];
             return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
         }
-       // var_dump(checkEmail($app, $cleaned_parameters));
+        var_dump(checkTimeslot($app,$cleaned_parameters));
+           if(checkTimeslot($app,$cleaned_parameters)=="") {
 
-        $meetingID = 2;
-        storeMeetingDetails($app, $cleaned_parameters, $email);
-        storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
-        $amountOfNumbers = count($numbersToMessage);
-        var_dump($amountOfNumbers);
-        var_dump($numbersToMessage[0]);
-        for($i =0; $i<$amountOfNumbers; $i++){
-            var_dump($numbersToMessage[$i]);
-        sendM2MMessage($app, $message_content, $numbersToMessage[$i]);
+
+
+            $meetingID = 2;
+            storeMeetingDetails($app, $cleaned_parameters, $email);
+            storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
+            $amountOfNumbers = count($numbersToMessage);
+            //var_dump($amountOfNumbers);
+            //var_dump($numbersToMessage[0]);
+            for($i =0; $i<$amountOfNumbers; $i++){
+                // var_dump($numbersToMessage[$i]);
+                sendM2MMessage($app, $message_content, $numbersToMessage[$i]);
+            }
+    }
+        else{
+            $error = 'Timeslot already booked';
+            $_SESSION['error'] = $error;
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
         }
+
         //getSimbyEmail($app, $email);
         $html_output =  $this->view->render($response,
             'sent_message.html.twig',
@@ -115,6 +119,11 @@ $app->post(
     })->setName('sendmessage');
 function cleanupParameters1($app, $tainted_parameters)
 {
+    $yearInString = (substr($_SESSION['date'],0,4));
+    $monthInString=(substr($_SESSION['date'],5,2));
+    $dayInString = (substr($_SESSION['date'],8,2));
+    $monthInInt = (int)$monthInString;
+    $dayInInt = (int)$dayInString;
     $cleaned_parameters = [];
     $validator = $app->getContainer()->get('validator');
     $tainted_time = $tainted_parameters['time'];
@@ -134,11 +143,23 @@ function cleanupParameters1($app, $tainted_parameters)
         array_push($sanitised_users,$sanitised_user);
     }
     //var_dump($sanitised_users);
+    $hourString = substr($cleaned_parameters['sanitised_time'],0,2);
+    $minString = substr($cleaned_parameters['sanitised_time'],3,2);
+   // var_dump((int)$hourString);
+    //var_dump((int)$minString);
+    $startTime = mktime((int)$hourString,(int)$minString,0,$monthInInt,$dayInInt,$yearInString);
+
+    $endTime = getdate($startTime)[0]+(60*(int)$cleaned_parameters['sanitised_duration']);
+    $cleaned_parameters['sanitised_start'] = $startTime;
+    $cleaned_parameters['sanitised_end'] = $endTime;
     $cleaned_parameters['sanitised_user'] = $sanitised_users;
     $cleaned_parameters['sanitised_date'] = $_SESSION['date'];
 
     return $cleaned_parameters;
 }
+
+
+
 
 function makeM2MString(array $cleaned_parameters,$email){
     $M2MString = '';
@@ -164,11 +185,32 @@ function makeM2MString(array $cleaned_parameters,$email){
     return $M2MString;
 }
 function sendM2MMessage($app, $message_content, $numberToSend){
-    var_dump("+".$numberToSend[0]);
+    //var_dump("+".$numberToSend[0]);
     $SoapWrapper = $app->getContainer()->get('SoapWrapper');
     $soap_client_handle = $SoapWrapper->createSoapClient();
     $soap_client_handle->sendMessage('20_2414628', 'PublicPassword12',"+".$numberToSend[0],$message_content,false,"SMS");
 }
+function checkTimeslot($app, array $cleaned_parameters)
+{
+
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+
+    $result = $DetailsModel->checkTimeslot($app, $cleaned_parameters);
+    var_dump($result);
+    return $result;
+
+}
+
 function storeMeetingDetails($app, array $cleaned_parameters, string $email)
 {
     $store_data_result = null;

@@ -56,11 +56,25 @@ class SQLQueries
         $query_string .= "meeting_date = :meeting_date,";
         $query_string .= "meeting_time = :meeting_time,";
         $query_string .= "meeting_duration = :meeting_duration,";
+        $query_string .= "meeting_start = :meeting_start,";
+        $query_string .= "meeting_end = :meeting_end,";
         $query_string .= "meeting_host = :meeting_host,";
         $query_string .= "notes = :notes;";
         return $query_string;
     }
+    public function  checkTimeslot()
+    {
 
+        $query_string  = "SELECT DISTINCT meeting_data.meeting_host, meeting_user.user_email ";
+        $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
+        $query_string .= "WHERE meeting_start BETWEEN :meeting_start ";
+        $query_string .= "AND :meeting_end ";
+        $query_string .= "OR meeting_end BETWEEN :meeting_start  ";
+        $query_string .="AND :meeting_end; ";
+        return $query_string;
+    }
+
+//stop when the start time of a new meeting is between the start and end of an existing meeting or when the end time is between the start and end of an existing meeting
     public function  createNewMeetingUser()
     {
         $query_string = "INSERT INTO meeting_user ";
@@ -109,6 +123,7 @@ class SQLQueries
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= "AND meeting_data.meeting_date = :meeting_date ";
+        $query_string .= "AND meeting_user.meeting_ack = :meeting_ack ";
         $query_string .= " OR meeting_data.meeting_host = :user_email_2 ";
         $query_string .= "AND meeting_data.meeting_date = :meeting_date_2 ";
 
