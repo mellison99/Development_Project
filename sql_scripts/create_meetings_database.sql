@@ -1,7 +1,7 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 CREATE DATABASE IF NOT EXISTS meetingPlanner_db COLLATE utf8_unicode_ci;
-
+DROP TABLE user_data, meeting_data, meeting_user, office_hours;
 
 --
 -- Create the user account
@@ -29,6 +29,8 @@ CREATE TABLE `meeting_data`(
 `meeting_date` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 `meeting_time` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 `meeting_duration` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+`meeting_start` int(12),
+`meeting_end` int(12),
 `meeting_host` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 `notes`varchar(240) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 PRIMARY KEY (`meetingId`),
@@ -41,6 +43,7 @@ CREATE TABLE `meeting_user`(
 `user_meeting_id` int(11) NOT NULL AUTO_INCREMENT ,
 `meetingId` int(11) NOT NULL,
 `user_email` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+`meeting_ack` tinyint(1) NOT NULL,
 PRIMARY KEY (`user_meeting_id`),
 CONSTRAINT `fk_meetingId`
 FOREIGN KEY (meetingId) REFERENCES meeting_data(meetingID)

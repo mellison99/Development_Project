@@ -71,8 +71,29 @@ $app->post(
             $date = $_SESSION['date'];
             return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
         }
-        var_dump(checkTimeslot($app,$cleaned_parameters));
-           if(checkTimeslot($app,$cleaned_parameters)=="") {
+        $meetingsToCheck = checkTimeslot($app,$cleaned_parameters);
+       // var_dump($meetingsToCheck);
+        for($i =0; $i<$meetingsToCheck; $i++){
+            checkTimeslotUsers($app,$cleaned_parameters,$meetingsToCheck[$i]);
+            $usersAtTimeslotArray = checkTimeslotUsers($app,$cleaned_parameters,$meetingsToCheck[$i]);
+        }
+        //var_dump(sizeof($usersAtTimeslotArray));
+        $meetingsattending = 0;
+        for($i =0; $i<sizeof($usersAtTimeslotArray)-1; $i++){
+
+            for($j =0; $j<sizeof($cleaned_parameters['sanitised_user']); $j++){
+                //var_dump(sizeof($cleaned_parameters['sanitised_user']));
+               // var_dump($usersAtTimeslotArray[$i]);
+                $arrayToSearch = $usersAtTimeslotArray[$i];
+                //var_dump($arrayToSearch);
+                //var_dump($cleaned_parameters['sanitised_user'][$j]);
+                $meetingsattending = $meetingsattending + array_search( $cleaned_parameters['sanitised_user'][$j],$arrayToSearch);
+                $meetingsattending = $meetingsattending + array_search($email, $usersAtTimeslotArray[$i]);
+            }
+
+        }
+        var_dump($meetingsattending);
+           if(checkTimeslot($app,$cleaned_parameters)=="0" and $meetingsattending <= 0) {
 
 
 
@@ -88,7 +109,7 @@ $app->post(
             }
     }
         else{
-            $error = 'Timeslot already booked';
+            $error = 'Timeslot already booked ' .$meetingsToCheck;
             $_SESSION['error'] = $error;
             $html_output =  $this->view->render($response,
                 'sent_message.html.twig');
@@ -206,10 +227,44 @@ function checkTimeslot($app, array $cleaned_parameters)
     $DetailsModel->setDatabaseWrapper($database_wrapper);
 
     $result = $DetailsModel->checkTimeslot($app, $cleaned_parameters);
-    var_dump($result);
+    //var_dump($result);
     return $result;
 
 }
+
+function checkTimeslotUsers($app, array $cleaned_parameters, $meetingsToCheck)
+{
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $meetingList = [];
+    $value = $meetingsToCheck;
+    //var_dump($meetingsToCheck);
+    //var_dump($value);
+    for($i =0; $i<=$value; $i++){
+        //$meeting = $meetingsToCheck[$i];
+       // var_dump($DetailsModel->checkTimeslotDetails($app, $cleaned_parameters,$meeting));
+        $result = $DetailsModel->checkTimeslotDetails($app, $cleaned_parameters,$meetingsToCheck);
+    }
+    //var_dump($result);
+        return $result;
+       // array_push($meetingList,$result." ");
+
+
+
+
+}
+function checkTimeslotList($app, array $listofUserMeetings){
+
+}
+
 
 function storeMeetingDetails($app, array $cleaned_parameters, string $email)
 {
