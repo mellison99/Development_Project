@@ -65,7 +65,7 @@ class SQLQueries
     public function  checkTimeslot()
     {
 
-        $query_string  = "SELECT DISTINCT meeting_data.meeting_host, meeting_user.user_email ";
+        $query_string  = "SELECT meeting_data.meeting_host, meeting_user.user_email ";
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_start BETWEEN :meeting_start ";
         $query_string .= "AND :meeting_end ";

@@ -36,8 +36,8 @@ $error = $_SESSION['error'];
 
         $starttime = mktime(12,30,0,$monthInInt,$dayInInt,$yearInString);
         $endtime = getdate($starttime)[0]+(60*30);
-        var_dump(getdate($starttime));
-        var_dump(getdate($endtime));
+       // var_dump(getdate($starttime));
+       // var_dump(getdate($endtime));
 //        var_dump($starttime);
 //        var_dump($endtime);
         $html_output =  $this->view->render($response,
