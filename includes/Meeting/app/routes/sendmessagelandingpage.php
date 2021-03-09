@@ -22,13 +22,24 @@ $app->get('/sendmessagelandingpage', function(Request $request, Response $respon
                 'homepageform.html.twig');
             return $html_output->withHeader('Location', LANDING_PAGE);
     }
-
+$error = $_SESSION['error'];
     //var_dump($_GET["date"]);
     $_SESSION['date'] = $_GET["date"];
     $test = getMeetingbyDateUser($app,$_SESSION['username'],$_SESSION['date']);
     //var_dump($_SESSION['username']);
         //var_dump($test);
+        $yearInString = (substr($_SESSION['date'],0,4));
+        $monthInString=(substr($_SESSION['date'],5,2));
+        $dayInString = (substr($_SESSION['date'],8,2));
+        $monthInInt = (int)$monthInString;
+        $dayInInt = (int)$dayInString;
 
+        $starttime = mktime(12,30,0,$monthInInt,$dayInInt,$yearInString);
+        $endtime = getdate($starttime)[0]+(60*30);
+        var_dump(getdate($starttime));
+        var_dump(getdate($endtime));
+//        var_dump($starttime);
+//        var_dump($endtime);
         $html_output =  $this->view->render($response,
             'sendmessage.html.twig',
             [
@@ -45,6 +56,7 @@ $app->get('/sendmessagelandingpage', function(Request $request, Response $respon
                 'Send' => LANDING_PAGE . '/sendmessage',
                 'Calendar' => LANDING_PAGE . '/calendar',
                 'meetingsOnDate'=>$test,
+                'error' => $error,
             ]);
         processOutput($app, $html_output);
         return $html_output;
@@ -68,7 +80,8 @@ function getMeetingbyDateUser($app,$email,$date)
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
     $value = $DetailsModel->getMeetingbyDateUser($app, $email,$date);
-    //var_dump($value);
+
+
     $downloadMessages = [];
     if($value<0){
         return "no  meetings";

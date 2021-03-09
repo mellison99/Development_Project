@@ -38,6 +38,16 @@ class SQLQueries
         $query_string .= "WHERE user_email_address = :user_email_address;";
         return $query_string;
     }
+
+    public function searchUser()
+    {
+        $query_string  = "SELECT user_email_address ";
+        $query_string .= "FROM user_data ";
+        $query_string .= "WHERE user_email_address LIKE '% :searchInput %'";
+        $query_string .= "OR user_firstname LIKE '% :searchInput %'";
+        $query_string .= "ORDER BY user_email_address LIMIT 5;";
+        return $query_string;
+    }
     public function  createNewMeeting()
     {
         $query_string = "INSERT INTO meeting_data ";
@@ -46,16 +56,31 @@ class SQLQueries
         $query_string .= "meeting_date = :meeting_date,";
         $query_string .= "meeting_time = :meeting_time,";
         $query_string .= "meeting_duration = :meeting_duration,";
+        $query_string .= "meeting_start = :meeting_start,";
+        $query_string .= "meeting_end = :meeting_end,";
         $query_string .= "meeting_host = :meeting_host,";
         $query_string .= "notes = :notes;";
         return $query_string;
     }
+    public function  checkTimeslot()
+    {
 
+        $query_string  = "SELECT DISTINCT meeting_data.meeting_host, meeting_user.user_email ";
+        $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
+        $query_string .= "WHERE meeting_start BETWEEN :meeting_start ";
+        $query_string .= "AND :meeting_end ";
+        $query_string .= "OR meeting_end BETWEEN :meeting_start  ";
+        $query_string .="AND :meeting_end; ";
+        return $query_string;
+    }
+
+//stop when the start time of a new meeting is between the start and end of an existing meeting or when the end time is between the start and end of an existing meeting
     public function  createNewMeetingUser()
     {
         $query_string = "INSERT INTO meeting_user ";
         $query_string .= "SET ";
         $query_string .= "user_email = :meeting_user,";
+        $query_string .= "meeting_ack = :meeting_ack,";
         $query_string .= "meetingId = :meetingId;";
         return $query_string;
     }
@@ -94,10 +119,11 @@ class SQLQueries
     }
     public static function getMeetingByDateUser()
     {
-        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email " ;
+        $query_string  = "SELECT DISTINCT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= "AND meeting_data.meeting_date = :meeting_date ";
+        $query_string .= "AND meeting_user.meeting_ack = :meeting_ack ";
         $query_string .= " OR meeting_data.meeting_host = :user_email_2 ";
         $query_string .= "AND meeting_data.meeting_date = :meeting_date_2 ";
 
@@ -110,6 +136,14 @@ class SQLQueries
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= " OR meeting_data.meeting_host = :user_email_2 ;";
+        return $query_string;
+    }
+
+    public static function getNumberByUser()
+    {
+        $query_string  = "SELECT user_sim " ;
+        $query_string .= "FROM user_data ";
+        $query_string .= "WHERE user_email_address = :user_email ;";
         return $query_string;
     }
 
@@ -200,6 +234,14 @@ class SQLQueries
         $query_string  = "UPDATE user_data ";
         $query_string .= "SET user_session_id = NULL ";
         $query_string .= "WHERE user_session_id = :user_session_id";
+        return $query_string;
+    }
+
+    public function checkEmailPresent()
+    {
+        $query_string  = "SELECT user_email_address ";
+        $query_string .= "FROM user_data ";
+        $query_string .= "WHERE user_email_address = :user_email_address;";
         return $query_string;
     }
 

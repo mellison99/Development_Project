@@ -57,6 +57,7 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
         [
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/loginuser',
+            'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
             'method' => 'post',
             'method2' => 'post',
             'initial_input_box_value' => null,

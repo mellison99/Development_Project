@@ -3,38 +3,50 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <style>
+        ul{
+            background-color: #abdde5;
+            cursor:pointer;
+        }
+        li{
+            padding:12px;
+        }
+    </style>
     <div id="page-content-div">
         <h3>{{ page_heading_2 }}</h3>
         <form action="{{ action }}" method="{{ method }}">
-            <fieldset>
+
                 <legend>New Meeting Details</legend>
                 <br>
                 <h2>Meeting for {{ date }}</h2>
                 <br>
                 Existing Meetings today at:
                 {% for code, name in meetingsOnDate %}
-                    <h4 value="{{code}}">{{name[0]}} for {{ name[2] }}</h4>
+                    <h4 value="{{code}}">{{name[0]}} for {{ name[2] }} minutes</h4>
                 {% endfor %}
                 <br>
                 <br>
+            <p>{{ error }}</p>
                 <label for="time">Meeting start time:</label>
                 <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
                 <br><br>
-                <label for="time">Meeting duration:</label>
+                <label for="time">Meeting duration (minutes):</label>
                 <input id="duration" name="duration" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
                 <br><br>
                 <div class="container">
                     <br />
                     <br />
                     <div class="form-group">
-                        <form name="add_name" id="add_name">
+                        <div name="add_name" id="add_name">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dynamic_field">
                                     <tr>
-                                        <td><input type="text" name="name[]" placeholder="Enter your Name" class="form-control name_list" /></td>
+                                        <td><input type="text"  name="name[]" placeholder="Enter user email" class="form-control name_list" /></td>
                                         <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
                                     </tr>
                                 </table>
+
+
 {#                                <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" />#}
                             </div>
                         </form>
@@ -54,6 +66,7 @@
 
 
     </html>
+
     <script>
         $(document).ready(function(){
             var i=1;
@@ -68,5 +81,6 @@
 
         });
     </script>
+
 
 {% endblock %}
