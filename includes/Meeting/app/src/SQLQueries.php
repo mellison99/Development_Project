@@ -101,6 +101,44 @@ class SQLQueries
         return $query_string;
     }
 
+    public function getUnacceptedMeetings()
+    {
+        $query_string  = "SELECT meeting_user.meetingId, meeting_data.meeting_date, meeting_data.meeting_time, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.meeting_ack ";
+        $query_string .= "FROM meeting_user JOIN meeting_data ON meeting_user.meetingId = meeting_data.meetingId ";
+        $query_string .= "WHERE meeting_ack = :meeting_ack ";
+        $query_string .= "AND meeting_start > :current_time ";
+        $query_string .= "AND user_email = :user_email ;";
+        return $query_string;
+    }
+
+    public function getMeetingByEmailId()
+    {
+        $query_string  = "SELECT * ";
+        $query_string .= "FROM meeting_data ";
+        $query_string .= "WHERE meetingId = :MiD ;";
+
+        return $query_string;
+    }
+
+    public function updateMeetingAck()
+    {
+        $query_string  = "UPDATE meeting_user ";
+        $query_string .=" SET meeting_ack = 1 " ;
+        $query_string .= "WHERE meetingId = :MiD ";
+        $query_string .= "AND user_email = :user_email;" ;
+        return $query_string;
+    }
+    public function deleteMeetingAck()
+    {
+        $query_string  = "DELETE ";
+        $query_string .="FROM meeting_user ";
+        $query_string .= "WHERE meetingId = :MiD ";
+        $query_string .= "AND user_email = :user_email;" ;
+        return $query_string;
+    }
+
+
+
     public function  createNewMessage()
     {
         $query_string = "INSERT INTO message_test_data ";

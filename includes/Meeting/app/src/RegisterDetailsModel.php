@@ -130,6 +130,34 @@ class RegisterDetailsModel
         //var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
+
+    public function updateMeetingAck($app,$meetingID,$user)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->updateMeetingAck();
+        $query_parameters = [
+            ':user_email' => $user,
+            ':MiD' => $meetingID
+
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+    public function deleteMeetingUser($app,$meetingID,$user)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteMeetingAck();
+        $query_parameters = [
+            ':user_email' => $user,
+            ':MiD' => $meetingID
+
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
     public function checkTimeslot($app, $cleaned_parameters): int
     {
 
@@ -248,6 +276,63 @@ class RegisterDetailsModel
         return $value;
     }
 
+    public function getUnacceptedMeeting($app, $email, $time)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getUnacceptedMeetings();
+        //var_dump($query_string);
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_ack' => 0,
+            ':current_time' => $time,
+        ];
+        //var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $value = $this->database_wrapper->countRows();
+        //var_dump($value);
+        return $value;
+    }
+    public function getUnacceptedMeetingDetails($app, $email, $time, $value)
+    {
+        $meetingDetails = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getUnacceptedMeetings();
+        //var_dump($query_string);
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_ack' => 0,
+            ':current_time' => $time,
+        ];
+        //var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $x = $this->database_wrapper->countRows();
+        for($i=$value+1; $i<=$x; $i++)
+            $meetingDetails = $this->database_wrapper->safeFetchRow();
+
+        return $this->database_wrapper->safeFetchRow();
+    }
+
+    public function getMeetingById($app, $email,$Mid)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getMeetingByEmailId();
+        $query_parameters = [
+            ':MiD' => $Mid
+
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        //var_dump($this->database_wrapper->safeFetchRow());
+        $value = $this->database_wrapper->safeFetchRow();
+        return $value;
+    }
+
+
     public function getEmailBySender($app, $cleaned_parameters,$pos): array
     {
         $value = [];
@@ -296,9 +381,25 @@ class RegisterDetailsModel
         if ($this->database_wrapper->countRows() >= 0)
         {
             $value = $this->database_wrapper->safeFetchRow();
+            var_dump($value);
         }
 
         return $value;
+
+    }
+    public function getHostNumber($app, $host_email)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getNumberByUser();
+        $query_parameters = [
+            ':user_email' => $host_email
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+
+
+
+        return $this->database_wrapper->safeFetchRow();
 
     }
 

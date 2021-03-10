@@ -3,27 +3,14 @@
     <div id="page-content-div">
         <h2>{{ page_heading_2 }}</h2>
         <p>{{ page_text }}</p>
-        <form action="{{action}}" method="{{method}}">
-            <fieldset>
-                <legend>Message details</legend>
-                <p>{{ "Select from web" }}</p>
-                <select name="message"  required autofocus>
-                    <option value="" selected>Select a message (1 = newest)</option>
-                    {% for code, name in country_names %}
-                        <option value="{{code}}">{{name}}</option>
-                    {% endfor %}
-                </select> <input type="submit" value="Retrieve the details >>>">
-        </form>
-                <br><br><br><br>
-        <form action="{{action2}}" method="{{method2}}">
-                <p>{{ "Select from database" }}</p>
-                <select name="messagedb" required >
-                    <option value="" selected>Select a message (1 = newest)</option>
-                    {% for code, name in country_names2 %}
-                        <option value="{{code}}">{{name}}</option>
-                    {% endfor %}
-                </select><input type="submit"  value="Retrieve the details >>>">
-                </form>
+        {{ error }}
+        <form action="{{ action }}" method="{{ method }}">
+        {% for code, name in country_names %}
+            <option value="{{code}}">Host: {{ name[4] }} On: {{name[1] }} at {{ name[2] }} for: {{ name[3] }}
+                <a href='downloadedmessagesindb?MiD={{ name[0] }}'>Accept</a>
+                <a href='downloadedmessagesindb?MiD=0{{ name[0] }}'>Reject</a>
+        {% endfor %}
+
         </fieldset>
                 <br><br>
                 <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>

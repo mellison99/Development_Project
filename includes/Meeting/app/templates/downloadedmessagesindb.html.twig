@@ -9,14 +9,16 @@
                 <p>{{ switch2 }}</p>
                 <p>{{ switch3 }}</p>
                 <p>{{ switch4 }}</p>
-                <p>{{ fan }}</p>
-                <p>{{ temperature }}</p>
-                <p>{{ lastdigit }}</p>
-                <p>{{ sendernum }}</p>
-                <p>{{ recievernum }}</p>
-                <p>{{ datetime }}</p>
                 <p>{{ email }}</p>
-                <br><br>
+                <br>
+                <p>
+                    <input type="radio" id="meeting_accept" name="meeting_response" value="1">
+                    <label for="role_teacher">Accept</label>
+                    <input type="radio" id="meeting_reject" name="meeting_response" value="0">
+                    <label for="role_student">Reject</label><br>
+                </p>
+                <input type="submit"  value="Submit" href = "{{ submit }}"></a>
+                <br>
                 <p>{{ error }}</p>
             </fieldset>
         </form>

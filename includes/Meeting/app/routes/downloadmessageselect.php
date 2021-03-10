@@ -24,6 +24,8 @@ $app->get('/downloadedmessageselect', function(Request $request, Response $respo
 
     $email = $_SESSION['username'];
    // $message_details = getMessages($app,$email);
+    $tester = RetrieveNumUnacknowledgedmeetings($app, $email);
+
 
     //$parsed_messages = parseAllMessageData($app,$message_details);
    // $downloaded_messages = RetrieveNumMessageData($app, $email);
@@ -41,9 +43,10 @@ $app->get('/downloadedmessageselect', function(Request $request, Response $respo
       'page_title' => APP_NAME,
       'page_heading_1' => APP_NAME,
       'page_heading_2' => 'Choose a message to download/ View in detail',
-      'country_names' => "placeholder",
+      'country_names' => $tester,
       'country_names2'=>"placeholder",
-      'page_text' => 'Select a message',
+      'page_text' => 'You have '.count($tester).' unacknowledged meeting(s)',
+      'error'=> $_SESSION['error'],
     ]);
 
     $processed_output = processOutput($app, $html_output);
@@ -97,6 +100,36 @@ function parseAllMessageData($app, array $messages)
             array_push($parsedMessages,$idstring);
         }
             return $parsedMessages;}
+}
+function RetrieveNumUnacknowledgedmeetings($app, $email)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $time = time();
+
+    $value = $DetailsModel->getUnacceptedMeeting($app, $email, $time);
+    $downloadMessages = [];
+    if($value<0){
+        return "no  messages";
+    }else{
+        for($i =1; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getUnacceptedMeetingDetails($app, $email, $time ,$i);;
+            //var_dump($idstring);
+            array_push($downloadMessages,$idstring);
+        }
+        //array_pop($downloadMessages);
+       // var_dump($downloadMessages);
+        return $downloadMessages;}
 }
 
 function RetrieveNumMessageData($app, $email)

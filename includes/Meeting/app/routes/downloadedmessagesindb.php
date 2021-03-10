@@ -11,7 +11,7 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->post('/downloadedmessagesindb', function(Request $request, Response $response) use ($app)
+$app->get('/downloadedmessagesindb', function(Request $request, Response $response) use ($app)
 {
     if(!isset($_SESSION['username']))
     {
@@ -21,7 +21,44 @@ $app->post('/downloadedmessagesindb', function(Request $request, Response $respo
             'homepageform.html.twig');
         return $html_output->withHeader('Location', LANDING_PAGE);
     }
+
     $email = $_SESSION['username'];
+    $tainted_MiD = $_GET["MiD"];
+    $cleaned_MiD = cleanupParameters($app, $tainted_MiD);
+    $values = RetrieveMeetingData($app,$email,$cleaned_MiD);
+    //var_dump($cleaned_MiD);
+    if($cleaned_MiD[0] == "0"){
+        $message_content = makeM2MUpdate($email, $cleaned_MiD, $values);
+        $cleaned_MiD = substr($cleaned_MiD,1);
+        $numberToMessage = RetrieveHostNumber($app,$values);
+        deleteMeetingData($app, $email,$cleaned_MiD);
+
+        //var_dump($message_content);
+        var_dump($numberToMessage);
+        sendM2MUpdate($app, $message_content, $numberToMessage);
+        $error = "Meeting Invite declined";
+        $_SESSION['error'] = $error;
+        $html_output =  $this->view->render($response,
+            'downloadmessageselect.html.twig');
+        return $html_output->withHeader('Location', LANDING_PAGE . '/downloadedmessageselect');
+    }
+
+    else{
+//        var_dump($cleaned_MiD);
+//        var_dump($email);
+        UpdateMeetingData($app, $email,$cleaned_MiD);
+        $numberToMessage = RetrieveHostNumber($app,$values);
+        $message_content = makeM2MUpdate($email, $cleaned_MiD, $values);
+       // var_dump($message_content);
+       // var_dump($numberToMessage);
+        sendM2MUpdate($app, $message_content, $numberToMessage);
+        $error = "";
+        $_SESSION['error'] = $error;
+        $html_output =  $this->view->render($response,
+            'downloadmessageselect.html.twig');
+        return $html_output->withHeader('Location', LANDING_PAGE . '/downloadedmessageselect');
+    }
+
     $error = '';
     $input = $request->getParsedBody()['messagedb'];
       $inputint = (int)$input;
@@ -33,8 +70,8 @@ $app->post('/downloadedmessagesindb', function(Request $request, Response $respo
         $pos = $inputint;
     }
 
-    $values =  RetrieveMessageData($app, $email,$pos);
-
+    $values =  [];//RetrieveMessageData($app, $email,$pos);
+    $values = RetrieveMeetingData($app,$email,$cleaned_MiD);
     $html_output = $this->view->render($response,
         'downloadedmessagesindb.html.twig',
         [
@@ -43,17 +80,13 @@ $app->post('/downloadedmessagesindb', function(Request $request, Response $respo
             'initial_input_box_value' => null,
             'page_title' => APP_NAME,
             'page_heading_1' => APP_NAME,
-            'page_heading_2' => 'Download',
-            'switch1' => 'Switch 1 state: '.$values[0],
-            'switch2' => 'Switch 2 state: '.$values[1],
-            'switch3' => 'Switch 3 state: '.$values[2],
-            'switch4' => 'Switch 4 state: '.$values[3],
-            'fan' => 'Fan state: '.$values[4],
-            'temperature' => 'Temperature: '.$values[5],
-            'lastdigit' => 'Last digit entered: '.$values[6],
-            'datetime' => ' Date/Time received: '.$values[7],
-            'sendernum' => 'Number of sender: '.$values[8],
-            'email' => ' Email of sender: '.$email,
+            'page_heading_2' => 'Meeting Details',
+            'switch1' => 'Meeting Id: '. $cleaned_MiD,
+            'switch2' => 'Meeting date: '.$values[1],
+            'switch3' => 'Start time: '.$values[2],
+            'switch4' => 'Duration: '.$values[3],
+
+            'email' => ' Host: '.$values[6],
             'error'=> $error,
             'Send' => LANDING_PAGE . '/downloadedmessageselect',
         ]);
@@ -64,7 +97,33 @@ $app->post('/downloadedmessagesindb', function(Request $request, Response $respo
 
 })->setName('downloadedmessages');
 
-function RetrieveMessageData($app, $email,$pos)
+function cleanupParameters($app, $tainted_MiD)
+{
+    $cleaned_MiD = [];
+    $validator = $app->getContainer()->get('validator');
+
+    $cleaned_MiD = $validator->sanitiseString($tainted_MiD);
+
+    return $cleaned_MiD;
+}
+function makeM2MUpdate($email,$cleaned_MiD, $values){
+    if ($cleaned_MiD[0] == "0"){
+    $M2MString = 'User: '.$email . ' has declined your meeting invite';
+    }
+    else{
+        $M2MString = 'User: '.$email . ' has accepted your meeting invite for '.$values[1] . ' at '.$values[2];
+    }
+    return $M2MString;
+}
+
+function sendM2MUpdate($app, $message_content, $numberToSend){
+    var_dump("+".$numberToSend[0]);
+    $SoapWrapper = $app->getContainer()->get('SoapWrapper');
+    $soap_client_handle = $SoapWrapper->createSoapClient();
+    $soap_client_handle->sendMessage('20_2414628', 'PublicPassword12',"+".$numberToSend[0],$message_content,false,"SMS");
+}
+
+function RetrieveMeetingData($app, $email,$MiD)
 {
     $value = [];
     $store_data_result = null;
@@ -79,7 +138,61 @@ function RetrieveMessageData($app, $email,$pos)
     $DetailsModel->setSqlQueries($sql_queries);
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
-    $value = $DetailsModel->getEmailBySender($app, $email,$pos);
+    $value = $DetailsModel->getMeetingById($app, $email,$MiD);
     return $value;
+}
+function RetrieveHostNumber($app, $values)
+{
+    $value = [];
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    var_dump($values[6]);
+    $value = $DetailsModel->getHostNumber($app, $values[6]);
+
+    return $value;
+}
+
+function UpdateMeetingData($app, $MiD, $email)
+{
+    $store_data_result = null;
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $DetailsModel->updateMeetingAck($app, $email,$MiD);
+
+}
+
+function deleteMeetingData($app, $MiD, $email)
+{
+    $store_data_result = null;
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $DetailsModel->deleteMeetingUser($app, $email,$MiD);
+
 }
 
