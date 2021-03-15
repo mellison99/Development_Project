@@ -1,0 +1,26 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+
+    <title></title>
+</head>
+<p class="curr_page"><a href="{{ landing_page }}">Home</a>
+<p class="curr_page"><a href="{{ upcoming_meetings }}">Scheduled Meetings</a>
+<p class="curr_page"><a href="{{ meeting_requests }}">New Meeting Requests</a>
+<p class="curr_page"><a href="{{ landing_page }}">Preferences and account settings</a></p>
+<body>
+
+<div id="page-content-div">
+
+
+
+{% for code, name in upcomingMeetings %}
+    <h4 value="{{code}}"> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes</h4>
+{% endfor %}
+</div>
+</body>
+</html>
+{% endblock %}
