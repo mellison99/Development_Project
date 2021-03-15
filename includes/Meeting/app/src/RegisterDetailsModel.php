@@ -275,6 +275,47 @@ class RegisterDetailsModel
         }
         return $value;
     }
+    public function getUpcomingMeetingsByUserCount($app, $email, $start)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getUpcomingMeetingByUser();
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_start' => $start,
+            ':meeting_ack' => 1,
+            ':user_email_2' => $email,
+            ':meeting_start_2' => $start
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $results = $this->database_wrapper->countRows();
+        return $results;
+    }
+    public function getUpcomingMeetingsByUser($app, $email, $start,$pos)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getUpcomingMeetingByUser();
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_start' => $start,
+            ':meeting_ack' => 1,
+            ':user_email_2' => $email,
+            ':meeting_start_2' => $start
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        //var_dump($this->database_wrapper->safeFetchRow());
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+            //var_dump($value);
+        }
+        return $value;
+    }
 
     public function getUnacceptedMeeting($app, $email, $time)
     {
