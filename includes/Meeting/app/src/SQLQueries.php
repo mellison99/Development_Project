@@ -85,6 +85,33 @@ class SQLQueries
         return $query_string;
     }
 
+    public function  createNewMeetingRecursion()
+    {
+        $query_string = "INSERT INTO meeting_recursion ";
+        $query_string .= "SET ";
+        $query_string .= "recursionId = :Id,";
+        $query_string .= "recursion_type = :recursion_type,";
+        $query_string .= "recursion_active = :recursion_active,";
+        $query_string .= "meetingId = :meetingId;";
+        return $query_string;
+    }
+
+    public function  createNewEvent()
+    {
+        $query_string = "INSERT INTO event_data ";
+        $query_string .= "SET ";
+        $query_string .= "eventId = :eventId,";
+        $query_string .= "event_start_time = :event_start_time,";
+        $query_string .= "event_duration = :event_duration,";
+        $query_string .= "event_description = :event_description,";
+        $query_string .= "event_date = :event_date,";
+        $query_string .= "event_day = :event_day,";
+        $query_string .= "event_month = :event_month,";
+        $query_string .= "event_active = :event_active,";
+        $query_string .= "user_email = :user_email;";
+        return $query_string;
+    }
+
 
     public function checkTimePresent()
     {

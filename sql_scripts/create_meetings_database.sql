@@ -59,6 +59,7 @@ CREATE TABLE `event_data`(
 `event_date` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 `event_day` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 `event_month` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+`event_active` tinyint(1) NOT NULL,
 `user_email` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 PRIMARY KEY (`eventId`),
 CONSTRAINT `fk_teacher_email`
@@ -69,12 +70,11 @@ ON DELETE CASCADE
 
 CREATE TABLE `meeting_recursion`(
 `recursionId` int(4) NOT NULL AUTO_INCREMENT,
-`event_date` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-`event_day` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
-`event_month` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+`recursion_type` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+`recursion_active` tinyint(1) NOT NULL,
 `meetingId` int(11) NOT NULL,
-PRIMARY KEY (`eventId`),
-CONSTRAINT `fk_teacher_email`
+PRIMARY KEY (`recursionId`),
+CONSTRAINT `fk_meeting_dataId`
 FOREIGN KEY (meetingId) REFERENCES meeting_data(meetingId)
 ON DELETE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

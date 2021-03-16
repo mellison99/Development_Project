@@ -32,6 +32,11 @@
 <body>
 
 <div id="page-content-div">
+    <h3>{{ page_heading_2 }}</h3>
+    {{ error }}
+    <br>
+    <form action="{{ action }}" method="{{ method }}">
+        <br>
     <label for="time">Event start time:</label>
     <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
     <br><br>
@@ -72,10 +77,12 @@
     </div>
     <br><br>
 
-    <input type="submit"  value="Save Event" href = "{{ Send }}"></a>
-
+    <input type="submit"  value="Save Event" href = "{{save_event}}"></a>
+    </form>
 
 </div>
+</body>
+</html>
     <script>
         var coll = document.getElementsByClassName("collapsible");
         var i;
@@ -92,7 +99,6 @@
             });
         }
     </script>
-</body>
-</html>
+
 
 {% endblock %}

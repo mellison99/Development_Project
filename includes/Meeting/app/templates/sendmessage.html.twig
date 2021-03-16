@@ -55,7 +55,20 @@
 
                 <label for="notes">Subject:</label>
                 <input id="notes" name="notes" type="string" value="{{ initial_input_box_value }}" size="30" maxlength="140">
-                <br><br>
+
+                <br>
+                <p>Set to repeat:
+                <input type="radio" id="never" name="repeat" value="never" checked="checked">
+                <label for="never">Never</label>
+                <input type="radio" id="weekly" name="repeat" value="weekly" >
+                <label for="weekly">Weekly</label>
+                <input type="radio" id="monthly" name="repeat" value="monthly">
+                <label for="monthly">Monthly</label>
+                <input type="radio" id="annually" name="repeat" value="annually">
+                <label for="annually">Annually</label>
+                    <br>
+    </p>
+                <br>
                 <input type="submit"  value="Send" href = "{{ Send }}"></a>
             </fieldset>
         </form>

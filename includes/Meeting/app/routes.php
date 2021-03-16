@@ -22,6 +22,7 @@ require 'routes/downloadmessageselect.php';
 require 'routes/calendar.php';
 require 'routes/upcomingmeetings.php';
 require 'routes/events.php';
+require 'routes/eventspost.php';
 
 
 

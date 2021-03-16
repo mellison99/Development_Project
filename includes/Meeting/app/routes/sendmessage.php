@@ -26,7 +26,6 @@ $app->post(
         $email = ($_SESSION['username']);
         $error = "";
         $tainted_parameters = $request->getParsedBody();
-
         try
         {
             //$taintedDigit = (int)$tainted_parameters['lastNumber'];
@@ -100,6 +99,7 @@ $app->post(
             $meetingID = 2;
             storeMeetingDetails($app, $cleaned_parameters, $email);
             storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
+            storeMeetingRecursion($app,$cleaned_parameters);
             $amountOfNumbers = count($numbersToMessage);
             //var_dump($amountOfNumbers);
             //var_dump($numbersToMessage[0]);
@@ -150,11 +150,13 @@ function cleanupParameters1($app, $tainted_parameters)
     $tainted_time = $tainted_parameters['time'];
     $tainted_duration = $tainted_parameters['duration'];
     $tainted_notes = $tainted_parameters['notes'];
+    $tainted_repeat = $tainted_parameters['repeat'];
     $tainted_users = $tainted_parameters['name'];
     $cleaned_parameters['sanitised_time'] = $validator->sanitiseString($tainted_time);
     $cleaned_parameters['sanitised_duration'] = $validator->sanitiseString($tainted_duration);
     $cleaned_parameters['sanitised_Id'] = time();
     $cleaned_parameters['sanitised_notes'] = $validator->sanitiseString($tainted_notes);
+    $cleaned_parameters['sanitised_repeat'] = $validator->sanitiseString($tainted_repeat);
     $sanitised_users = [];
     //var_dump($tainted_users[0]);
     $value = sizeOf($tainted_users)-1;
@@ -286,6 +288,28 @@ function storeMeetingDetails($app, array $cleaned_parameters, string $email)
 
 
 }
+function storeMeetingRecursion($app,$cleaned_parameters)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+
+    $DetailsModel->setMeetingRecursionDetails($app, $cleaned_parameters);
+
+
+
+}
+
+
 
 function storeMeetingUserDetails($app, array $cleaned_parameters, $meetingID)
 {

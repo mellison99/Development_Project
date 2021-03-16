@@ -131,6 +131,45 @@ class RegisterDetailsModel
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
 
+    public function setMeetingRecursionDetails($app, $cleaned_parameters)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->createNewMeetingRecursion();
+        $query_parameters = [
+            ':Id' => 1,
+            ':recursion_type' => $cleaned_parameters['sanitised_repeat'],
+            ':recursion_active' => 1,
+            ':meetingId' => $cleaned_parameters['sanitised_Id']
+
+        ];
+        //var_dump($query_string);
+        //var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+    public function setEventDetails($app, $cleaned_parameters)
+    {
+
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->createNewEvent();
+        $query_parameters = [
+            ':eventId' => 1,
+            ':event_start_time' => $cleaned_parameters['sanitised_time'],
+            ':event_duration' => $cleaned_parameters['sanitised_duration'],
+            ':event_description' => $cleaned_parameters['sanitised_description'],
+            ':event_date' => $cleaned_parameters['sanitised_date'],
+            ':event_day' => $cleaned_parameters['sanitised_dayOfWeek'],
+            ':event_month' => $cleaned_parameters['sanitised_monthInYear'],
+            ':event_active' => 1,
+            ':user_email' => $cleaned_parameters['sanitised_email']
+
+        ];
+        //var_dump($query_string);
+        //var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
     public function updateMeetingAck($app,$meetingID,$user)
     {
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
