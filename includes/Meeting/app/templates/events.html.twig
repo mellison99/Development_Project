@@ -1,0 +1,98 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+<html lang="en">
+<style>
+    .collapsible {
+        cursor: pointer;
+        padding: 12px;
+        color: black;
+        background: rgba(102,102,153,0.5);
+        border: none;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .active, .collapsible:hover {
+
+    }
+
+    .content {
+        display: none;
+        overflow: hidden;
+    }
+</style>
+<head>
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+    <title></title>
+</head>
+<p class="curr_page"><a href="{{ landing_page }}">Home</a>
+<p class="curr_page"><a href="{{ upcoming_meetings }}">Scheduled Meetings</a>
+<p class="curr_page"><a href="{{ meeting_requests }}">New Meeting Requests</a>
+<p class="curr_page"><a href="{{ landing_page }}">Preferences and account settings</a></p>
+<body>
+
+<div id="page-content-div">
+    <label for="time">Event start time:</label>
+    <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
+    <br><br>
+    <label for="time">Event duration (minutes):</label>
+    <input id="duration" name="duration" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
+    <br><br>
+    <label for="description">Event description:</label>
+    <input id="description" name="description" type="string" value="{{ initial_input_box_value }}" size="15" maxlength="30">
+    <br><br>
+    <button type="button" class="collapsible">Set event for date</button>
+    <div class="content">
+        <p>Sets event to repeat by the date specified</p>
+        <input id="date" name="date" type="int" value="{{ initial_input_box_value }}" size="4" maxlength="2">
+    </div>
+    <br><br>
+    <button type="button" class="collapsible">Set event for day</button>
+    <div class="content">
+        <p>Sets event to repeat by the day of the week specified</p>
+        <select name="dayOfWeek">
+            <option value="" selected>Select a day</option>
+            {% for code, name in weekdays %}
+                <option value="{{code}}">{{name}}</option>
+            {% endfor %}
+        </select>
+
+    </div>
+    <br><br>
+    <button type="button" class="collapsible">Set event for month</button>
+    <div class="content">
+        <p>Sets event to repeat on entire month specified</p>
+        <select name="monthInYear">
+            <option value="" selected>Select a month</option>
+            {% for code, name in months %}
+                <option value="{{code}}">{{name}}</option>
+            {% endfor %}
+        </select>
+
+    </div>
+    <br><br>
+
+    <input type="submit"  value="Save Event" href = "{{ Send }}"></a>
+
+
+</div>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+{% endblock %}
