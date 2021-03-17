@@ -20,8 +20,8 @@ $app->get('/events', function (Request $request, Response $response) use ($app) 
             'homepageform.html.twig');
         return $html_output->withHeader('Location', LANDING_PAGE);
     }
-    $listOfWeekDays = ['Monday','Tuesday','Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'];
-    $listOfMonths = ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    $listOfWeekDays = ['Non','Monday','Tuesday','Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'];
+    $listOfMonths = ['Non','January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     $html_output = $this->view->render($response,
         'events.html.twig',

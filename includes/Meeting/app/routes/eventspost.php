@@ -80,16 +80,16 @@ function cleanupParameter($app, $tainted_parameters)
     $tainted_duration = $tainted_parameters['duration'];
     $tainted_description = $tainted_parameters['description'];
     $tainted_date = $tainted_parameters['date'];
-    $tainted_day = $tainted_parameters['dayOfWeek'];
-    $tainted_month = $tainted_parameters['monthInYear'];
+    $tainted_day = (int)$tainted_parameters['dayOfWeek'];
+    $tainted_month = (int)$tainted_parameters['monthInYear'];
 
     $cleaned_parameters['sanitised_email'] = $validator->sanitiseString($tainted_email);
     $cleaned_parameters['sanitised_time'] = $validator->sanitiseString($tainted_time);
     $cleaned_parameters['sanitised_duration'] = $validator->sanitiseString($tainted_duration);
     $cleaned_parameters['sanitised_description'] = $validator->sanitiseString($tainted_description);
     $cleaned_parameters['sanitised_date'] = $validator->sanitiseString($tainted_date);
-    $cleaned_parameters['sanitised_dayOfWeek'] = $validator->sanitiseString($tainted_day);
-    $cleaned_parameters['sanitised_monthInYear'] = $validator->sanitiseString($tainted_month);
+    $cleaned_parameters['sanitised_dayOfWeek'] = $tainted_day;
+    $cleaned_parameters['sanitised_monthInYear'] = $tainted_month;
     return $cleaned_parameters;
 
 }

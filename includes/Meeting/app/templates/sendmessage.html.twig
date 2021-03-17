@@ -24,6 +24,21 @@
                 {% for code, name in meetingsOnDate %}
                     <h4 value="{{code}}">{{name[0]}} for {{ name[2] }} minutes</h4>
                 {% endfor %}
+            {% for code, name in RepeatingmeetingsOnDate %}
+                <h4 value="{{code}}">{{name}}</h4>
+            {% endfor %}
+
+            <br><br>
+            Events today
+            {% for code, name in eventsOnDateByMonth %}
+                <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
+            {% endfor %}
+            {% for code, name in eventsOnDateByDate %}
+                <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
+            {% endfor %}
+            {% for code, name in eventsOnDateByDay %}
+                <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes </h4>
+            {% endfor %}
                 <br>
                 <br>
             <p>{{ error }}</p>

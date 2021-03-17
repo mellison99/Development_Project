@@ -89,7 +89,6 @@ class SQLQueries
     {
         $query_string = "INSERT INTO meeting_recursion ";
         $query_string .= "SET ";
-        $query_string .= "recursionId = :Id,";
         $query_string .= "recursion_type = :recursion_type,";
         $query_string .= "recursion_active = :recursion_active,";
         $query_string .= "meetingId = :meetingId;";
@@ -100,7 +99,6 @@ class SQLQueries
     {
         $query_string = "INSERT INTO event_data ";
         $query_string .= "SET ";
-        $query_string .= "eventId = :eventId,";
         $query_string .= "event_start_time = :event_start_time,";
         $query_string .= "event_duration = :event_duration,";
         $query_string .= "event_description = :event_description,";
@@ -111,6 +109,36 @@ class SQLQueries
         $query_string .= "user_email = :user_email;";
         return $query_string;
     }
+
+    public function  checkEventByDayUser()
+    {
+        $query_string = "SELECT event_start_time, event_duration, event_description ";
+        $query_string .= "FROM event_data ";
+        $query_string .= "WHERE event_day = :event_day ";
+        $query_string .= "AND user_email = :user_email ";
+        $query_string .= "AND event_active = :event_active;";
+        return $query_string;
+    }
+
+    public function  checkEventByDateUser()
+    {
+        $query_string = "SELECT event_start_time, event_duration, event_description ";
+        $query_string .= "FROM event_data ";
+        $query_string .= "WHERE event_date = :event_date ";
+        $query_string .= "AND user_email = :user_email ";
+        $query_string .= "AND event_active = :event_active;";
+        return $query_string;
+    }
+    public function  checkEventByMonthUser()
+    {
+        $query_string = "SELECT event_start_time, event_duration, event_description ";
+        $query_string .= "FROM event_data ";
+        $query_string .= "WHERE event_month = :event_month ";
+        $query_string .= "AND user_email = :user_email ";
+        $query_string .= "AND event_active = :event_active;";
+        return $query_string;
+    }
+
 
 
     public function checkTimePresent()
@@ -165,23 +193,6 @@ class SQLQueries
     }
 
 
-
-    public function  createNewMessage()
-    {
-        $query_string = "INSERT INTO message_test_data ";
-        $query_string .= "SET ";
-        $query_string .= "switch_1 = :switch_1,";
-        $query_string .= "switch_2 = :switch_2,";
-        $query_string .= "switch_3 = :switch_3,";
-        $query_string .= "switch_4 = :switch_4,";
-        $query_string .= "fan = :fan,";
-        $query_string .= "temperature = :temperature,";
-        $query_string .= "last_digit = :last_digit,";
-        $query_string .= "message_receiver = :message_receiver,";
-        $query_string .= "date_time_received = :date_time_received,";
-        $query_string .= "sender_email_address = :sender_email_address;";
-        return $query_string;
-    }
     public static function getMeetingByDateUser()
     {
         $query_string  = "SELECT DISTINCT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email " ;
@@ -194,6 +205,40 @@ class SQLQueries
 
         return $query_string;
     }
+    public static function getRecurringMeetingsHost()
+    {
+        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type " ;
+        $query_string .= "FROM meeting_data  ";
+        $query_string .= "JOIN meeting_recursion on meeting_data.meetingId = meeting_recursion.meetingId ";
+        $query_string .= "WHERE meeting_data.meeting_host = :meeting_host  ";
+        $query_string .= "AND meeting_recursion.recursion_active = :active;";
+
+
+        return $query_string;
+    }
+
+    public static function getIdForRecurringMeeting()
+    {
+        $query_string  = "SELECT meeting_user.meetingId " ;
+        $query_string .= "FROM meeting_user  ";
+        $query_string .= "JOIN meeting_recursion on meeting_user.meetingId = meeting_recursion.meetingId ";
+        $query_string .= "WHERE meeting_user.user_email = :user_email  ";
+        $query_string .= "AND meeting_recursion.recursion_active = :active ";
+        $query_string .= "AND meeting_user.meeting_ack = :acknowledged;";
+
+
+        return $query_string;
+    }
+    public static function getStartDurationById()
+    {
+        $query_string  = "SELECT meeting_host " ;
+        $query_string .= "FROM meeting_data  ";
+        $query_string .= "WHERE meetingId = :MId ;";
+
+        return $query_string;
+    }
+
+
 
     public static function getUpcomingMeetingByUser()
     {
@@ -204,6 +249,7 @@ class SQLQueries
         $query_string .= "AND meeting_user.meeting_ack = :meeting_ack ";
         $query_string .= " OR meeting_data.meeting_host = :user_email_2 ";
         $query_string .= "AND meeting_data.meeting_start > :meeting_start_2 ";
+        $query_string .= "ORDER BY meeting_data.meeting_start DESC;";
 
         return $query_string;
     }
