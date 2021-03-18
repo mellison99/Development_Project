@@ -661,7 +661,7 @@ class RegisterDetailsModel
         if ($this->database_wrapper->countRows() >= 0)
         {
             $value = $this->database_wrapper->safeFetchRow();
-            var_dump($value);
+            //var_dump($value);
         }
 
         return $value;

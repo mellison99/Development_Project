@@ -302,7 +302,7 @@ function getRecurringMeetingParticipantDetails($app, $meetingIDtoSearch){
 
 
         }
-        array_pop($recurringMeeting);
+        //array_pop($recurringMeeting);
         return $recurringMeeting;
 
 
