@@ -207,7 +207,7 @@ class SQLQueries
     }
     public static function getRecurringMeetingsHost()
     {
-        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type " ;
+        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type, meeting_data.notes, meeting_data.meeting_time " ;
         $query_string .= "FROM meeting_data  ";
         $query_string .= "JOIN meeting_recursion on meeting_data.meetingId = meeting_recursion.meetingId ";
         $query_string .= "WHERE meeting_data.meeting_host = :meeting_host  ";
@@ -242,7 +242,8 @@ class SQLQueries
 
     public static function getUpcomingMeetingByUser()
     {
-        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email " ;
+        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, 
+        meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.notes  " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= "AND meeting_data.meeting_start > :meeting_start ";
@@ -279,21 +280,6 @@ class SQLQueries
         return $query_string;
     }
 
-    public function getMessageBySimID()
-    {
-        $query_string  = "SELECT switch_1, switch_2, switch_3, switch_4, fan, temperature, last_digit, date_time_received, message_receiver, user_sim ";
-        $query_string .= "FROM message_data  ";
-        $query_string .= "WHERE message_data.user_sim = :user_sim;";
-        return $query_string;
-    }
-
-    public function getMessageBySenderEmail()
-    {
-        $query_string  = "SELECT switch_1, switch_2, switch_3, switch_4, fan, temperature, last_digit, date_time_received, message_receiver ";
-        $query_string .= "FROM message_test_data  ";
-        $query_string .= "WHERE sender_email_address = :sender_email_address;";
-        return $query_string;
-    }
 
     public static function getEmail()
     {
@@ -303,30 +289,7 @@ class SQLQueries
         return $query_string;
     }
 
-    public function getSimId()
-    {
-        $query_string  = "SELECT user_sim ";
-        $query_string .= "FROM meta_data  ";
-        $query_string .= "WHERE user_email = :user_email;";
-        return $query_string;
-    }
 
-    public function getSimbyEmail()
-    {
-        $query_string  = "SELECT user_sim ";
-        $query_string .= "FROM user_data  ";
-        $query_string .= "WHERE user_email = :sender_email;";
-        return $query_string;
-    }
-    public function addMetaData()
-    {
-        $query_string = "INSERT INTO meta_data ";
-        $query_string .= "SET ";
-        $query_string .= "user_sim_id = :user_sim_id, ";
-        $query_string .= "user_email = :user_email_address, ";
-        $query_string .= "user_name = :user_name;";
-        return $query_string;
-    }
     public static function checkSessionID()
     {
         $query_string  = "SELECT user_session_id ";
@@ -369,11 +332,4 @@ class SQLQueries
         return $query_string;
     }
 
-    public function checkNumberPresent()
-    {
-        $query_string  = "SELECT user_sim_id ";
-        $query_string .= "FROM meta_data ";
-        $query_string .= "WHERE user_sim_id = :user_sim_id;";
-        return $query_string;
-    }
 }

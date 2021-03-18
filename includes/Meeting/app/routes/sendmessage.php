@@ -330,7 +330,12 @@ function storeMeetingUserDetails($app, array $cleaned_parameters, $meetingID)
     for($i =0; $i<=$value; $i++){
         $user = $userList[$i];
         $DetailsModel->setMeetingUserDetails($app, $cleaned_parameters, $meetingID, $user);
-        //var_dump(getNumberbyUser($app,$user));
+        $headers = 'From: MeetingOrganiser@email.com' . "\r\n" .
+            'Reply-To: MeetingOrganiser@email.com' . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+        mail ( $user , $cleaned_parameters['sanitised_notes'] , "New meeting at: ".
+            $cleaned_parameters['sanitised_time']. " for: ". $cleaned_parameters['sanitised_duration'] . "on: ".$_SESSION['date'] .
+            "host: ".$_SESSION['username'], $headers);
     }
 
 }
