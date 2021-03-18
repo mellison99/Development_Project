@@ -44,42 +44,15 @@ $error = $_SESSION['error'];
         $arrayOfHostedRepeatMeetings = getRecurringMeetingHost($app,$_SESSION['username']);
         $meetingIDtoSearch = getRecurringMeetingParticipant($app,$_SESSION['username']);
         $recurringmeetingDetails = getRecurringMeetingParticipantDetails($app, $meetingIDtoSearch);
-
-        //var_dump($arrayOfHostedRepeatMeetings);
-        $repeatingMeetings = [];
-        $numOfRepeatHostedMeetings = sizeof($arrayOfHostedRepeatMeetings);
-        for($i =0; $i<=$numOfRepeatHostedMeetings-1 ; $i++){
-            $repeatInfo = getdate($arrayOfHostedRepeatMeetings[$i][1]);
-            if($arrayOfHostedRepeatMeetings[$i][3] == "weekly") {
-
-                if($repeatInfo['wday'] == getdate($starttime)['wday'] ){
-                //var_dump("add weekly");
-                    $mins = str_pad ( $repeatInfo['minutes'] , 2 , "0" ,  STR_PAD_LEFT);
-                    $infoString = $repeatInfo['hours'] .":". $mins. " for " . $arrayOfHostedRepeatMeetings[$i][2]." minutes";
-                    array_push($repeatingMeetings,$infoString);
-
-            }}
-            if($arrayOfHostedRepeatMeetings[$i][3] == "monthly") {
-                if($repeatInfo['mday'] == getdate($starttime)['mday'] ){
-                    $mins = str_pad ( $repeatInfo['minutes'] , 2 , "0" ,  STR_PAD_LEFT);
-                    $infoString = $repeatInfo['hours'] .":". $mins. " for " . $arrayOfHostedRepeatMeetings[$i][2]." minutes";
-                    array_push($repeatingMeetings,$infoString);
-
-                }
-            }
-            if($arrayOfHostedRepeatMeetings[$i][3] == "annually") {
-
-                if($repeatInfo['yday'] == getdate($starttime)['yday'] ){
-                    $mins = str_pad ( $repeatInfo['minutes'] , 2 , "0" ,  STR_PAD_LEFT);
-                    $infoString = $repeatInfo['hours'] .":". $mins. " for " . $arrayOfHostedRepeatMeetings[$i][2] . " minutes";
-                    array_push($repeatingMeetings,$infoString);
-                }
-            }
-        }
         $meetingIDtoSearch = getRecurringMeetingParticipant($app,$_SESSION['username']);
+        $recurringmeetingDetails2 = getRecurringMeetingParticipantDetails($app, $meetingIDtoSearch)[0];
 
-        $recurringmeetingDetails = getRecurringMeetingParticipantDetails($app, $meetingIDtoSearch);
-        var_dump($recurringmeetingDetails);
+        $recurringWhereHost = sortRecurringMeetings($arrayOfHostedRepeatMeetings,$starttime);
+
+        $recurringWhereParticipant = sortRecurringMeetings($recurringmeetingDetails2,$starttime);
+
+
+
         $eventsOnDay = getEventbyDayUser($app,$_SESSION['username'],$weekdayVal);
         $eventsInMonth =getEventbyMonthUser($app,$_SESSION['username'],$monthVal);
         $eventsOnDate =getEventbyDateUser($app,$_SESSION['username'],$dateVal);
@@ -99,7 +72,8 @@ $error = $_SESSION['error'];
                 'Send' => LANDING_PAGE . '/sendmessage',
                 'Calendar' => LANDING_PAGE . '/calendar',
                 'meetingsOnDate'=>$test,
-                'RepeatingmeetingsOnDate'=>$repeatingMeetings,
+                'RepeatingmeetingsOnDate'=>$recurringWhereHost,
+                'RepeatingmeetingsOnDate2' =>$recurringWhereParticipant,
                 'eventsOnDateByMonth'=>$eventsInMonth,
                 'eventsOnDateByDate'=>$eventsOnDate,
                 'eventsOnDateByDay'=>$eventsOnDay,
@@ -333,5 +307,44 @@ function getRecurringMeetingParticipantDetails($app, $meetingIDtoSearch){
 
 
     }
+}
+function sortRecurringMeetings($arrayOfHostedRepeatMeetings,$starttime ){
+    $repeatingMeetings = [];
+    $numOfRepeatHostedMeetings = sizeof($arrayOfHostedRepeatMeetings);
+    for($i =0; $i<=$numOfRepeatHostedMeetings-1 ; $i++){
+        $repeatInfo = getdate($arrayOfHostedRepeatMeetings[$i][1]);
+
+        if($arrayOfHostedRepeatMeetings[$i][3] == "weekly") {
+
+            if($repeatInfo['wday'] == getdate($starttime)['wday'] ){
+                //var_dump("add weekly");
+                $mins = str_pad ( $repeatInfo['minutes'] , 2 , "0" ,  STR_PAD_LEFT);
+                $infoString = $repeatInfo['hours'] .":". $mins. " for " . $arrayOfHostedRepeatMeetings[$i][2]." minutes ". "weekly";
+                array_push($repeatingMeetings,$infoString);
+
+            }
+        }
+        if($arrayOfHostedRepeatMeetings[$i][3] == "monthly") {
+            if($repeatInfo['mday'] == getdate($starttime)['mday'] ){
+
+                $mins = str_pad ( $repeatInfo['minutes'] , 2 , "0" ,  STR_PAD_LEFT);
+                $infoString = $repeatInfo['hours'] .":". $mins. " for " . $arrayOfHostedRepeatMeetings[$i][2]." minutes " . "monthly";
+                array_push($repeatingMeetings,$infoString);
+
+            }
+        }
+        if($arrayOfHostedRepeatMeetings[$i][3] == "annually") {
+
+            if($repeatInfo['yday'] == getdate($starttime)['yday'] ){
+                $mins = str_pad ( $repeatInfo['minutes'] , 2 , "0" ,  STR_PAD_LEFT);
+                $infoString = $repeatInfo['hours'] .":". $mins. " for " . $arrayOfHostedRepeatMeetings[$i][2] . " minutes ". "annually";
+                array_push($repeatingMeetings,$infoString);
+
+            }
+        }
+    }
+
+    return $repeatingMeetings;
+
 }
 

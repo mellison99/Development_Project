@@ -25,6 +25,33 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
     $start = $date[0];
     //var_dump($start);
     $upcomingMeetings = getUpcomingMeetings($app,$email,$start);
+    $repeatMeetings = getRecurringMeetingHostD($app,$email);
+    $searchableId = getRecurringMeetingParticipantD($app, $email);
+    $repeatMeetings2 = getRecurringMeetingParticipantDetailsD($app, $searchableId)[0];
+    $formattedRepeatMeetings = formatRecurringMeetingInfo($repeatMeetings);
+    $formattedRepeatMeetings2 = formatRecurringMeetingInfo($repeatMeetings2);
+    $count = sizeof($repeatMeetings2);
+
+    for($i =0; $i<=$count-1 ; $i++){
+        $repeatInfo = getdate($repeatMeetings2[$i][1]);
+        if($repeatMeetings2[$i][3] == "weekly") {
+            $repeatMeetings2[$i][1] = $repeatInfo['weekday'];
+        }
+        if($repeatMeetings2[$i][3] == "monthly") {
+            $repeatMeetings2[$i][1] = $repeatInfo['mday'];
+        }
+        if($repeatMeetings2[$i][3] == "annually") {
+            $repeatMeetings2[$i][1] = $repeatInfo['mday'] . "/".$repeatInfo['mon'];
+
+
+
+
+        }
+    }
+    //var_dump($repeatMeetings2[0][4]);
+
+    //var_dump($repeatMeetings2);
+
   // var_dump($upcomingMeetings);
 
     $html_output = $this->view->render($response,
@@ -41,6 +68,8 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
             'page_heading_1' => APP_NAME,
             'currentDate' =>date('Y-m-d'),
             'upcomingMeetings' =>$upcomingMeetings,
+            'repeatMeetings1' => $formattedRepeatMeetings,
+            'repeatMeetings2' => $formattedRepeatMeetings2,
         ]);
 
 
@@ -79,6 +108,125 @@ function getUpcomingMeetings($app,$email,$date)
 
         return $downloadMessages;
     }
+}
+
+function getRecurringMeetingHostD($app,$email)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->getRecurringMeetingsHost($app, $email);
+
+
+    $recurringMeeting = [];
+    if($value<0){
+        return "no  meetings";
+    }else{
+        for($i =0; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getRecurringMeetingsHostDetails($app, $email, $i);
+            array_push($recurringMeeting,$idstring);
+
+        }
+        array_pop($recurringMeeting);
+        return $recurringMeeting;
+    }
+}
+
+function getRecurringMeetingParticipantD($app, $email)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->getIdForRecurringMeeting($app, $email);
+    //var_dump($value);
+
+    $recurringMeeting = [];
+    $recurringMeetingId = [];
+    if($value<0){
+        return "no  meetings";
+    }
+    else{
+        for($i =0; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getIdForRecurringMeetingDetails($app, $email, $i);
+            array_push($recurringMeetingId,$idstring[0]);
+
+        }
+        array_pop($recurringMeetingId);
+        return $recurringMeetingId;
+    }
+}
+function getRecurringMeetingParticipantDetailsD($app, $meetingIDtoSearch){
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->getStartDurationById($app, $meetingIDtoSearch );
+    //var_dump($meetingIDtoSearch);
+
+    $recurringMeeting = [];
+
+    if($value<0){
+        return "no  meetings";
+    }
+    else{
+        for($i =0; $i<=$value ; $i++){
+            $detailstring = $DetailsModel->getStartDurationByIdDetails($app, $meetingIDtoSearch[$i], $i);
+
+            array_push($recurringMeeting,getRecurringMeetingHostD($app,$detailstring[0]));
+
+
+
+        }
+        array_pop($recurringMeeting);
+        return $recurringMeeting;
+
+
+    }
+}
+function formatRecurringMeetingInfo($repeatMeetings){
+    $count = sizeof($repeatMeetings);
+
+    for($i =0; $i<=$count-1 ; $i++){
+        $repeatInfo = getdate($repeatMeetings[$i][1]);
+        if($repeatMeetings[$i][3] == "weekly") {
+            $repeatMeetings[$i][1] = $repeatInfo['weekday'];
+        }
+        if($repeatMeetings[$i][3] == "monthly") {
+            $repeatMeetings[$i][1] = $repeatInfo['mday'];
+        }
+        if($repeatMeetings[$i][3] == "annually") {
+            $repeatMeetings[$i][1] = $repeatInfo['mday'] . "/".$repeatInfo['mon'];
+        }
+        if($repeatMeetings[$i][3] == "never") {
+            unset($repeatMeetings[$i]);
+
+        }
+    }
+    return $repeatMeetings;
 }
 
 
