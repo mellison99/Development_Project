@@ -52,8 +52,8 @@ $error = $_SESSION['error'];
         $recurringWhereParticipant = sortRecurringMeetings($recurringmeetingDetails2,$starttime);
 
 
-
-        $eventsOnDay = getEventbyDayUser($app,$_SESSION['username'],$weekdayVal);
+        var_dump($weekdayVal);
+        $eventsOnDay = getEventbyDayUser($app,$_SESSION['username'],$weekdayVal-1);
         $eventsInMonth =getEventbyMonthUser($app,$_SESSION['username'],$monthVal);
         $eventsOnDate =getEventbyDateUser($app,$_SESSION['username'],$dateVal);
         $html_output =  $this->view->render($response,
@@ -119,7 +119,7 @@ function getMeetingbyDateUser($app,$email,$date)
 function getEventbyDayUser($app,$email,$day)
 {
     $store_data_result = null;
-
+    var_dump($day);
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
     $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
@@ -169,14 +169,9 @@ function getEventbyDateUser($app,$email,$date)
     }else{
         for($i =0; $i<=$value-1 ; $i++){
             $idstring = $DetailsModel->checkEventByDateUserDetails($app, $email, $date, $i);
-
-            $test = $DetailsModel->getStartDurationById($app,$idstring[$i][0]);
-
-
+            array_push($eventsByDate,$idstring);
         }
-         array_pop($eventsByDate);
-
-        return $test;
+        return $eventsByDate;
     }
 }
 function getEventbyMonthUser($app,$email,$month)

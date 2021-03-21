@@ -119,6 +119,14 @@ class SQLQueries
         $query_string .= "AND event_active = :event_active;";
         return $query_string;
     }
+    public function  getAllEventDetails()
+    {
+        $query_string = "SELECT event_start_time, event_duration, event_description, event_date, event_day, event_month ";
+        $query_string .= "FROM event_data ";
+        $query_string .= "WHERE user_email = :user_email ";
+        $query_string .= "AND event_active = :event_active;";
+        return $query_string;
+    }
 
     public function  checkEventByDateUser()
     {

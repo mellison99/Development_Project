@@ -89,7 +89,14 @@ function cleanupParameter($app, $tainted_parameters)
     $cleaned_parameters['sanitised_description'] = $validator->sanitiseString($tainted_description);
     $cleaned_parameters['sanitised_date'] = $validator->sanitiseString($tainted_date);
     $cleaned_parameters['sanitised_dayOfWeek'] = $tainted_day;
+    if($cleaned_parameters['sanitised_dayOfWeek'] == 0){
+        $cleaned_parameters['sanitised_dayOfWeek'] = 100;
+    }
     $cleaned_parameters['sanitised_monthInYear'] = $tainted_month;
+    if($cleaned_parameters['sanitised_monthInYear'] == 0){
+        $cleaned_parameters['sanitised_monthInYear'] = 100;
+    }
+
     return $cleaned_parameters;
 
 }

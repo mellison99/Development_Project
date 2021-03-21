@@ -195,6 +195,25 @@ class RegisterDetailsModel
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         return $this->database_wrapper->countRows();
     }
+    public function checkAllEventsByUser($app, $email)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getAllEventDetails();
+        $query_parameters = [
+            ':user_email' => $email,
+            'event_active' => 1
+        ];
+        //var_dump($query_parameters);
+        //var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        return $this->database_wrapper->countRows();
+    }
+
+
+
+
 
     public function checkEventByDayUserDetails($app, $email, $day, $pos): array
     {
@@ -204,6 +223,25 @@ class RegisterDetailsModel
         $query_string = $this->sql_queries->checkEventByDayUser();
         $query_parameters = [
             ':event_day' => $day,
+            ':user_email' => $email,
+            'event_active' => 1
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
+        return $value;
+    }
+    public function getAllEventDetails($app, $email, $pos): array
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getAllEventDetails();
+        $query_parameters = [
             ':user_email' => $email,
             'event_active' => 1
         ];

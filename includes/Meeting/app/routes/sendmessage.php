@@ -27,26 +27,54 @@ $app->post(
         $error = "";
         $tainted_parameters = $request->getParsedBody();
 
-        $yearInString = (substr($_SESSION['date'],0,4));
-        $monthInString=(substr($_SESSION['date'],5,2));
-        $dayInString = (substr($_SESSION['date'],8,2));
-        $monthInInt = (int)$monthInString;
-        $dayInInt = (int)$dayInString;
+
+
+
         $cleaned_parameters = cleanupParameters1($app, $tainted_parameters);
         $StartVal=getdate($cleaned_parameters['sanitised_start'])['hours'].getdate($cleaned_parameters['sanitised_start'])['minutes'];
         $EndVal=getdate($cleaned_parameters['sanitised_end'])['hours'].getdate($cleaned_parameters['sanitised_end'])['minutes'];
         $StartVal = str_pad($StartVal,4,"0",STR_PAD_RIGHT);
         $EndVal = str_pad($EndVal,4,"0",STR_PAD_RIGHT);
         $weekdayVal = (getdate($cleaned_parameters['sanitised_start'])['weekday']);
+        $weekdayIntVal = (getdate($cleaned_parameters['sanitised_start'])['wday']);
         $yearVal = (getdate($cleaned_parameters['sanitised_start'])['yday']);
         $dateVal=(getdate($cleaned_parameters['sanitised_start'])['mday']);
         $monthVal=(getdate($cleaned_parameters['sanitised_start'])['month']);
-        $newMeetingArray =[$StartVal,$EndVal,$weekdayVal,$yearVal,$dateVal,$monthVal];
-        $eventsOnDay2 = getEventbyDayUser2($app,$_SESSION['username'],$weekdayVal);
-        $eventsInMonth2 =getEventbyMonthUser2($app,$_SESSION['username'],$monthVal);
-        $eventsOnDate2 =getEventbyDateUser2($app,$_SESSION['username'],$dateVal);
+        $monthNumVal=(getdate($cleaned_parameters['sanitised_start'])['mon']);
+        $newMeetingArray =[$StartVal,$EndVal,$weekdayVal,$yearVal,$dateVal,$monthVal,$monthNumVal,$weekdayIntVal];
+        $usersToCheck = $cleaned_parameters['sanitised_user'];
+        $eventsToCheck = getEventDetails($app, $_SESSION['username']);
+        $eventCountInTimeslot = checkEventTimeslots($eventsToCheck,$newMeetingArray );
+        if($eventCountInTimeslot != NULL ){
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+        }
+        var_dump(sizeOf($usersToCheck));
+        for ($i =0; $i<sizeOf($usersToCheck); $i++){
+            $eventsToCheck = getEventDetails($app, $usersToCheck[$i]);
+            var_dump($eventsToCheck);
+            $eventCountInTimeslot = checkEventTimeslots($eventsToCheck,$newMeetingArray );
+            var_dump($eventCountInTimeslot);
+            if($eventCountInTimeslot != NULL ){
+                $html_output =  $this->view->render($response,
+                    'sent_message.html.twig');
+                $date = $_SESSION['date'];
+                $_SESSION['error'] = "Event organised at this time";
+                return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+            }
 
-//
+            if(checkRecurringTimeslots($arrayOfHostedRepeatMeetings,$newMeetingArray )>0
+                || checkRecurringTimeslots($recurringmeetingDetails,$newMeetingArray )>0){
+                $html_output =  $this->view->render($response,
+                    'sent_message.html.twig');
+                $date = $_SESSION['date'];
+                return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+            }
+        }
+
+
         $arrayOfHostedRepeatMeetings = getRecurringMeetingHost2($app,$_SESSION['username']);
         $meetingIDtoSearch = getRecurringMeetingParticipant2($app,$_SESSION['username']);
         $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
@@ -58,6 +86,20 @@ $app->post(
                             'sent_message.html.twig');
                         $date = $_SESSION['date'];
                         return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+        }
+        for ($i =0; $i<sizeOf($usersToCheck)-1; $i++){
+            $arrayOfHostedRepeatMeetings = getRecurringMeetingHost2($app,$usersToCheck[$i]);
+            $meetingIDtoSearch = getRecurringMeetingParticipant2($app,$usersToCheck[$i]);
+            $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
+            $recurringmeetingDetails = $recurringmeetingDetails[0];
+
+            if(checkRecurringTimeslots($arrayOfHostedRepeatMeetings,$newMeetingArray )>0
+                || checkRecurringTimeslots($recurringmeetingDetails,$newMeetingArray )>0){
+                $html_output =  $this->view->render($response,
+                    'sent_message.html.twig');
+                $date = $_SESSION['date'];
+                return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+            }
         }
 
         if($_POST['time'] == '' || $_POST['duration'] == '' || $_POST['name'][0] == '' )
@@ -95,11 +137,7 @@ $app->post(
         for($i =0; $i<sizeof($usersAtTimeslotArray)-1; $i++){
 
             for($j =0; $j<sizeof($cleaned_parameters['sanitised_user']); $j++){
-                //var_dump(sizeof($cleaned_parameters['sanitised_user']));
-               // var_dump($usersAtTimeslotArray[$i]);
                 $arrayToSearch = $usersAtTimeslotArray[$i];
-
-                //var_dump($cleaned_parameters['sanitised_user'][$j]);
                 $meetingsattending = $meetingsattending + array_search( $cleaned_parameters['sanitised_user'][$j],$arrayToSearch);
                 $meetingsattending = $meetingsattending + array_search($email, $usersAtTimeslotArray[$i]);
             }
@@ -125,10 +163,10 @@ $app->post(
         else{
             $error = 'Timeslot already booked ' .$meetingsToCheck;
             $_SESSION['error'] = $error;
-//            $html_output =  $this->view->render($response,
-//                'sent_message.html.twig');
-//            $date = $_SESSION['date'];
-//            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
         }
 
         //getSimbyEmail($app, $email);
@@ -412,8 +450,10 @@ function getNumberbyUser($app,$cleaned_parameters)
     }
     return $numbersToMessage;
 }
-function getEventbyDayUser2($app,$email,$day)
+function getEventDetails($app,$email)
 {
+//    var_dump($email);
+//    var_dump($day);
     $store_data_result = null;
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
@@ -426,85 +466,20 @@ function getEventbyDayUser2($app,$email,$day)
     $DetailsModel->setSqlQueries($sql_queries);
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
-    $value = $DetailsModel->checkEventByDayUser($app, $email,$day);
+    $value = $DetailsModel->checkAllEventsByUser($app, $email);
 
 
-    $weekdayEvent = [];
+    $event = [];
     if($value<0){
         return "no  meetings";
     }else{
         for($i =0; $i<=$value ; $i++){
-            $idstring = $DetailsModel->checkEventByDayUserDetails($app, $email, $day, $i);
-            array_push($weekdayEvent,$idstring);
+            $idstring = $DetailsModel->getAllEventDetails($app, $email, $i);
+            array_push($event,$idstring);
 
         }
-        array_pop($weekdayEvent);
-        return $weekdayEvent;
-    }
-}
-function getEventbyDateUser2($app,$email,$date)
-{
-    $store_data_result = null;
-
-    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-    $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-
-    $settings = $app->getContainer()->get('settings');
-    $database_connection_settings = $settings['pdo_settings'];
-
-    $DetailsModel->setSqlQueries($sql_queries);
-    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-    $DetailsModel->setDatabaseWrapper($database_wrapper);
-    $value = $DetailsModel->checkEventByDateUser($app, $email,$date);
-
-
-    $eventsByDate = [];
-    if($value<0){
-        return "no  meetings";
-    }else{
-        for($i =0; $i<=$value-1 ; $i++){
-            $idstring = $DetailsModel->checkEventByDateUserDetails($app, $email, $date, $i);
-
-            $test = $DetailsModel->getStartDurationById($app,$idstring[$i][0]);
-
-
-        }
-        array_pop($eventsByDate);
-
-        return $test;
-    }
-}
-function getEventbyMonthUser2($app,$email,$month)
-{
-    $store_data_result = null;
-
-    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-    $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-
-    $settings = $app->getContainer()->get('settings');
-    $database_connection_settings = $settings['pdo_settings'];
-
-    $DetailsModel->setSqlQueries($sql_queries);
-    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-    $DetailsModel->setDatabaseWrapper($database_wrapper);
-    $value = $DetailsModel->checkEventByMonthUser($app, $email,$month-1);
-
-
-    $monthEvent = [];
-    if($value<0){
-        return "no  meetings";
-    }else{
-        for($i =0; $i<=$value ; $i++){
-            $idstring = $DetailsModel->checkEventByMonthUserDetails($app, $email, $month-1, $i);
-
-            array_push($monthEvent,$idstring);
-
-        }
-        array_pop($monthEvent);
-
-        return $monthEvent;
+        array_pop($event);
+        return $event;
     }
 }
 
@@ -646,6 +621,47 @@ function checkRecurringTimeslots($arrayOfHostedRepeatMeetings,$newMeetingArray )
 
 
     }
+}
+
+function checkEventTimeslots($eventsToCheck,$newMeetingArray ){
+    $eventsAtTime = 0;
+    $StartVal =(int)$newMeetingArray[0];
+    $EndVal = (int)$newMeetingArray[1];
+    $weekdayNumVal = $newMeetingArray[7];
+    $weekdayNumVal = (int) $weekdayNumVal;
+    $dateVal = $newMeetingArray[4];
+    $monthNumVal = $newMeetingArray[6];
+    $timesToLoop = sizeof($eventsToCheck);
+
+    for($i =0; $i<sizeof($eventsToCheck); $i++){
+        $duration = (int) $eventsToCheck[$i][1];
+        if($duration >=60){
+            $duration =(100 * (($duration/60))) + ($duration % 60);
+        }
+        $storedStart =  $eventsToCheck[$i][0][0].$eventsToCheck[$i][0][1].$eventsToCheck[$i][0][3].$eventsToCheck[$i][0][4];
+        $storedStart = (int) $storedStart;
+        $storedEnd = $storedStart+$duration;
+
+            if ($eventsToCheck[$i][3] == $dateVal && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            {
+                $eventsAtTime=$eventsAtTime+1;
+                return $eventsAtTime;
+            }
+
+            if ($eventsToCheck[$i][4] ==  $weekdayNumVal && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            {
+                $eventsAtTime=$eventsAtTime+1;
+                return $eventsAtTime;
+            }
+
+            if ((int)$eventsToCheck[$i][5] ==  $monthNumVal-1 && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            {
+                $eventsAtTime=$eventsAtTime+1;
+                return $eventsAtTime;
+            }
+
+    }
+
 }
 
 
