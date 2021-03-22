@@ -23,6 +23,9 @@ require 'routes/calendar.php';
 require 'routes/upcomingmeetings.php';
 require 'routes/events.php';
 require 'routes/eventspost.php';
+require 'routes/eventView.php';
+require 'routes/eventAction.php';
+
 
 
 
