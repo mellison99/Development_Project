@@ -20,7 +20,8 @@ $app->get('/events', function (Request $request, Response $response) use ($app) 
             'homepageform.html.twig');
         return $html_output->withHeader('Location', LANDING_PAGE);
     }
-    $_SESSION['error'] = "";
+    //var_dump($_SESSION['error']);
+
     $listOfWeekDays = ['Non','Monday','Tuesday','Wednesday', 'Thursday', 'Friday','Saturday', 'Sunday'];
     $listOfMonths = ['Non','January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -45,7 +46,7 @@ $app->get('/events', function (Request $request, Response $response) use ($app) 
             'weekdays'=>$listOfWeekDays,
             'months'=>$listOfMonths,
         ]);
-
+    $_SESSION['error'] = "";
 
     $processed_output = processOutput($app, $html_output);
     return $processed_output;

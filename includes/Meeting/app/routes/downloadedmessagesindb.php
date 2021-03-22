@@ -81,12 +81,6 @@ $app->get('/downloadedmessagesindb', function(Request $request, Response $respon
             'page_title' => APP_NAME,
             'page_heading_1' => APP_NAME,
             'page_heading_2' => 'Meeting Details',
-            'switch1' => 'Meeting Id: '. $cleaned_MiD,
-            'switch2' => 'Meeting date: '.$values[1],
-            'switch3' => 'Start time: '.$values[2],
-            'switch4' => 'Duration: '.$values[3],
-
-            'email' => ' Host: '.$values[6],
             'error'=> $error,
             'Send' => LANDING_PAGE . '/downloadedmessageselect',
         ]);
@@ -193,6 +187,23 @@ function deleteMeetingData($app, $MiD, $email)
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
     $DetailsModel->deleteMeetingUser($app, $email,$MiD);
+
+}
+
+function deleteEventData($app, $MiD, $email)
+{
+    $store_data_result = null;
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $DetailsModel->deleteEventData($app, $email,$MiD);
 
 }
 

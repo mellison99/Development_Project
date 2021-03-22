@@ -121,7 +121,7 @@ class SQLQueries
     }
     public function  getAllEventDetails()
     {
-        $query_string = "SELECT event_start_time, event_duration, event_description, event_date, event_day, event_month ";
+        $query_string = "SELECT event_start_time, event_duration, event_description, event_date, event_day, event_month, eventId ";
         $query_string .= "FROM event_data ";
         $query_string .= "WHERE user_email = :user_email ";
         $query_string .= "AND event_active = :event_active;";
@@ -196,6 +196,22 @@ class SQLQueries
         $query_string  = "DELETE ";
         $query_string .="FROM meeting_user ";
         $query_string .= "WHERE meetingId = :MiD ";
+        $query_string .= "AND user_email = :user_email;" ;
+        return $query_string;
+    }
+    public function deleteEvent()
+    {
+        $query_string  = "DELETE ";
+        $query_string .="FROM event_data ";
+        $query_string .= "WHERE eventId = :MiD ";
+        $query_string .= "AND user_email = :user_email;" ;
+        return $query_string;
+    }
+    public function updateEventStatus()
+    {
+        $query_string  = "UPDATE event_data ";
+        $query_string .=" SET event_active = :State " ;
+        $query_string .= "WHERE eventId = :MiD ";
         $query_string .= "AND user_email = :user_email;" ;
         return $query_string;
     }

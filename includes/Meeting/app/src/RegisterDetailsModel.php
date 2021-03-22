@@ -147,6 +147,23 @@ class RegisterDetailsModel
 
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
+
+    public function updateEventStatus($app,$meetingID,$user,$state)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->updateEventStatus();
+        $query_parameters = [
+            ':user_email' => $user,
+            ':MiD' => $meetingID,
+            ':State'=> $state,
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
     public function deleteMeetingUser($app,$meetingID,$user)
     {
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
@@ -157,6 +174,22 @@ class RegisterDetailsModel
             ':MiD' => $meetingID
 
         ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
+    public function deleteEventData($app,$meetingID,$user)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteEvent();
+        $query_parameters = [
+            ':user_email' => $user,
+            ':MiD' => $meetingID
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
 
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
@@ -211,6 +244,21 @@ class RegisterDetailsModel
         return $this->database_wrapper->countRows();
     }
 
+    public function checkAllNonActiveEvents($app, $email)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getAllEventDetails();
+        $query_parameters = [
+            ':user_email' => $email,
+            'event_active' => 0
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        return $this->database_wrapper->countRows();
+    }
+
 
 
 
@@ -244,6 +292,25 @@ class RegisterDetailsModel
         $query_parameters = [
             ':user_email' => $email,
             'event_active' => 1
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
+        return $value;
+    }
+    public function getDisabledEventDetails($app, $email, $pos): array
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getAllEventDetails();
+        $query_parameters = [
+            ':user_email' => $email,
+            'event_active' => 0
         ];
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         if ($this->database_wrapper->countRows() >= 0)

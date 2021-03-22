@@ -45,18 +45,21 @@ $app->post(
         $usersToCheck = $cleaned_parameters['sanitised_user'];
         $eventsToCheck = getEventDetails($app, $_SESSION['username']);
         $eventCountInTimeslot = checkEventTimeslots($eventsToCheck,$newMeetingArray );
+        $arrayOfHostedRepeatMeetings = getRecurringMeetingHost2($app,$_SESSION['username']);
+        $meetingIDtoSearch = getRecurringMeetingParticipant2($app,$_SESSION['username']);
+        $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
+        $recurringmeetingDetails = $recurringmeetingDetails[0];
         if($eventCountInTimeslot != NULL ){
             $html_output =  $this->view->render($response,
                 'sent_message.html.twig');
             $date = $_SESSION['date'];
             return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
         }
-        var_dump(sizeOf($usersToCheck));
         for ($i =0; $i<sizeOf($usersToCheck); $i++){
             $eventsToCheck = getEventDetails($app, $usersToCheck[$i]);
-            var_dump($eventsToCheck);
+            //var_dump($eventsToCheck);
             $eventCountInTimeslot = checkEventTimeslots($eventsToCheck,$newMeetingArray );
-            var_dump($eventCountInTimeslot);
+            //var_dump($eventCountInTimeslot);
             if($eventCountInTimeslot != NULL ){
                 $html_output =  $this->view->render($response,
                     'sent_message.html.twig');
@@ -75,10 +78,7 @@ $app->post(
         }
 
 
-        $arrayOfHostedRepeatMeetings = getRecurringMeetingHost2($app,$_SESSION['username']);
-        $meetingIDtoSearch = getRecurringMeetingParticipant2($app,$_SESSION['username']);
-        $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
-        $recurringmeetingDetails = $recurringmeetingDetails[0];
+
 
         if(checkRecurringTimeslots($arrayOfHostedRepeatMeetings,$newMeetingArray )>0
             || checkRecurringTimeslots($recurringmeetingDetails,$newMeetingArray )>0){
@@ -112,6 +112,7 @@ $app->post(
             return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
 
         }
+
 
 
 
@@ -190,6 +191,8 @@ $app->post(
 
         return $html_output;
     })->setName('sendmessage');
+
+$_SESSION['error'] ="";
 function cleanupParameters1($app, $tainted_parameters)
 {
     $yearInString = (substr($_SESSION['date'],0,4));
@@ -599,18 +602,18 @@ function checkRecurringTimeslots($arrayOfHostedRepeatMeetings,$newMeetingArray )
 //                var_dump((int)$storedStart);
 //                var_dump((int)$storedEnd);
 
-            if ($arrayOfHostedRepeatMeetings[$i][3] == "weekly" && $dateInfo['weekday'] == $weekdayVal && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            if ($arrayOfHostedRepeatMeetings[$i][3] == "weekly" && $dateInfo['weekday'] == $weekdayVal && $StartVal >=$storedStart && $EndVal <=$storedEnd)
             {
                 $meetingsAtTime=$meetingsAtTime+1;
                 return $meetingsAtTime;
             }
 
-            if ($arrayOfHostedRepeatMeetings[$i][3] == "monthly" && $dateInfo['mday'] == $dateVal && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            if ($arrayOfHostedRepeatMeetings[$i][3] == "monthly" && $dateInfo['mday'] == $dateVal && $StartVal >=$storedStart && $EndVal <=$storedEnd)
             {
                 $meetingsAtTime=$meetingsAtTime+1;
                 return $meetingsAtTime;
             }
-            if ($arrayOfHostedRepeatMeetings[$i][3] == "annually" && $dateInfo['yday'] == $yearVal && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            if ($arrayOfHostedRepeatMeetings[$i][3] == "annually" && $dateInfo['yday'] == $yearVal && $StartVal >=$storedStart && $EndVal <=$storedEnd)
             {
                 $meetingsAtTime=$meetingsAtTime+1;
                 return $meetingsAtTime;
@@ -642,19 +645,19 @@ function checkEventTimeslots($eventsToCheck,$newMeetingArray ){
         $storedStart = (int) $storedStart;
         $storedEnd = $storedStart+$duration;
 
-            if ($eventsToCheck[$i][3] == $dateVal && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            if ($eventsToCheck[$i][3] == $dateVal && $StartVal >=$storedStart  && $EndVal <=$storedEnd)
             {
                 $eventsAtTime=$eventsAtTime+1;
                 return $eventsAtTime;
             }
 
-            if ($eventsToCheck[$i][4] ==  $weekdayNumVal && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            if ($eventsToCheck[$i][4] ==  $weekdayNumVal && $StartVal >=$storedStart && $EndVal <=$storedEnd)
             {
                 $eventsAtTime=$eventsAtTime+1;
                 return $eventsAtTime;
             }
 
-            if ((int)$eventsToCheck[$i][5] ==  $monthNumVal-1 && $storedStart == $StartVal && $EndVal <=$storedEnd)
+            if ((int)$eventsToCheck[$i][5] ==  $monthNumVal-1 && $StartVal >=$storedStart && $EndVal <=$storedEnd)
             {
                 $eventsAtTime=$eventsAtTime+1;
                 return $eventsAtTime;
