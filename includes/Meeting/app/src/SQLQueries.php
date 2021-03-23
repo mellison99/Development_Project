@@ -183,6 +183,34 @@ class SQLQueries
         return $query_string;
     }
 
+    public function getMeetingByEmailMeetingId()
+    {
+        $query_string  = "SELECT * ";
+        $query_string .= "FROM meeting_data ";
+        $query_string .= "WHERE meetingId = :MiD ";
+        $query_string .= "AND meeting_host = :user_email ;";
+
+        return $query_string;
+    }
+    public function getMeetingRecursionByID()
+    {
+        $query_string  = "SELECT recursion_type ";
+        $query_string .= "FROM meeting_recursion ";
+        $query_string .= "WHERE meetingId = :MiD; ";
+
+
+        return $query_string;
+    }
+
+    public function getUsersByEmailMeetingId()
+    {
+        $query_string  = "SELECT * ";
+        $query_string .= "FROM meeting_user ";
+        $query_string .= "WHERE meetingId = :MiD; ";
+
+        return $query_string;
+    }
+
     public function updateMeetingAck()
     {
         $query_string  = "UPDATE meeting_user ";
@@ -207,12 +235,36 @@ class SQLQueries
         $query_string .= "AND user_email = :user_email;" ;
         return $query_string;
     }
+    public function deleteAllMeetingUser()
+    {
+        $query_string  = "DELETE ";
+        $query_string .="FROM meeting_user ";
+        $query_string .= "WHERE meetingId = :MiD; ";
+        return $query_string;
+    }
+
+    public function deleteMeetingData()
+    {
+        $query_string  = "DELETE ";
+        $query_string .="FROM meeting_data ";
+        $query_string .= "WHERE meetingId = :MiD ";
+        $query_string .= "AND meeting_host = :user_email;" ;
+        return $query_string;
+    }
     public function updateEventStatus()
     {
         $query_string  = "UPDATE event_data ";
         $query_string .=" SET event_active = :State " ;
         $query_string .= "WHERE eventId = :MiD ";
         $query_string .= "AND user_email = :user_email;" ;
+        return $query_string;
+    }
+
+    public function updateMeetingRecursion()
+    {
+        $query_string  = "UPDATE meeting_recursion ";
+        $query_string .=" SET recursion_active = :State " ;
+        $query_string .= "WHERE meetingId = :MiD ";
         return $query_string;
     }
 
@@ -267,7 +319,7 @@ class SQLQueries
     public static function getUpcomingMeetingByUser()
     {
         $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, 
-        meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.notes  " ;
+        meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.notes, meeting_data.meetingId  " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= "AND meeting_data.meeting_start > :meeting_start ";

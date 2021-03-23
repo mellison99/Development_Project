@@ -164,6 +164,21 @@ class RegisterDetailsModel
 
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
+    public function updateMeetingRecursion($app,$meetingID,$state)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->updateMeetingRecursion();
+        $query_parameters = [
+            ':MiD' => $meetingID,
+            ':State'=> $state,
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
     public function deleteMeetingUser($app,$meetingID,$user)
     {
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
@@ -175,6 +190,34 @@ class RegisterDetailsModel
 
         ];
 
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
+    public function deleteAllMeetingUsers($app,$meetingID)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteAllMeetingUser();
+        $query_parameters = [
+            ':MiD' => $meetingID
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+    public function deleteMeetingData($app,$meetingID, $user)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteMeetingData();
+        $query_parameters = [
+            ':MiD' => $meetingID,
+            ':user_email' => $user,
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
 
@@ -432,6 +475,44 @@ class RegisterDetailsModel
         return $value;
     }
 
+    public function getRecurringMeetingsHostDisabled($app, $email)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getRecurringMeetingsHost();
+        $query_parameters = [
+            ':meeting_host' => $email,
+            ':active' => 0
+        ];
+//         var_dump($query_parameters);
+//        var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        return $this->database_wrapper->countRows();
+    }
+
+    public function getRecurringMeetingsHostDetailsDisabled($app, $email, $pos): array
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getRecurringMeetingsHost();
+        $query_parameters = [
+            ':meeting_host' => $email,
+            ':active' => 0
+        ];
+//        var_dump($query_parameters);
+//        var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
+        return $value;
+    }
+
     public function checkTimeslotDetails($app, $cleaned_parameters, $pos)
     {
         $value = [];
@@ -616,6 +697,65 @@ class RegisterDetailsModel
         return $value;
 
     }
+    public function getMeetingDetailsByUserMeetingID($app, $email, $MiD){
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getMeetingByEmailMeetingId();
+        $query_parameters = [
+            ':user_email' => $email,
+            ':MiD'=>$MiD
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $results = $this->database_wrapper->safeFetchRow();
+        return $results;
+    }
+    public function getMeetingRecursionByID($app, $MiD){
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getMeetingRecursionByID();
+        $query_parameters = [
+            ':MiD'=>$MiD
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $results = $this->database_wrapper->safeFetchRow();
+        return $results;
+    }
+    public function getUsersByEmailMeetingIdCount($app, $MiD){
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getUsersByEmailMeetingId();
+        $query_parameters = [
+            ':MiD'=>$MiD
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $results = $this->database_wrapper->countRows();
+        return $results;
+    }
+    public function getUsersByEmailMeetingId($app, $MiD, $pos){
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getUsersByEmailMeetingId();
+        $query_parameters = [
+            ':MiD'=>$MiD
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+            //var_dump($value);
+        }
+        return $value;
+    }
+
+
+
 
     public function getUpcomingMeetingsByUserCount($app, $email, $start)
     {
