@@ -1,0 +1,107 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <style>
+        ul{
+            background-color: #abdde5;
+            cursor:pointer;
+        }
+        li{
+            padding:12px;
+        }
+    </style>
+    <div id="page-content-div">
+        <h3>{{ page_heading_2 }}</h3>
+        <form action="{{ action }}" method="{{ method }}">
+
+                <legend>New Meeting Details</legend>
+                <br>
+
+                <br>
+
+            <br><br>
+                <br>
+                <br>
+            <p>{{ error }}</p>
+                <label for="time">Meeting start time:</label>
+                <input id="time" name="time" type="string" value="{{ meetingData[2] }}" size="4" maxlength="5">
+                <br><br>
+                <label for="time">Meeting duration (minutes):</label>
+                <input id="duration" name="duration" type="string" value="{{ meetingData[3] }}" size="4" maxlength="5">
+                <br><br>
+
+                <div class="container">
+                    <br />
+                    <br />
+                    <div class="form-group">
+                        <div name="add_name" id="add_name">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dynamic_field">
+
+                                        <td>{% for code, name in userData %}<td><tr>
+                                        <input type="text"  name="name[]" value="{{name[2]}}" class="form-control name_list" />
+                                        <button type="button" name="add" id="add" class="btn btn-success">Add More</button>
+                                        <button type="button" name="remove" id="remove" class="btn btn-remove">Remove</button>
+                                            </tr></td>
+                                        {% endfor %}</td>
+                                </table>
+
+
+{#                                <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" />#}
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <label for="notes">Subject:</label>
+                <input id="notes" name="notes" type="string" value="{{ meetingData[7] }}" size="30" maxlength="140">
+
+ <br>{{ annuallyChecked }}
+<p>Set to repeat:
+<input type="radio" id="never" name="repeat" value="never" checked={{ neverChecked }}>
+<label for="never">Never</label>
+<input type="radio" id="weekly" name="repeat" value="weekly"checked={{ weeklyChecked }}>
+<label for="weekly">Weekly</label>
+<input type="radio" id="monthly" name="repeat" value="monthly"checked="true">
+<label for="monthly">Monthly</label>
+<input type="radio" id="annually" name="repeat" value="annually"checked="false">
+<label for="annually">Annually</label>
+
+<br>
+    </p>
+                <br>
+                <input type="submit"  value="Send" href = "{{ Send }}"></a>
+            </fieldset>
+        </form>
+        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+        <p class="curr_page"><a href="{{ Calendar }}">Back to calendar view</a></p>
+    </div>
+    <html>
+
+
+    </html>
+
+    <script>
+        $(document).ready(function(){
+            var i=1;
+            $('#add').click(function(){
+                i++;
+                $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="text" name="name[]" placeholder="Enter your Name" class="form-control name_list" /></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
+            });
+            $('#remove').click(function(){
+                i++;
+                $('#dynamic_field').remove();
+            });
+            $(document).on('click', '.btn_remove', function(){
+                var button_id = $(this).attr("id");
+                $('#row'+button_id+'').remove();
+            });
+
+        });
+    </script>
+
+
+{% endblock %}

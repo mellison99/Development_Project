@@ -25,6 +25,9 @@ require 'routes/events.php';
 require 'routes/eventspost.php';
 require 'routes/eventView.php';
 require 'routes/eventAction.php';
+require 'routes/meetingshosted.php';
+require 'routes/hostedmeetingsaction.php';
+require 'routes/hostedmeetingsedit.php';
 
 
 
