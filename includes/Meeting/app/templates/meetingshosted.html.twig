@@ -1,26 +1,7 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
 <html lang="en">
-<style>
-    .collapsible {
-        cursor: pointer;
-        padding: 12px;
-        color: black;
-        background: rgba(102,102,153,0.5);
-        border: none;
-        text-align: center;
-        font-size: 15px;
-    }
 
-    .active, .collapsible:hover {
-
-    }
-
-    .content {
-        display: none;
-        overflow: hidden;
-    }
-</style>
 <head>
     <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
     <title></title>
@@ -35,26 +16,41 @@
     <h3>{{ page_heading_2 }}</h3>
     {{ error }}
     <br>
+
+
     <form action="{{ action }}" method="{{ method }}">
-        {% for code, name in OneOffHostedMeetings %}
-        <option value="{{code}}">   {{ name[5] }} at {{ name[0] }}  for {{ name[2] }} on {{name[1] }}
-            <a href='hostedmeetingsaction?MiD=E{{ name[6] }}'>Edit meeting</a>
-            <a href='hostedmeetingsaction?MiD=D{{ name[6] }}'>Delete Meeting</a>
-            {% endfor %}
-
+        <button type="button" class="collapsible">Hosted Meetings</button>
+        <div class="content">
+            {% for code, name in OneOffHostedMeetings %}
+            <option value="{{code}}">   {{ name[5] }} at {{ name[0] }}  for {{ name[2] }} on {{name[1] }}
+                <a href='hostedmeetingsaction?MiD=E{{ name[6] }}'>Edit meeting</a>
+                <a href='hostedmeetingsaction?MiD=D{{ name[6] }}'>Delete Meeting</a>
+                {% endfor %}
+        </div>
+        <br><br>
+        <button type="button" class="collapsible">Active repeating hosted meetings</button>
+        <div class="content">
             {% for code, name in HostedMeetings %}
-        <option value="{{code}}"> {{ name[4] }}  at {{name[5] }} for {{ name[2] }} minutes {{ name[3] }} ({{ name[1] }})
-            <a href='hostedmeetingsaction?MiD=E{{ name[0] }}'>Edit meeting</a>
-            <a href='hostedmeetingsaction?MiD=D{{ name[0] }}'>Delete Meeting</a>
-            <a href='hostedmeetingsaction?MiD=0{{ name[0] }}'>Disable meeting</a>
-            {% endfor %}
+            <option value="{{code}}"> {{ name[4] }}  at {{name[5] }} for {{ name[2] }} minutes {{ name[3] }} ({{ name[1] }})
+                <a href='hostedmeetingsaction?MiD=E{{ name[0] }}'>Edit meeting</a>
+                <a href='hostedmeetingsaction?MiD=D{{ name[0] }}'>Delete Meeting</a>
+                <a href='hostedmeetingsaction?MiD=0{{ name[0] }}'>Disable meeting</a>
+                {% endfor %}
+        </div>
 
+
+<br><br>
+        <button type="button" class="collapsible">Disabled repeating hosted meetings</button>
+        <div class="content">
             {% for code, name in disabledHostedMeetings %}
-        <option value="{{code}}"> {{ name[4] }}  at {{name[5] }} for {{ name[2] }} minutes {{ name[3] }} ({{ name[1] }})
-            <a href='hostedmeetingsaction?MiD=E{{ name[0] }}'>Edit meeting</a>
-            <a href='hostedmeetingsaction?MiD=1{{ name[0] }}'>Enable meeting</a>
-            <a href='hostedmeetingsaction?MiD=D{{ name[0] }}'>Delete Meeting</a>
-            {% endfor %}
+            <option value="{{code}}"> {{ name[4] }}  at {{name[5] }} for {{ name[2] }} minutes {{ name[3] }} ({{ name[1] }})
+                <a href='hostedmeetingsaction?MiD=E{{ name[0] }}'>Edit meeting</a>
+                <a href='hostedmeetingsaction?MiD=1{{ name[0] }}'>Enable meeting</a>
+                <a href='hostedmeetingsaction?MiD=D{{ name[0] }}'>Delete Meeting</a>
+                {% endfor %}
+        </div>
+
+
 
 
 
@@ -68,6 +64,22 @@
 </div>
 </body>
 </html>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
 
 
 

@@ -169,7 +169,6 @@ class SQLQueries
         $query_string  = "SELECT meeting_user.meetingId, meeting_data.meeting_date, meeting_data.meeting_time, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.meeting_ack ";
         $query_string .= "FROM meeting_user JOIN meeting_data ON meeting_user.meetingId = meeting_data.meetingId ";
         $query_string .= "WHERE meeting_ack = :meeting_ack ";
-        $query_string .= "AND meeting_start > :current_time ";
         $query_string .= "AND user_email = :user_email ;";
         return $query_string;
     }
@@ -293,6 +292,19 @@ class SQLQueries
         return $query_string;
     }
 
+    public static function getRecurringMeetingsHostEx()
+    {
+        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type, meeting_data.notes, meeting_data.meeting_time " ;
+        $query_string .= "FROM meeting_data  ";
+        $query_string .= "JOIN meeting_recursion on meeting_data.meetingId = meeting_recursion.meetingId ";
+        $query_string .= "WHERE meeting_data.meeting_host = :meeting_host  ";
+        $query_string .= "AND meeting_data.meetingId != :meetingId  ";
+        $query_string .= "AND meeting_recursion.recursion_active = :active;";
+
+
+        return $query_string;
+    }
+
     public static function getIdForRecurringMeeting()
     {
         $query_string  = "SELECT meeting_user.meetingId " ;
@@ -300,6 +312,19 @@ class SQLQueries
         $query_string .= "JOIN meeting_recursion on meeting_user.meetingId = meeting_recursion.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email  ";
         $query_string .= "AND meeting_recursion.recursion_active = :active ";
+        $query_string .= "AND meeting_user.meeting_ack = :acknowledged;";
+
+
+        return $query_string;
+    }
+    public static function getIdForRecurringMeetingEx()
+    {
+        $query_string  = "SELECT meeting_user.meetingId " ;
+        $query_string .= "FROM meeting_user  ";
+        $query_string .= "JOIN meeting_recursion on meeting_user.meetingId = meeting_recursion.meetingId ";
+        $query_string .= "WHERE meeting_user.user_email = :user_email  ";
+        $query_string .= "AND meeting_recursion.recursion_active = :active ";
+        $query_string .= "AND meeting_user.meetingId != :meetingId ";
         $query_string .= "AND meeting_user.meeting_ack = :acknowledged;";
 
 

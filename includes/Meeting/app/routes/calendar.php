@@ -59,6 +59,7 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
             'landing_page' => LANDING_PAGE . '/loginuser',
             'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
+            'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
             'method' => 'post',
             'method2' => 'post',
             'initial_input_box_value' => null,
@@ -79,7 +80,7 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
 
 function build_calendar($month, $year){
     $daysInWeek = array("Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-
+    $daysInWeek2 = $daysInWeek;
     $startDay =  mktime(0,0,0,$month,1,$year);
 
     $amountDaysInMonth = date('t',$startDay);
@@ -106,8 +107,8 @@ function build_calendar($month, $year){
     $calendar .="<br>";
 
     $calendar .= "<tr>";
-    foreach ($daysInWeek as $day) {
 
+    foreach ($daysInWeek2 as $day) {
         $calendar .= "<th class ='header'>$day</th>";
     }
 

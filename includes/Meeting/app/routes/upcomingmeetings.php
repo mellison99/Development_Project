@@ -48,7 +48,7 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
 
         }
     }
-    var_dump($repeatMeetings[0]);
+    //var_dump($repeatMeetings[0]);
 
     //var_dump($repeatMeetings2);
 
@@ -58,7 +58,7 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
         'upcomingmeetings.html.twig',
         [
             'css_path' => CSS_PATH,
-            'landing_page' => LANDING_PAGE . '/loginuser',
+            'landing_page' => LANDING_PAGE . '/calendar',
             'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'method' => 'post',

@@ -1,9 +1,9 @@
 <?php
 /**
- * sendmessage.php
+ * hostedmeetingsedit.php
  *
  * Author: Matthew
- * Date: 17/01/2021
+ * Date: 23/03/2021
  *
  * @author Matthew
  */
@@ -25,7 +25,7 @@ $app->post(
         }
 
         $email = ($_SESSION['username']);
-        $error = "";
+
         $tainted_parameters = $request->getParsedBody();
         $cleaned_MiD = $_SESSION['MiD'];
         $cleaned_parameters = cleanupParametersForUpdate($app, $tainted_parameters,$cleaned_MiD);
@@ -39,7 +39,7 @@ $app->post(
             return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
         }
 
-        deleteMeetingToUpdate($app, $cleaned_MiD, $email);
+
 
 
         $StartVal=getdate($cleaned_parameters['sanitised_start'])['hours'].getdate($cleaned_parameters['sanitised_start'])['minutes'];
@@ -56,16 +56,17 @@ $app->post(
         $usersToCheck = $cleaned_parameters['sanitised_user'];
         $eventsToCheck = getEventDetails($app, $_SESSION['username']);
         $eventCountInTimeslot = checkEventTimeslots($eventsToCheck,$newMeetingArray );
-        $arrayOfHostedRepeatMeetings = getRecurringMeetingHost2($app,$_SESSION['username']);
-        $meetingIDtoSearch = getRecurringMeetingParticipant2($app,$_SESSION['username']);
+        $arrayOfHostedRepeatMeetings = getRecurringMeetingHostEx($app,$_SESSION['username'],$cleaned_MiD);
+        $meetingIDtoSearch = getRecurringMeetingParticipantEx($app,$_SESSION['username'],$cleaned_MiD);
         $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
         $recurringmeetingDetails = $recurringmeetingDetails[0];
         if($eventCountInTimeslot != NULL ){
             $html_output =  $this->view->render($response,
                 'sent_message.html.twig');
-            $date = $_SESSION['date'];
-            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=.E".$_SESSION['MiD']);
+            $_SESSION['error'] = "Event organised at this time";
+            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
         }
+
         for ($i =0; $i<sizeOf($usersToCheck); $i++){
             $eventsToCheck = getEventDetails($app, $usersToCheck[$i]);
             //var_dump($eventsToCheck);
@@ -74,17 +75,18 @@ $app->post(
             if($eventCountInTimeslot != NULL ){
                 $html_output =  $this->view->render($response,
                     'sent_message.html.twig');
-                $date = $_SESSION['date'];
                 $_SESSION['error'] = "Event organised at this time";
-                return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=.E".$_SESSION['MiD']);
+                return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
             }
+
+
+           // deleteMeetingToUpdate($app, $cleaned_MiD, $email);
 
             if(checkRecurringTimeslots($arrayOfHostedRepeatMeetings,$newMeetingArray )>0
                 || checkRecurringTimeslots($recurringmeetingDetails,$newMeetingArray )>0){
                 $html_output =  $this->view->render($response,
                     'sent_message.html.twig');
-                $date = $_SESSION['date'];
-                return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=.E".$_SESSION['MiD']);
+                return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
             }
         }
 
@@ -95,21 +97,20 @@ $app->post(
             || checkRecurringTimeslots($recurringmeetingDetails,$newMeetingArray )>0){
             $html_output =  $this->view->render($response,
                             'sent_message.html.twig');
-                        $date = $_SESSION['date'];
-                        return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=.E".$_SESSION['MiD']);
+                        return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
         }
         for ($i =0; $i<sizeOf($usersToCheck)-1; $i++){
-            $arrayOfHostedRepeatMeetings = getRecurringMeetingHost2($app,$usersToCheck[$i]);
-            $meetingIDtoSearch = getRecurringMeetingParticipant2($app,$usersToCheck[$i]);
+            $arrayOfHostedRepeatMeetings = getRecurringMeetingHostEx($app,$usersToCheck[$i], $cleaned_MiD);
+            $meetingIDtoSearch = getRecurringMeetingParticipantEx($app, $usersToCheck[$i], $cleaned_MiD);
             $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
+
             $recurringmeetingDetails = $recurringmeetingDetails[0];
 
             if(checkRecurringTimeslots($arrayOfHostedRepeatMeetings,$newMeetingArray )>0
                 || checkRecurringTimeslots($recurringmeetingDetails,$newMeetingArray )>0){
                 $html_output =  $this->view->render($response,
                     'sent_message.html.twig');
-                $date = $_SESSION['date'];
-                return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=.E".$_SESSION['MiD']);
+                return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
             }
         }
 
@@ -120,7 +121,7 @@ $app->post(
             $html_output =  $this->view->render($response,
                 'sent_message.html.twig');
             $date = $_SESSION['date'];
-            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=.E".$_SESSION['MiD']);
+            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
 
         }
 
@@ -154,6 +155,7 @@ $app->post(
 
 
             $meetingID = 2;
+            deleteMeetingToUpdate($app, $cleaned_MiD, $email);
             storeMeetingDetails($app, $cleaned_parameters, $email);
             storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
             storeMeetingRecursion($app,$cleaned_parameters);
@@ -170,11 +172,11 @@ $app->post(
             $_SESSION['error'] = $error;
             $html_output =  $this->view->render($response,
                 'sent_message.html.twig');
-            $date = $_SESSION['date'];
-            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=.E".$_SESSION['MiD']);
+            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
         }
 
         //getSimbyEmail($app, $email);
+        $_SESSION['error'] = $error;
         $html_output =  $this->view->render($response,
             'sent_message.html.twig',
             [
@@ -196,7 +198,7 @@ $app->post(
         return $html_output;
     })->setName('hostedmeetingsedit');
 
-//$_SESSION['error'] ="";
+
 function cleanupParametersForUpdate($app, $tainted_parameters, $meetingId)
 {
     $yearInString = (substr($_SESSION['date'],0,4));
@@ -310,7 +312,7 @@ function deleteMeetingToUpdate($app, $MiD, $email)
 //
 //}
 //
-//function checkTimeslotUsers($app, array $cleaned_parameters, $meetingsToCheck)
+//function checkTimeslotUsersEx($app, array $cleaned_parameters, $meetingsToCheck)
 //{
 //    $database_wrapper = $app->getContainer()->get('databaseWrapper');
 //    $sql_queries = $app->getContainer()->get('SQLQueries');
@@ -507,68 +509,68 @@ function checkEmailEdit($app, $cleaned_parameters)
 //    }
 //}
 //
-//function getRecurringMeetingHost2($app,$email)
-//{
-//    $store_data_result = null;
-//
-//    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-//    $sql_queries = $app->getContainer()->get('SQLQueries');
-//    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-//
-//    $settings = $app->getContainer()->get('settings');
-//    $database_connection_settings = $settings['pdo_settings'];
-//
-//    $DetailsModel->setSqlQueries($sql_queries);
-//    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-//    $DetailsModel->setDatabaseWrapper($database_wrapper);
-//    $value = $DetailsModel->getRecurringMeetingsHost($app, $email);
-//
-//
-//    $recurringMeeting = [];
-//    if($value<0){
-//        return "no  meetings";
-//    }else{
-//        for($i =0; $i<=$value ; $i++){
-//            $idstring = $DetailsModel->getRecurringMeetingsHostDetails($app, $email, $i);
-//            array_push($recurringMeeting,$idstring);
-//
-//        }
-//        array_pop($recurringMeeting);
-//        return $recurringMeeting;
-//    }
-//}
-//function getRecurringMeetingParticipant2($app, $email)
-//{
-//    $store_data_result = null;
-//
-//    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-//    $sql_queries = $app->getContainer()->get('SQLQueries');
-//    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-//
-//    $settings = $app->getContainer()->get('settings');
-//    $database_connection_settings = $settings['pdo_settings'];
-//
-//    $DetailsModel->setSqlQueries($sql_queries);
-//    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-//    $DetailsModel->setDatabaseWrapper($database_wrapper);
-//    $value = $DetailsModel->getIdForRecurringMeeting($app, $email);
-//   // var_dump($value);
-//
-//    $recurringMeeting = [];
-//    $recurringMeetingId = [];
-//    if($value<0){
-//        return "no  meetings";
-//    }
-//    else{
-//        for($i =0; $i<=$value ; $i++){
-//            $idstring = $DetailsModel->getIdForRecurringMeetingDetails($app, $email, $i);
-//            array_push($recurringMeetingId,$idstring[0]);
-//
-//        }
-//        array_pop($recurringMeetingId);
-//        return $recurringMeetingId;
-//    }
-//}
+function getRecurringMeetingHostEx($app,$email, $MiD)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->getRecurringMeetingsHostEx($app, $email, $MiD);
+
+
+    $recurringMeeting = [];
+    if($value<0){
+        return "no  meetings";
+    }else{
+        for($i =0; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getRecurringMeetingsHostDetailsEx($app, $email, $i, $MiD);
+            array_push($recurringMeeting,$idstring);
+
+        }
+        array_pop($recurringMeeting);
+        return $recurringMeeting;
+    }
+}
+function getRecurringMeetingParticipantEx($app, $email, $MiD)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->getIdForRecurringMeetingEx($app, $email, $MiD);
+   // var_dump($value);
+
+    $recurringMeeting = [];
+    $recurringMeetingId = [];
+    if($value<0){
+        return "no  meetings";
+    }
+    else{
+        for($i =0; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getIdForRecurringMeetingDetailsEx($app, $email, $i, $MiD);
+            array_push($recurringMeetingId,$idstring[0]);
+
+        }
+        array_pop($recurringMeetingId);
+        return $recurringMeetingId;
+    }
+}
 //function getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch){
 //    $database_wrapper = $app->getContainer()->get('databaseWrapper');
 //    $sql_queries = $app->getContainer()->get('SQLQueries');

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * eventAction.php
+ * hostedmeetingsaction.php
  *
  * Author: Matthew
- * Date: 20/03/2021
+ * Date: 23/03/2021
  *
  * @author Matthew
  */
@@ -13,6 +13,8 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 $app->get('/hostedmeetingsaction', function (Request $request, Response $response) use ($app) {
+    $error = "something went wrong, please try again";
+
     if (!isset($_SESSION['username'])) {
         $error = "please login";
         $_SESSION['error'] = $error;
@@ -54,9 +56,9 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
     $meetingDetails = getMeetingDetailsById($app, $cleaned_MiD, $email);
     $userList = getUserDetailsById($app, $cleaned_MiD);
     $recursionValue = getMeetingRecursionTypeById($app, $cleaned_MiD)[0];
-    var_dump($userList);
-    var_dump($meetingDetails);
-    var_dump($recursionValue);
+//    var_dump($userList);
+//    var_dump($meetingDetails);
+//    var_dump($recursionValue);
 
     $html_output = $this->view->render($response,
         'hostedmeetingsaction.html.twig',
@@ -68,7 +70,7 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
             'save_event'=>LANDING_PAGE . '/eventspost',
             'Send' => LANDING_PAGE . '/hostedmeetingsedit',
             'action' => 'hostedmeetingsedit',
-            'error' => $_SESSION['error'],
+            'error' => $error,
             'method' => 'post',
             'method2' => 'post',
             'initial_input_box_value' => null,
