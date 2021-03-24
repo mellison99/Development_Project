@@ -452,6 +452,22 @@ class RegisterDetailsModel
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         return $this->database_wrapper->countRows();
     }
+    public function getRecurringMeetingsHostEx($app, $email,$MiD)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getRecurringMeetingsHostEx();
+        $query_parameters = [
+            ':meeting_host' => $email,
+            ':active' => 1,
+            ':meetingId'=> $MiD
+        ];
+//         var_dump($query_parameters);
+//        var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        return $this->database_wrapper->countRows();
+    }
 
     public function getRecurringMeetingsHostDetails($app, $email, $pos): array
     {
@@ -474,6 +490,29 @@ class RegisterDetailsModel
         }
         return $value;
     }
+    public function getRecurringMeetingsHostDetailsEx($app, $email, $pos,$MiD): array
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getRecurringMeetingsHostEx();
+        $query_parameters = [
+            ':meeting_host' => $email,
+            ':active' => 1,
+            ':meetingId'=> $MiD
+        ];
+//        var_dump($query_parameters);
+//        var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
+        return $value;
+    }
+
 
     public function getRecurringMeetingsHostDisabled($app, $email)
     {
@@ -633,6 +672,27 @@ class RegisterDetailsModel
         return $value;
     }
 
+    public function getIdForRecurringMeetingEx($app, $email, $MiD)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getIdForRecurringMeetingEx();
+        //var_dump($query_string);
+        $query_parameters = [
+            ':user_email' => $email,
+            ':acknowledged' => 1,
+            ':active' => 1,
+            ':meetingId'=>$MiD
+
+        ];
+        // var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $value = $this->database_wrapper->countRows();
+        //var_dump($value);
+        return $value;
+    }
+
     public function getIdForRecurringMeetingDetails($app, $email,$pos)
     {
         $value = [];
@@ -644,6 +704,31 @@ class RegisterDetailsModel
             ':user_email' => $email,
             ':acknowledged' => 1,
             ':active' => 1
+
+        ];
+        // var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
+        return $value;
+    }
+    public function getIdForRecurringMeetingDetailsEx($app, $email,$pos, $MiD)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getIdForRecurringMeetingEx();
+        //var_dump($query_string);
+        $query_parameters = [
+            ':user_email' => $email,
+            ':acknowledged' => 1,
+            ':active' => 1,
+            ':meetingId' => $MiD,
 
         ];
         // var_dump($query_parameters);
@@ -801,7 +886,7 @@ class RegisterDetailsModel
         return $value;
     }
 
-    public function getUnacceptedMeeting($app, $email, $time)
+    public function getUnacceptedMeeting($app, $email)
     {
         $value = [];
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
@@ -811,7 +896,6 @@ class RegisterDetailsModel
         $query_parameters = [
             ':user_email' => $email,
             ':meeting_ack' => 0,
-            ':current_time' => $time,
         ];
         //var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
@@ -819,7 +903,7 @@ class RegisterDetailsModel
         //var_dump($value);
         return $value;
     }
-    public function getUnacceptedMeetingDetails($app, $email, $time, $value)
+    public function getUnacceptedMeetingDetails($app, $email, $value)
     {
         $meetingDetails = [];
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
@@ -829,7 +913,6 @@ class RegisterDetailsModel
         $query_parameters = [
             ':user_email' => $email,
             ':meeting_ack' => 0,
-            ':current_time' => $time,
         ];
         //var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);

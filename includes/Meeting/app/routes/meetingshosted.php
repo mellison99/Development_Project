@@ -27,7 +27,7 @@ $app->get('/meetingshosted', function (Request $request, Response $response) use
     $upcomingMeetings = getUpcomingMeeting($app,$email,$start);
     $hostedRepeatMeetings = getHostedMeetings($app,$email);
     $disabledHostedRepeatMeetings = getDisabledHostedMeetings($app,$email);
-    var_dump($upcomingMeetings);
+   // var_dump($upcomingMeetings);
     $hostedRepeatMeetings = formatMeetingInfo($hostedRepeatMeetings);
     $disabledHostedRepeatMeetings = formatMeetingInfo($disabledHostedRepeatMeetings);
 
@@ -37,7 +37,7 @@ $app->get('/meetingshosted', function (Request $request, Response $response) use
         'meetingshosted.html.twig',
         [
             'css_path' => CSS_PATH,
-            'landing_page' => LANDING_PAGE . '/loginuser',
+            'landing_page' => LANDING_PAGE . '/calendar',
             'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'save_event'=>LANDING_PAGE . '/eventspost',

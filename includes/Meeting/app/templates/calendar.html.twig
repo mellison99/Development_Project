@@ -4,16 +4,7 @@
 <head>
     <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" type="text/css"/>
-    <style>
-        table{
-            table-layout: fixed;
-        }
-        td{
-            width:33%
-        }
-        .today{
-            background: cornflowerblue;
-        }
+
     </style>
     <title>Calendar</title>
 </head>
@@ -26,14 +17,10 @@
             calendar
 
         </div>
-            <p class="curr_page"><a href="{{ landing_page }}">Home</a>
+            <p class="curr_page"><a href="{{ landing_page }}">Login page</a>
             <p class="curr_page"><a href="{{ upcoming_meetings }}">Scheduled Meetings</a>
             <p class="curr_page"><a href="{{ meeting_requests }}">New Meeting Requests</a>
-            <p class="curr_page"><a href="{{ landing_page }}">Preferences and account settings</a></p>
-{#            <p <a class = 'btn btn-xs btn-primary' href='?month=".date('m',mktime(0,0,0,$month-1,1,#}
-{#            $year))."&year=".date('Y',mktime(0,0,0,$month-1,1,$year))."Previous Month</a>"</p>#}
-{#            <p <a class = 'btn btn-xs btn-primary' href='?month=".date('m',mktime(0,0,0,$month+1,1,#}
-{#            $year))."&year=".date('Y',mktime(0,0,0,$month+1,1,$year))."Next Month</a>"</p>#}
+            <p class="curr_page"><a href="{{ hosted_meetings }}">Hosted Meetings</a></p>
     </div>
 </div>
 </body>

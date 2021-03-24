@@ -25,7 +25,7 @@ $app->get('/downloadedmessageselect', function(Request $request, Response $respo
     $email = $_SESSION['username'];
    // $message_details = getMessages($app,$email);
     $tester = RetrieveNumUnacknowledgedmeetings($app, $email);
-
+//var_dump($tester);
 
     //$parsed_messages = parseAllMessageData($app,$message_details);
    // $downloaded_messages = RetrieveNumMessageData($app, $email);
@@ -34,7 +34,7 @@ $app->get('/downloadedmessageselect', function(Request $request, Response $respo
     'downloadmessageselect.html.twig',
     [
       'css_path' => CSS_PATH,
-      'landing_page' => LANDING_PAGE . '/loginuser',
+      'landing_page' => LANDING_PAGE . '/calendar',
       'method' => 'post',
       'method2' => 'post',
       'action' => 'downloadedmessages',
@@ -117,13 +117,14 @@ function RetrieveNumUnacknowledgedmeetings($app, $email)
     $DetailsModel->setDatabaseWrapper($database_wrapper);
     $time = time();
 
-    $value = $DetailsModel->getUnacceptedMeeting($app, $email, $time);
+    $value = $DetailsModel->getUnacceptedMeeting($app, $email);
+    //var_dump($value);
     $downloadMessages = [];
     if($value<0){
         return "no  messages";
     }else{
         for($i =1; $i<=$value ; $i++){
-            $idstring = $DetailsModel->getUnacceptedMeetingDetails($app, $email, $time ,$i);;
+            $idstring = $DetailsModel->getUnacceptedMeetingDetails($app, $email ,$i);;
             //var_dump($idstring);
             array_push($downloadMessages,$idstring);
         }

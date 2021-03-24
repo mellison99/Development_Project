@@ -15,18 +15,51 @@
 
 <div id="page-content-div">
 
+    <button type="button" class="collapsible">Upcoming meetings</button>
+    <div class="content">
+        <p></p>
+        {% for code, name in upcomingMeetings %}
+            <h4 value="{{code}}"> Subject: {{ name[5] }}<br> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes </h4>
+        {% endfor %}
+    </div>
+    <br> <br>
+    <button type="button" class="collapsible">Repeating meetings</button>
+    <div class="content">
+        <p></p>
+        {% for code, name in repeatMeetings1 %}
+            <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
+        {% endfor %}
+
+        {% for code, name in repeatMeetings2 %}
+            <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
+        {% endfor %}
+    </div>
 
 
-{% for code, name in upcomingMeetings %}
-    <h4 value="{{code}}"> Subject: {{ name[5] }}<br> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes </h4>
-{% endfor %}
-{% for code, name in repeatMeetings1 %}
-    <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
-{% endfor %}
-    {% for code, name in repeatMeetings2 %}
-    <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
-    {% endfor %}
+
+{#{% for code, name in repeatMeetings1 %}#}
+{#    <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>#}
+{#{% endfor %}#}
+{#    {% for code, name in repeatMeetings2 %}#}
+{#    <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>#}
+{#    {% endfor %}#}
 </div>
 </body>
 </html>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
 {% endblock %}
