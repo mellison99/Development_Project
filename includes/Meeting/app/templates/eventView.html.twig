@@ -5,10 +5,12 @@
     <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
     <title></title>
 </head>
-<p class="curr_page"><a href="{{ landing_page }}">Home</a>
-<p class="curr_page"><a href="{{ upcoming_meetings }}">Scheduled Meetings</a>
-<p class="curr_page"><a href="{{ meeting_requests }}">New Meeting Requests</a>
-<p class="curr_page"><a href="{{ landing_page }}">Preferences and account settings</a></p>
+<ul>
+    <li><a href="{{ landing_page }}">Home</a></li>
+    <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+    <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
+    <li><a href="{{ landing_page }}">Preferences and account settings</a></li>
+</ul>
 <body>
 
 <div id="page-content-div">
@@ -18,14 +20,26 @@
     <form action="{{ action }}" method="{{ method }}">
         {% for code, name in events %}
         <option value="{{code}}"> {{ name[2] }}  at {{name[0] }} for {{ name[1] }} {{ name[3] }}
-            <a href='eventAction?MiD=0{{ name[6] }}'>Turn off Event</a>
-            <a href='eventAction?MiD=D{{ name[6] }}'>Delete Event</a>
+            <a href='eventAction?MiD=0{{ name[6] }}'>
+                <img src="../media/on.png"
+                     alt="turn off meeting" width="70" height="20">
+            </a>
+            <a href='eventAction?MiD=D{{ name[6] }}'>
+                <img src="../media/delete.png"
+                     alt="delete event" width="20" height="20">
+            </a>
             {% endfor %}
 
             {% for code, name in disabled_events %}
         <option value="{{code}}"> {{ name[2] }}  at {{name[0] }} for {{ name[1] }} {{ name[3] }}
-            <a href='eventAction?MiD=1{{ name[6] }}'>Turn on Event</a>
-            <a href='eventAction?MiD=D{{ name[6] }}'>Delete Event</a>
+            <a href='eventAction?MiD=1{{ name[6] }}'>
+                <img src="../media/off.png"
+                     alt="turn on event" width="70" height="20">
+            </a>
+            <a href='eventAction?MiD=D{{ name[6] }}'>
+                <img src="../media/delete.png"
+                     alt="delete event" width="20" height="20">
+            </a>
             {% endfor %}
 
             </fieldset>

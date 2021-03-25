@@ -76,6 +76,7 @@ class RegisterDetailsModel
             ':meeting_start' => $cleaned_parameters['sanitised_start'],
             ':meeting_end' => $cleaned_parameters['sanitised_end'],
             ':meeting_host' => $email,
+            ':meeting_subject'=>$cleaned_parameters['sanitised_subject'],
             ':notes' => $cleaned_parameters['sanitised_notes']
         ];
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
@@ -164,6 +165,78 @@ class RegisterDetailsModel
 
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
+    public function setUserRoleStudent($app,$Uid)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->updateRoleStudent();
+        $query_parameters = [
+            ':UiD' => $Uid,
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+    public function setUserRoleTeacher($app,$Uid)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->updateRoleTeacher();
+        $query_parameters = [
+            ':UiD' => $Uid,
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+    public function deleteUser($app,$Uid)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteUser();
+        $query_parameters = [
+            ':UiD' => $Uid,
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters);
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
+    public function deleteUserMeetings($app,$Uid)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteUserMeetings();
+        $query_parameters = [
+            ':UiD' => $Uid,
+
+        ];
+
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
+    public function deleteUserMeetingsPart($app,$Uid)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteUserMeetingsPart();
+        $query_parameters = [
+            ':UiD' => $Uid,
+
+        ];
+
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
+
     public function updateMeetingRecursion($app,$meetingID,$state)
     {
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
@@ -246,10 +319,28 @@ class RegisterDetailsModel
         $sanitisedStart = $cleaned_parameters['sanitised_start'];
         $sanitisedEnd = $cleaned_parameters['sanitised_end'];
         $query_parameters = [
-            ':meeting_start' => $sanitisedStart,
-            ':meeting_end' => $sanitisedEnd
+            ':meeting_start' => $sanitisedStart+60,
+            ':meeting_end' => $sanitisedEnd-60
         ];
        // var_dump($query_parameters);
+        //var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        return $this->database_wrapper->countRows();
+    }
+    public function checkTimeslotEx($app, $cleaned_parameters,$MiD): int
+    {
+
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->checkTimeslotEx();
+        $sanitisedStart = $cleaned_parameters['sanitised_start'];
+        $sanitisedEnd = $cleaned_parameters['sanitised_end'];
+        $query_parameters = [
+            ':meetingId' => $MiD,
+            ':meeting_start' => $sanitisedStart+60,
+            ':meeting_end' => $sanitisedEnd-60
+        ];
+        // var_dump($query_parameters);
         //var_dump($query_string);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         return $this->database_wrapper->countRows();
@@ -582,6 +673,44 @@ class RegisterDetailsModel
                 array_push($value,$this->database_wrapper->safeFetchRow());
                 //array_push($value,$this->database_wrapper->safeFetchRow());
                 //var_dump($value);
+
+        }
+
+
+        return $value;
+    }
+
+    public function checkTimeslotDetailsEx($app, $cleaned_parameters, $pos, $MiD)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->checkTimeslotEx();
+        $sanitisedStart = $cleaned_parameters['sanitised_start'];
+        $sanitisedEnd = $cleaned_parameters['sanitised_end'];
+        $query_parameters = [
+            ':meetingId'=>$MiD,
+            ':meeting_start' => $sanitisedStart,
+            ':meeting_end' => $sanitisedEnd
+        ];
+        //var_dump($query_parameters);
+        //var_dump($query_string);
+        // var_dump($this->database_wrapper->safeFetchRow());
+        //var_dump($this->database_wrapper->countRows() . " without assignment");
+        $x = $this->database_wrapper->countRows();
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+
+        //var_dump($x . " with assignment");
+        if ($x >= 0)
+        {
+
+            //var_dump($x);
+            for($i=$pos; $i<=$x; $i++)
+//var_dump($value,$this->database_wrapper->safeFetchRow());
+                //var_dump($value,$this->database_wrapper->safeFetchRow()[1]);
+                array_push($value,$this->database_wrapper->safeFetchRow());
+            //array_push($value,$this->database_wrapper->safeFetchRow());
+            //var_dump($value);
 
         }
 
@@ -959,6 +1088,38 @@ class RegisterDetailsModel
         }
         return $value;
     }
+    public function getAllUsersCount($app,$email)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getAllUsers();
+        $query_parameters = [
+            ':email' => $email
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $value = $this->database_wrapper->countRows();
+
+        return $value;
+    }
+
+    public function getAllUsers($app,$pos,$email): array
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getAllUsers();
+        $query_parameters = [
+            ':email' => $email
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
+        return $value;
+    }
 
     public function getNumEmailBySender($app, $email)
     {
@@ -1028,6 +1189,22 @@ class RegisterDetailsModel
         }
 
         return $exists;
+    }
+
+    public function checkUserRole($app, $email)
+    {
+
+
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->checkUserRole();
+        $query_parameters = [
+            ':user_email'=> $email
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $value = $this->database_wrapper->safeFetchRow();
+
+        return $value;
     }
 
     public function checkEmail($app, $cleaned_parameters)

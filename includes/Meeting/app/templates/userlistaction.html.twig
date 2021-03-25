@@ -1,30 +1,22 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
 <html lang="en">
+
 <head>
     <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" type="text/css"/>
-
-    </style>
-    <title>Calendar</title>
+    <title></title>
 </head>
-
-<body>
 <ul>
     <li><a href="{{ landing_page }}">Home</a></li>
     <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
     <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
     <li><a href="{{ landing_page }}">Preferences and account settings</a></li>
 </ul>
-<div class = "container">
-    <div class = "row">
-        <div class = "col-md-12">
-        <?php
-            calendar
+<body>
 
-        </div>
-    </div>
-</div>
 </body>
 </html>
+
+
+
 {% endblock %}

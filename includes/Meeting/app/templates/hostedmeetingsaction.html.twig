@@ -40,34 +40,38 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dynamic_field">
 
-                                        <td>{% for code, name in userData %}<td><tr>
-                                        <input type="text"  name="name[]" value="{{name[2]}}" class="form-control name_list" />
-                                        <button type="button" name="add" id="add" class="btn btn-success">Add More</button>
-                                        <button type="button" name="remove" id="remove" class="btn btn-remove">Remove</button>
-                                            </tr></td>
-                                        {% endfor %}</td>
+                                    <tr>
+                                        <td><input type="text"  name="name[]" value={{ userData[0][2] }} class="form-control name_list" /></td>
+                                        <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
+                                    </tr>
+                                    {% for code, name in userData %}
+
+                                    {% endfor %}
                                 </table>
 
 
-{#                                <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" />#}
+{#                                #}
                             </div>
 
                         </form>
                     </div>
                 </div>
 
-                <label for="notes">Subject:</label>
-                <input id="notes" name="notes" type="string" value="{{ meetingData[7] }}" size="30" maxlength="140">
+                <label for="subject">Subject:</label>
+                <input id="subject" name="subject" type="string" value="{{ meetingData[8] }}" size="30" maxlength="140">
+    <br><br>
+    <label for="notes">Notes:</label>
+    <input id="notes" name="notes" type="string" value="{{ meetingData[7] }}" size="50" maxlength="140">
 
- <br>{{ annuallyChecked }}
+ <br>
 <p>Set to repeat:
-<input type="radio" id="never" name="repeat" value="never" checked={{ neverChecked }}>
+<input type="radio" id="never" name="repeat" value="never" checked="true" >
 <label for="never">Never</label>
-<input type="radio" id="weekly" name="repeat" value="weekly"checked={{ weeklyChecked }}>
+<input type="radio" id="weekly" name="repeat" value="weekly">
 <label for="weekly">Weekly</label>
-<input type="radio" id="monthly" name="repeat" value="monthly"checked="true">
+<input type="radio" id="monthly" name="repeat" value="monthly">
 <label for="monthly">Monthly</label>
-<input type="radio" id="annually" name="repeat" value="annually"checked="false">
+<input type="radio" id="annually" name="repeat" value="annually">
 <label for="annually">Annually</label>
 
 <br>
@@ -81,16 +85,46 @@
     </div>
     <html>
 
-
     </html>
 
     <script>
-        $(document).ready(function(){
-            var i=1;
-            $('#add').click(function(){
-                i++;
-                $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="text" name="name[]" placeholder="Enter your Name" class="form-control name_list" /></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
-            });
+        $(document).ready(function() {
+            var i = 1;
+            var loopvar = {{ loopvar }};
+            var userlist = {{ userData }};
+
+                $('#add').click(function () {
+
+                    i++;
+                    $('#dynamic_field').append('<tr id="row' + i + '"><td><input type="text" name="name[]" placeholder="Enter user Name" class="form-control name_list" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+                });
+                if(loopvar >1){
+                    $('#pop').add(function () {
+                        $('#dynamic_field').append('<tr id="row' + 2 + '"><td><input type="text" name="name[]" value= {{ userData[1][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 2 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+                    });
+                }
+            if(loopvar >2){
+                $('#pop').add(function () {
+                    $('#dynamic_field').append('<tr id="row' + 3 + '"><td><input type="text" name="name[]" value= {{ userData[2][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 3 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+                });
+            }
+            if(loopvar >3){
+                $('#pop').add(function () {
+                    $('#dynamic_field').append('<tr id="row' + 4 + '"><td><input type="text" name="name[]" value= {{ userData[3][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 4 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+                });
+            }
+            if(loopvar >4){
+                $('#pop').add(function () {
+                    $('#dynamic_field').append('<tr id="row' + 5 + '"><td><input type="text" name="name[]" value= {{ userData[4][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 5 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+                });
+            }
+        {#    for (i = 0; i < loopvar-1; i++){#}
+        {#        $('#pop').add(function () {#}
+        {#            $('#dynamic_field').append('<tr id="row' + i + '"><td><input type="text" name="name[]" value= {{ userData[1][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');#}
+        {#        });#}
+        {#}#}
+
+
             $('#remove').click(function(){
                 i++;
                 $('#dynamic_field').remove();
@@ -101,6 +135,20 @@
             });
 
         });
+
+        function GetDynamicTextBox(value)
+        {
+            return '<input name = "DynamicTextBox"  class="dynamic"  type="text" value = "' + "mymonthname" + '" />' +
+                '<input name = "DynamicTextBox1"  class="dynamic"  type="text" value = "' + "myYearname" + '" />' +
+                '<input type="button" value="Remove" onclick = "RemoveTextBox(this)" />'
+        }
+
+        function AddTextBox()
+        {
+            var div = document.createElement('DIV');
+            div.innerHTML = GetDynamicTextBox("");
+            document.getElementById("TextBoxContainer").appendChild(div);
+        }
     </script>
 
 

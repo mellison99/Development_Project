@@ -39,6 +39,14 @@ class SQLQueries
         return $query_string;
     }
 
+    public function checkUserRole()
+    {
+        $query_string  = "SELECT user_type ";
+        $query_string .= "FROM user_data ";
+        $query_string .= "WHERE user_email_address = :user_email;";
+        return $query_string;
+    }
+
     public function searchUser()
     {
         $query_string  = "SELECT user_email_address ";
@@ -59,6 +67,7 @@ class SQLQueries
         $query_string .= "meeting_start = :meeting_start,";
         $query_string .= "meeting_end = :meeting_end,";
         $query_string .= "meeting_host = :meeting_host,";
+        $query_string .= "subject = :meeting_subject,";
         $query_string .= "notes = :notes;";
         return $query_string;
     }
@@ -67,10 +76,23 @@ class SQLQueries
 
         $query_string  = "SELECT meeting_data.meeting_host, meeting_user.user_email ";
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
-        $query_string .= "WHERE meeting_start BETWEEN :meeting_start ";
+        $query_string .= "WHERE meeting_start BETWEEN :meeting_start  ";
         $query_string .= "AND :meeting_end ";
         $query_string .= "OR meeting_end BETWEEN :meeting_start  ";
         $query_string .="AND :meeting_end; ";
+        return $query_string;
+    }
+    public function  checkTimeslotEx()
+    {
+
+        $query_string  = "SELECT meeting_data.meeting_host, meeting_user.user_email ";
+        $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
+        $query_string .= "WHERE meeting_start BETWEEN :meeting_start  ";
+        $query_string .= "AND :meeting_end ";
+        $query_string .= "AND meeting_data.meetingId != :meetingId ";
+        $query_string .= "OR meeting_end BETWEEN :meeting_start  ";
+        $query_string .="AND :meeting_end ";
+        $query_string .= "AND meeting_data.meetingId != :meetingId; ";
         return $query_string;
     }
 
@@ -210,12 +232,58 @@ class SQLQueries
         return $query_string;
     }
 
+    public function getAllUsers()
+    {
+        $query_string  = "SELECT user_email_address, user_firstname, user_lastname, user_sim, user_type ";
+        $query_string .= "FROM user_data ";
+        $query_string .= "WHERE user_email_address != :email; ";
+
+
+        return $query_string;
+    }
+
     public function updateMeetingAck()
     {
         $query_string  = "UPDATE meeting_user ";
         $query_string .=" SET meeting_ack = 1 " ;
         $query_string .= "WHERE meetingId = :MiD ";
         $query_string .= "AND user_email = :user_email;" ;
+        return $query_string;
+    }
+
+    public function updateRoleStudent()
+    {
+        $query_string  = "UPDATE user_data ";
+        $query_string .=" SET user_type = 'Student' " ;
+        $query_string .= "WHERE user_email_address = :UiD;" ;
+        return $query_string;
+    }
+
+    public function updateRoleTeacher()
+    {
+        $query_string  = "UPDATE user_data ";
+        $query_string .=" SET user_type = 'Teacher' " ;
+        $query_string .= "WHERE user_email_address = :UiD;" ;
+        return $query_string;
+    }
+
+    public function deleteUser()
+    {
+        $query_string  = "DELETE FROM user_data ";
+        $query_string .= "WHERE user_email_address = :UiD;" ;
+        return $query_string;
+    }
+
+    public function deleteUserMeetings()
+    {
+        $query_string  = "DELETE FROM meeting_data ";
+        $query_string .= "WHERE meeting_host = :UiD;" ;
+        return $query_string;
+    }
+    public function deleteUserMeetingsPart()
+    {
+        $query_string  = "DELETE FROM meeting_user ";
+        $query_string .= "WHERE user_email = :UiD;" ;
         return $query_string;
     }
     public function deleteMeetingAck()
@@ -282,7 +350,7 @@ class SQLQueries
     }
     public static function getRecurringMeetingsHost()
     {
-        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type, meeting_data.notes, meeting_data.meeting_time " ;
+        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type, meeting_data.subject, meeting_data.meeting_time " ;
         $query_string .= "FROM meeting_data  ";
         $query_string .= "JOIN meeting_recursion on meeting_data.meetingId = meeting_recursion.meetingId ";
         $query_string .= "WHERE meeting_data.meeting_host = :meeting_host  ";
@@ -294,7 +362,7 @@ class SQLQueries
 
     public static function getRecurringMeetingsHostEx()
     {
-        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type, meeting_data.notes, meeting_data.meeting_time " ;
+        $query_string  = "SELECT meeting_data.meetingId, meeting_data.meeting_start, meeting_data.meeting_duration, meeting_recursion.recursion_type, meeting_data.subject, meeting_data.meeting_time " ;
         $query_string .= "FROM meeting_data  ";
         $query_string .= "JOIN meeting_recursion on meeting_data.meetingId = meeting_recursion.meetingId ";
         $query_string .= "WHERE meeting_data.meeting_host = :meeting_host  ";
@@ -344,7 +412,7 @@ class SQLQueries
     public static function getUpcomingMeetingByUser()
     {
         $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, 
-        meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.notes, meeting_data.meetingId  " ;
+        meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.subject, meeting_data.meetingId  " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= "AND meeting_data.meeting_start > :meeting_start ";
