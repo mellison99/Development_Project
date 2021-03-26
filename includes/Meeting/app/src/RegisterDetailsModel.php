@@ -134,6 +134,25 @@ class RegisterDetailsModel
         //var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
+    public function updateUser($app,$email,$cleaned_parameters)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->updateUser();
+        $query_parameters = [
+            ':user_email' => $email,
+            ':sim' => $cleaned_parameters['sanitised_sim'],
+            ':firstname'=> $cleaned_parameters['sanitised_firstname'],
+            ':lastname' => $cleaned_parameters['sanitised_lastname']
+
+        ];
+        var_dump($query_string);
+        var_dump($query_parameters[':user_email']);
+        var_dump($query_parameters[':sim']);
+        var_dump($query_parameters[':firstname']);
+        var_dump($query_parameters[':lastname']);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
 
     public function updateMeetingAck($app,$meetingID,$user)
     {
@@ -924,6 +943,18 @@ class RegisterDetailsModel
         $results = $this->database_wrapper->safeFetchRow();
         return $results;
     }
+    public function getMeetingNotes($app ,$MiD){
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getMeetingNotes();
+        $query_parameters = [
+            ':MiD'=>$MiD
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $results = $this->database_wrapper->safeFetchRow();
+        return $results;
+    }
     public function getMeetingRecursionByID($app, $MiD){
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
         $this->database_wrapper->makeDatabaseConnection();
@@ -995,6 +1026,50 @@ class RegisterDetailsModel
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
         $this->database_wrapper->makeDatabaseConnection();
         $query_string = $this->sql_queries->getUpcomingMeetingByUser();
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_start' => $start,
+            ':meeting_ack' => 1,
+            ':user_email_2' => $email,
+            ':meeting_start_2' => $start
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        //var_dump($this->database_wrapper->safeFetchRow());
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+            //var_dump($value);
+        }
+        return $value;
+    }
+
+    public function getPastMeetingsByUserCount($app, $email, $start)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getPastMeetingByUser();
+        $query_parameters = [
+            ':user_email' => $email,
+            ':meeting_start' => $start,
+            ':meeting_ack' => 1,
+            ':user_email_2' => $email,
+            ':meeting_start_2' => $start
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $results = $this->database_wrapper->countRows();
+        return $results;
+    }
+
+    public function getPastMeetingsByUser($app, $email, $start,$pos)
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getPastMeetingByUser();
         $query_parameters = [
             ':user_email' => $email,
             ':meeting_start' => $start,
@@ -1088,6 +1163,54 @@ class RegisterDetailsModel
         }
         return $value;
     }
+    public function getUserInfo($app,$email)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getUserInfo();
+        $query_parameters = [
+            ':email' => $email
+        ];
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $value = $this->database_wrapper->safeFetchRow();
+
+        return $value;
+    }
+
+    public function getStudentsCount($app)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getStudents();
+        $query_parameters = [
+            ':Student' => "Student"
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        $value = $this->database_wrapper->countRows();
+
+        return $value;
+    }
+    public function getStudents($app,$pos): array
+    {
+        $value = [];
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->getStudents();
+        $query_parameters = [
+            ':Student' => "Student"
+        ];
+
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        if ($this->database_wrapper->countRows() >= 0)
+        {
+            $x = $this->database_wrapper->countRows();
+            for($i=$pos+1; $i<=$x; $i++)
+                $value = $this->database_wrapper->safeFetchRow();
+        }
+        return $value;
+    }
+
     public function getAllUsersCount($app,$email)
     {
         $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);

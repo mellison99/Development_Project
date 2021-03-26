@@ -10,43 +10,43 @@
 </head>
 
 <ul>
-<li><a href="{{ landing_page }}">Home</a></li>
-<li><a class = "active" href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
-<li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
-<li><a href="{{ landing_page }}">Preferences and account settings</a></li>
+    <li><a href="{{ landing_page }}">Home</a></li>
+    <li><a class = "active" href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+    <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
+    <li><a href="{{ edit_profile }}">Preferences and account settings</a></li>
+    <li><a href="{{ create_event }}">Create event</a></li>
+    <li><a href="{{ view_event }}">View event</a></li>
 </ul>
 <body>
 
 <div id="page-content-div">
 
-    <button type="button" class="collapsible">Upcoming meetings</button>
-    <div class="content">
-        <p></p>
         {% for code, name in upcomingMeetings %}
             <h4 value="{{code}}"> Subject: {{ name[5] }}<br> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes </h4>
+            <a href='eventAction?MiD=0{{ name[6] }}'>
+                <img src="../media/on.png"
+                     alt="turn off meeting" width="70" height="20">
         {% endfor %}
-    </div>
-    <br> <br>
-    <button type="button" class="collapsible">Repeating meetings</button>
-    <div class="content">
-        <p></p>
+    <br>
         {% for code, name in repeatMeetings1 %}
             <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
+            <a href='meetingnotes?MiD={{ name[0] }}'>
+                 <img src="../media/on.png"
+                    alt="turn off meeting" width="70" height="20">
         {% endfor %}
-
         {% for code, name in repeatMeetings2 %}
             <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
-        {% endfor %}
-    </div>
-
-
-
-{#{% for code, name in repeatMeetings1 %}#}
-{#    <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>#}
-{#{% endfor %}#}
-{#    {% for code, name in repeatMeetings2 %}#}
-{#    <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>#}
-{#    {% endfor %}#}
+                <a href='meetingnotes?MiD={{ name[0] }}'>
+                    <img src="../media/on.png"
+                         alt="turn off meeting" width="70" height="20">
+                    {% endfor %}
+    <br>
+        {% for code, name in pastMeetings %}
+         <h4 value="{{code}}"> Subject: {{ name[5] }}<br> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes </h4>
+          <a href='meetingnotes?MiD={{ name[6] }}'>
+           <img src="../media/on.png"
+            alt="turn off meeting" width="70" height="20">
+            {% endfor %}
 </div>
 </body>
 </html>

@@ -267,6 +267,32 @@ class SQLQueries
         return $query_string;
     }
 
+    public function getStudents()
+    {
+        $query_string  = "Select user_email_address, user_firstname, user_lastname, user_sim";
+        $query_string .=" FROM user_data " ;
+        $query_string .= "WHERE user_type = :Student ;" ;
+        return $query_string;
+    }
+
+    public function updateUser()
+    {
+        $query_string  = "UPDATE user_data ";
+        $query_string .=" SET user_firstname = :firstname , " ;
+        $query_string .= "user_lastname = :lastname , ";
+        $query_string .= "user_sim = :sim  ";
+        $query_string .= "WHERE user_email_address = :user_email;" ;
+        return $query_string;
+    }
+
+    public function getUserInfo()
+    {
+        $query_string  = "SELECT user_email_address, user_firstname, user_lastname, user_sim ";
+        $query_string .= "FROM user_data ";
+        $query_string .= "WHERE user_email_address = :email; ";
+        return $query_string;
+    }
+
     public function deleteUser()
     {
         $query_string  = "DELETE FROM user_data ";
@@ -423,6 +449,28 @@ class SQLQueries
 
         return $query_string;
     }
+    public static function getPastMeetingByUser()
+    {
+        $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, 
+        meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.subject, meeting_data.meetingId  " ;
+        $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
+        $query_string .= "WHERE meeting_user.user_email = :user_email ";
+        $query_string .= "AND meeting_data.meeting_start < :meeting_start ";
+        $query_string .= "AND meeting_user.meeting_ack = :meeting_ack ";
+        $query_string .= " OR meeting_data.meeting_host = :user_email_2 ";
+        $query_string .= "AND meeting_data.meeting_start < :meeting_start_2 ";
+        $query_string .= "ORDER BY meeting_data.meeting_start DESC;";
+
+        return $query_string;
+    }
+public static function getMeetingNotes()
+{
+    $query_string  = "SELECT meeting_data.notes " ;
+    $query_string .= "FROM meeting_data  ";
+    $query_string .= "WHERE meetingId = :MiD;";
+    return $query_string;
+
+}
 
     public static function getMeetingByUser()
     {

@@ -25,12 +25,14 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
     $start = $date[0];
     //var_dump($start);
     $upcomingMeetings = getUpcomingMeetings($app,$email,$start);
+    $pastMeetings = getPastMeetings($app,$email,$start);
     $repeatMeetings = getRecurringMeetingHostD($app,$email);
     $searchableId = getRecurringMeetingParticipantD($app, $email);
     $repeatMeetings2 = getRecurringMeetingParticipantDetailsD($app, $searchableId)[0];
     $formattedRepeatMeetings = formatRecurringMeetingInfo($repeatMeetings);
     $formattedRepeatMeetings2 = formatRecurringMeetingInfo($repeatMeetings2);
     $count = sizeof($repeatMeetings2);
+
 
     for($i =0; $i<=$count-1 ; $i++){
         $repeatInfo = getdate($repeatMeetings2[$i][1]);
@@ -53,6 +55,7 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
     //var_dump($repeatMeetings2);
 
    //var_dump($upcomingMeetings);
+   // var_dump($pastMeetings);
 
     $html_output = $this->view->render($response,
         'upcomingmeetings.html.twig',
@@ -61,6 +64,10 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
             'landing_page' => LANDING_PAGE . '/calendar',
             'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
+            'edit_profile'=> LANDING_PAGE . '/profilemanagement',
+            'create_event'=> LANDING_PAGE . '/events',
+            'view_event'=> LANDING_PAGE . '/eventView',
+            'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
             'method' => 'post',
             'method2' => 'post',
             'initial_input_box_value' => null,
@@ -68,6 +75,7 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
             'page_heading_1' => APP_NAME,
             'currentDate' =>date('Y-m-d'),
             'upcomingMeetings' =>$upcomingMeetings,
+            'pastMeetings' =>$pastMeetings,
             'repeatMeetings1' => $formattedRepeatMeetings,
             'repeatMeetings2' => $formattedRepeatMeetings2,
         ]);
@@ -101,6 +109,38 @@ function getUpcomingMeetings($app,$email,$date)
     }else{
         for($i =0; $i<=$value ; $i++){
             $idstring = $DetailsModel->getUpcomingMeetingsByUser($app, $email, $date, $i);
+
+            array_push($downloadMessages,$idstring);
+        }
+        array_pop($downloadMessages);
+
+        return $downloadMessages;
+    }
+}
+
+function getPastMeetings($app,$email,$date)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->getPastMeetingsByUserCount($app, $email,$date);
+
+
+    $downloadMessages = [];
+    if($value<0){
+        array_push($downloadMessages,"no  meetings");
+    }else{
+        for($i =1; $i<=$value ; $i++){
+            $idstring = $DetailsModel->getPastMeetingsByUser($app, $email, $date, $i);
 
             array_push($downloadMessages,$idstring);
         }
