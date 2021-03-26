@@ -2,10 +2,9 @@
 /**
 	* routes.php
 	*
-	* Author: Hasan, Matthew
-	* Date: 17/01/2021
+	* Author: Matthew
+	* Date: 26/03/2021
 	*
-	* @author Hasan
     * @author Matthew
 	*/
 
@@ -28,7 +27,11 @@ require 'routes/meetingshosted.php';
 require 'routes/hostedmeetingsaction.php';
 require 'routes/hostedmeetingsedit.php';
 require 'routes/alluserslist.php';
+require 'routes/studentlist.php';
 require 'routes/userlistaction.php';
+require  'routes/profilemanagement.php';
+require 'routes/updateuser.php';
+require  'routes/meetingnotes.php';
 
 
 

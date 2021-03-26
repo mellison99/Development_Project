@@ -68,14 +68,6 @@ $app->post(
                     return $html_output->withHeader('Location', LANDING_PAGE . '/registeruserlandingpage');
                 }
 
-//                if(checkNumber($app, $cleaned_parameters) == true)
-//                {
-//                    $error = "That number is already registered, please login ";
-//                    $_SESSION['error'] = $error;
-//                    $html_output =  $this->view->render($response,
-//                        'register.html.twig');
-//                    return $html_output->withHeader('Location', LANDING_PAGE . '/registeruserlandingpage');
-//                }
             }
 
 
