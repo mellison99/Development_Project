@@ -1,6 +1,6 @@
 html {margin:0;padding:0;border:0;}
 
-body {color:black;background-color: rgba(102,102,153,0.5);font-family:arial, sans-serif;font-size:12pt;}
+body {color:black;background-color: rgba(248, 248, 248, 0.5);font-family:arial, sans-serif;font-size:12pt;}
 
 /***********************************************/
 /* link styles                                 */
@@ -34,8 +34,55 @@ legend {
 /***********************************************/
 .cent {text-align:center;}
 .heads {font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;font-size:1.2em;text-align:left;}
-.curr_page {color:darkslateblue;font-weight:bolder;text-shadow:black;border:1px darkslateblue;}
+.curr_page {color: #ffffff;font-weight:bolder;text-shadow:black;border:1px #bfbdc6;}
 .result {color:inherit;font-weight:bold;text-shadow:black;}
+.collapsible {
+    cursor: pointer;
+    padding: 20px;
+    color: black;
+    background: rgba(195, 195, 219, 0.5);
+    border-radius: 1px;
+    text-align: center;
+    font-size: 15px;
+}
+.active, .collapsible:hover {
+}
+.content {
+    display: none;
+    overflow: hidden;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+li a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+.table{
+    table-layout: fixed;
+}
+.td{
+    width:33%
+}
+
 
 /***********************************************/
 /* horizontal line styles                      */
