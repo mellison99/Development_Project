@@ -13,7 +13,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 $app->get('/hostedmeetingsaction', function (Request $request, Response $response) use ($app) {
-    $error = "something went wrong, please try again";
+
 
     if (!isset($_SESSION['username'])) {
         $error = "please login";
@@ -55,10 +55,9 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
     }
     $meetingDetails = getMeetingDetailsById($app, $cleaned_MiD, $email);
     $userList = getUserDetailsById($app, $cleaned_MiD);
-    $recursionValue = getMeetingRecursionTypeById($app, $cleaned_MiD)[0];
-//    var_dump($userList);
-//    var_dump($meetingDetails);
-//    var_dump($recursionValue);
+
+
+
 
     $html_output = $this->view->render($response,
         'hostedmeetingsaction.html.twig',
@@ -80,10 +79,7 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
             'currentDate' =>date('Y-m-d'),
             'meetingData'=>$meetingDetails,
             'userData' => $userList,
-            'neverChecked' => $neverChecked,
-            'weeklyChecked' => $weeklyChecked,
-            'monthlyChecked' => $monthlyChecked,
-            'annuallyChecked' => $annuallyChecked,
+            'loopvar'=> sizeof($userList)
         ]);
     $_SESSION['error'] = "";
 
@@ -92,20 +88,7 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
 
 })->setName('homepage');
 
-function recursionHtmlPrep(){
-    $radioButtons .=" <br>";
-    $radioButtons .="   <p>Set to repeat:" ;
-    $radioButtons .="    <input type='radio' id='never' name='repeat' value='never' checked='checked'>";
-    $radioButtons .=" <label for='never'>Never</label>" ;
-    $radioButtons .="<input type='radio' id='weekly' name='repeat' value='weekly' >";
-    $radioButtons .=" <label for='weekly'>Weekly</label>";
-    $radioButtons .="<input type='radio' id='monthly' name='repeat' value='monthly'>";
-    $radioButtons .="<label for='monthly'>Monthly</label>";
-    $radioButtons .="<input type='radio' id='annually' name='repeat' value='annually'>";
-    $radioButtons .="<label for='annually'>Annually</label>";
-    $radioButtons .="<br>";
-    return $radioButtons;
-}
+
 
 function getMeetingDetailsById($app, $MiD, $email){
     $database_wrapper = $app->getContainer()->get('databaseWrapper');

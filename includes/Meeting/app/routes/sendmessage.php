@@ -205,12 +205,14 @@ function cleanupParameters1($app, $tainted_parameters)
     $tainted_time = $tainted_parameters['time'];
     $tainted_duration = $tainted_parameters['duration'];
     $tainted_notes = $tainted_parameters['notes'];
+    $tainted_subject = $tainted_parameters['subject'];
     $tainted_repeat = $tainted_parameters['repeat'];
     $tainted_users = $tainted_parameters['name'];
     $cleaned_parameters['sanitised_time'] = $validator->sanitiseString($tainted_time);
     $cleaned_parameters['sanitised_duration'] = $validator->sanitiseString($tainted_duration);
     $cleaned_parameters['sanitised_Id'] = time();
     $cleaned_parameters['sanitised_notes'] = $validator->sanitiseString($tainted_notes);
+    $cleaned_parameters['sanitised_subject'] = $validator->sanitiseString($tainted_subject);
     $cleaned_parameters['sanitised_repeat'] = $validator->sanitiseString($tainted_repeat);
     $sanitised_users = [];
     //var_dump($tainted_users[0]);
@@ -251,8 +253,8 @@ function makeM2MString(array $cleaned_parameters,$email){
     $M2MString .= 'duration:';
     $M2MString .= $cleaned_parameters['sanitised_duration'];
     $M2MString .= '  |';
-    $M2MString .= 'notes: ';
-    $M2MString .= $cleaned_parameters['sanitised_notes'];
+    $M2MString .= 'Subject: ';
+    $M2MString .= $cleaned_parameters['sanitised_subject'];
     $M2MString .= '  |';
 
     $M2MString .= 'host email: ';

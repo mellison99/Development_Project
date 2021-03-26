@@ -1,0 +1,46 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+<html lang="en">
+
+<head>
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+    <title></title>
+</head>
+<ul>
+    <li><a href="{{ landing_page }}">Home</a></li>
+    <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+    <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
+    <li><a href="{{ landing_page }}">Preferences and account settings</a></li>
+</ul>
+<body>
+
+<div id="page-content-div">
+    <h3>{{ page_heading_2 }}</h3>
+    <form action="{{ action }}" method="{{ method }}">
+    {% for code, name in userslist %}
+    <option value="{{code}}">   Email: {{ name[0] }}
+        <br>  Name: {{ name[1] }} {{ name[2] }} <br> Mobile number: {{name[3] }} <br>Role: {{ name[4] }}<br>
+        <a href='userlistaction?UiD={{ name[4] }}{{ name[0] }}'>
+            <img src="../media/edit.png"
+                 alt="swap role" width="20" height="20">
+        </a>
+        &emsp;
+        <a href='userlistaction?UiD=D{{ name[0] }}'>
+            <img src="../media/delete.png"
+                 alt="delete user" width="20" height="20">
+        </a>
+        {% endfor %}
+<br><br>
+</fieldset>
+<br><br>
+<p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+</fieldset>
+</form>
+
+</div>
+</body>
+</html>
+
+
+
+{% endblock %}

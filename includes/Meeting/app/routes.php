@@ -12,7 +12,6 @@
 require 'routes/homepage.php';
 require 'routes/registeruserlandingpage.php';
 require 'routes/registeruser.php';
-require 'routes/downloadedmessages.php';
 require 'routes/downloadedmessagesindb.php';
 require 'routes/sendmessage.php';
 require 'routes/sendmessagelandingpage.php';
@@ -28,7 +27,8 @@ require 'routes/eventAction.php';
 require 'routes/meetingshosted.php';
 require 'routes/hostedmeetingsaction.php';
 require 'routes/hostedmeetingsedit.php';
-
+require 'routes/alluserslist.php';
+require 'routes/userlistaction.php';
 
 
 

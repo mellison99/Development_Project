@@ -4,6 +4,12 @@
         <h2>{{ page_heading_2 }}</h2>
         <p>{{ page_text }}</p>
         {{ error }}
+        <ul>
+            <li><a href="{{ landing_page }}">Home</a></li>
+            <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+            <li><a class = "active" href="{{ meeting_requests }}">New Meeting Requests</a></li>
+            <li><a href="{{ landing_page }}">Preferences and account settings</a></li>
+        </ul>
         <form action="{{ action }}" method="{{ method }}">
         {% for code, name in country_names %}
             <option value="{{code}}">Host: {{ name[4] }} On: {{name[1] }} at {{ name[2] }} for: {{ name[3] }}
@@ -13,7 +19,7 @@
 
         </fieldset>
                 <br><br>
-                <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
+
             </fieldset>
         </form>
     </div>

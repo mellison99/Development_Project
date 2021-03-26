@@ -132,11 +132,11 @@ $app->post(
         $message_content = makeM2MString($cleaned_parameters,$email);
         $numbersToMessage = getNumberbyUser($app,$cleaned_parameters);
 
-        $meetingsToCheck = checkTimeslot($app,$cleaned_parameters);
+        $meetingsToCheck = checkTimeslotEx($app,$cleaned_parameters,$cleaned_MiD);
        // var_dump($meetingsToCheck);
         for($i =0; $i<$meetingsToCheck; $i++){
-            checkTimeslotUsers($app,$cleaned_parameters,$meetingsToCheck[$i]);
-            $usersAtTimeslotArray = checkTimeslotUsers($app,$cleaned_parameters,$meetingsToCheck[$i]);
+            checkTimeslotUsersEx($app,$cleaned_parameters,$meetingsToCheck[$i],$cleaned_MiD);
+            $usersAtTimeslotArray = checkTimeslotUsersEx($app,$cleaned_parameters,$meetingsToCheck[$i],$cleaned_MiD);
         }
         //var_dump(sizeof($usersAtTimeslotArray));
         $meetingsattending = 0;
@@ -150,7 +150,7 @@ $app->post(
 
         }
         //var_dump($meetingsattending);
-           if(checkTimeslot($app,$cleaned_parameters)=="0" and $meetingsattending <= 0) {
+           if(checkTimeslotEx($app,$cleaned_parameters,$cleaned_MiD)=="0" and $meetingsattending <= 0) {
 
 
 
@@ -210,12 +210,14 @@ function cleanupParametersForUpdate($app, $tainted_parameters, $meetingId)
     $validator = $app->getContainer()->get('validator');
     $tainted_time = $tainted_parameters['time'];
     $tainted_duration = $tainted_parameters['duration'];
+    $tainted_subject = $tainted_parameters['subject'];
     $tainted_notes = $tainted_parameters['notes'];
     $tainted_repeat = $tainted_parameters['repeat'];
     $tainted_users = $tainted_parameters['name'];
     $cleaned_parameters['sanitised_time'] = $validator->sanitiseString($tainted_time);
     $cleaned_parameters['sanitised_duration'] = $validator->sanitiseString($tainted_duration);
     $cleaned_parameters['sanitised_Id'] = $meetingId;
+    $cleaned_parameters['sanitised_subject'] = $validator->sanitiseString($tainted_subject);
     $cleaned_parameters['sanitised_notes'] = $validator->sanitiseString($tainted_notes);
     $cleaned_parameters['sanitised_repeat'] = $validator->sanitiseString($tainted_repeat);
     $sanitised_users = [];
@@ -291,52 +293,51 @@ function deleteMeetingToUpdate($app, $MiD, $email)
 //    $soap_client_handle = $SoapWrapper->createSoapClient();
 //    $soap_client_handle->sendMessage('20_2414628', 'PublicPassword12',"+".$numberToSend[0],$message_content,false,"SMS");
 //}
-//function checkTimeslot($app, array $cleaned_parameters)
-//{
-//
-//
-//    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-//    $sql_queries = $app->getContainer()->get('SQLQueries');
-//    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-//
-//    $settings = $app->getContainer()->get('settings');
-//    $database_connection_settings = $settings['pdo_settings'];
-//
-//    $DetailsModel->setSqlQueries($sql_queries);
-//    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-//    $DetailsModel->setDatabaseWrapper($database_wrapper);
-//
-//    $result = $DetailsModel->checkTimeslot($app, $cleaned_parameters);
-//    //var_dump($result);
-//    return $result;
-//
-//}
-//
-//function checkTimeslotUsersEx($app, array $cleaned_parameters, $meetingsToCheck)
-//{
-//    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-//    $sql_queries = $app->getContainer()->get('SQLQueries');
-//    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-//
-//    $settings = $app->getContainer()->get('settings');
-//    $database_connection_settings = $settings['pdo_settings'];
-//
-//    $DetailsModel->setSqlQueries($sql_queries);
-//    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-//    $DetailsModel->setDatabaseWrapper($database_wrapper);
-//    $meetingList = [];
-//    $value = $meetingsToCheck;
-//    //var_dump($meetingsToCheck);
-//    //var_dump($value);
-//    for($i =0; $i<=$value; $i++){
-//        //$meeting = $meetingsToCheck[$i];
-//       // var_dump($DetailsModel->checkTimeslotDetails($app, $cleaned_parameters,$meeting));
-//        $result = $DetailsModel->checkTimeslotDetails($app, $cleaned_parameters,$meetingsToCheck);
-//    }
-//    //var_dump($result);
-//        return $result;
-//       // array_push($meetingList,$result." ");
-//}
+function checkTimeslotEx($app, array $cleaned_parameters, $MiD)
+{
+
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+
+    $result = $DetailsModel->checkTimeslotEx($app, $cleaned_parameters, $MiD);
+    //var_dump($result);
+    return $result;
+
+}
+
+function checkTimeslotUsersEx($app, array $cleaned_parameters, $meetingsToCheck, $MiD)
+{
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $meetingList = [];
+    $value = $meetingsToCheck;
+    //var_dump($meetingsToCheck);
+    //var_dump($value);
+    for($i =0; $i<=$value; $i++){
+        //$meeting = $meetingsToCheck[$i];
+        $result = $DetailsModel->checkTimeslotDetailsEx($app, $cleaned_parameters,$meetingsToCheck, $MiD);
+    }
+    //var_dump($result);
+        return $result;
+       // array_push($meetingList,$result." ");
+}
 function updateMeetingDetails($app, array $cleaned_parameters, string $email)
 {
     $store_data_result = null;
