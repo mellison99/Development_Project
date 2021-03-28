@@ -2,7 +2,7 @@
 {% block content %}
     <div id="page-content-div">
         <h3>{{ page_heading_2 }}</h3>
-        <form action="{{ action }}" method="{{ method }}">
+        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
             <fieldset>
                 <legend>New User Details</legend>
                 <br>
@@ -21,12 +21,17 @@
                 <label for="password">Password:</label>
                 <input id="password" name="password" type="password" value="{{ initial_input_box_value }}" size="30" maxlength="50">
                 <br><br>
+                <label for="profile_image">Set profile picture</label>
+{#                <input type='file' name='file' />#}
+                <input type='file' id="profile_image" name='profile_image' />
+                <br><br>
                 <p>Role:
                     <input type="radio" id="role_teacher" name="role" value="Teacher">
                     <label for="role_teacher">Teacher</label>
                     <input type="radio" id="role_student" name="role" value="Student">
                     <label for="role_student">Student</label><br>
                 </p>
+
                 <br><br>
                 <input type="submit"  value="Register" href = "{{ register }}"></a>
                 <br><br>
@@ -34,6 +39,7 @@
                 <p>{{ error }}</p>
             </fieldset>
         </form>
+
         <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
     </div>
 {% endblock %}

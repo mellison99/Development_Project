@@ -139,7 +139,7 @@ function getPastMeetings($app,$email,$date)
     if($value<0){
         array_push($downloadMessages,"no  meetings");
     }else{
-        for($i =1; $i<=$value ; $i++){
+        for($i =0; $i<=$value ; $i++){
             $idstring = $DetailsModel->getPastMeetingsByUser($app, $email, $date, $i);
 
             array_push($downloadMessages,$idstring);

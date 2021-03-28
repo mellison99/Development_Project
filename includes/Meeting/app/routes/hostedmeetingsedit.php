@@ -174,6 +174,31 @@ $app->post(
                 'sent_message.html.twig');
             return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
         }
+        if($success == true){
+
+            $name = $cleaned_MiD .$_FILES['file']['name'];
+            $target_dir = "meetingdocs/";
+            $target_file = $target_dir . basename($_FILES["file"]["name"]);
+            // Select file type
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+            // Valid file extensions
+            $extensions_arr = array("txt", "docx", "doc", "pdf");
+
+            // Check extension
+            if (in_array($imageFileType, $extensions_arr)) {
+
+                $cleaned_parameters = ['sanitised_id'=> $cleaned_MiD];
+                storeMeetingDoc($app, $name, $cleaned_MiD);
+//                $query = "insert into images(name) values('" . $name . "')";
+//                mysqli_query($con, $query);
+
+                // Upload file
+                move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+                $information = move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+
+            }
+        }
 
         //getSimbyEmail($app, $email);
         $_SESSION['error'] = $error;

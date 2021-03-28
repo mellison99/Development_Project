@@ -25,6 +25,9 @@ $app->get('/meetingnotes', function(Request $request, Response $response) use ($
 
     $cleaned_MiD = cleanupParameters($app, $tainted_MiD);
    $notes = getMeetingNotes($app, $cleaned_MiD);
+   $fileLink = getMeetingFiles($app, $cleaned_MiD);
+
+   $fileLink = "../meetingdocs/".$fileLink[0];
 $html_output = $this->view->render($response,
 'meetingnotes.html.twig',
 [
@@ -45,6 +48,7 @@ $html_output = $this->view->render($response,
 'update' => LANDING_PAGE . '/updateuser',
 'error' => $error,
 'notes' => $notes,
+'meetingDocs' => $fileLink,
 ]);
 
 processOutput($app, $html_output);
@@ -66,6 +70,21 @@ $DetailsModel->setSqlQueries($sql_queries);
 $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
 $DetailsModel->setDatabaseWrapper($database_wrapper);
 return $DetailsModel->getMeetingNotes($app, $MiD);
+
+}
+
+function getMeetingFiles($app, $MiD){
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    return $DetailsModel->fetchMeetingDoc($app, $MiD);
 
 }
 

@@ -1,0 +1,13 @@
+{% extends 'banner.html.twig' %}
+{% block content %}
+    <html>
+    <head>
+        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
+            <input type='file' name='file' />
+            <input type='submit' value='Save name' name='but_upload'>
+            <label for="name">Id:</label>
+            <input id="name" name="name" type="text" value="{{ initial_input_box_value }}" size="30" maxlength="50">
+        </form>
+    </body>
+    </html>
+{% endblock %}

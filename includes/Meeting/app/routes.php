@@ -33,5 +33,8 @@ require  'routes/profilemanagement.php';
 require 'routes/updateuser.php';
 require  'routes/meetingnotes.php';
 
+require  'routes/test.php';
+require  'routes/images.php';
+
 
 

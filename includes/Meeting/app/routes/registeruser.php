@@ -16,9 +16,11 @@ $app->post(
     function(Request $request, Response $response) use ($app)
     {
         $error = "";
+        $fileArray = $_FILES;
         $tainted_parameters = $request->getParsedBody();
 
         $cleaned_parameters = cleanupParameterss1($app, $tainted_parameters);
+
         $hashed_password = hash_passwords($app, $tainted_parameters['password']);
 
         $_SESSION['error'] = $cleaned_parameters;
@@ -72,7 +74,12 @@ $app->post(
 
 
         if($error == '')
-        {storeUserDetails($app, $cleaned_parameters, $hashed_password);
+        {
+
+           $result = storeUserDetails($app, $cleaned_parameters, $hashed_password);
+var_dump($result);
+
+
             try {
 
                        try {
@@ -101,7 +108,30 @@ $app->post(
                 return $html_output->withHeader('Location', LANDING_PAGE . '/registeruserlandingpage');
             };
         }
+        if($result == "complete"){
+            $name = $fileArray['profile_image']['name'];
+//                var_dump($name);
+            $target_dir = "profileimages/";
+            $target_file = $target_dir . basename($_FILES["profile_image"]["name"]);
+//                var_dump($target_file);
+            // Select file type
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
+            // Valid file extensions
+            $extensions_arr = array("jpg", "jpeg", "png", "gif");
+            var_dump($imageFileType);
+            // Check extension
+            if (in_array($imageFileType, $extensions_arr)) {
+
+                // Insert record
+                storeProfilePic($app,$name, $cleaned_parameters);
+
+
+                // Upload file
+                move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+                $information = move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+
+            }}
         $html_output =  $this->view->render($response,
             'register_user.html.twig',
             [
@@ -156,9 +186,26 @@ function storeUserDetails($app, array $cleaned_parameters, string $hashed_passwo
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
 
-    $DetailsModel->setRegisterDetails($app, $cleaned_parameters, $hashed_password);
+    $store_data_result = $DetailsModel->setRegisterDetails($app, $cleaned_parameters, $hashed_password);
+    return $store_data_result;
 }
 
+function storeProfilePic($app,$name,$cleaned_parameters)
+{
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel->storeProfilePic($app, $name, $cleaned_parameters['sanitised_email']);
+    return $value;
+}
 
 function StoreMetaData($app, array $cleaned_parameters)
 {

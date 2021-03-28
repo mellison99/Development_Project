@@ -51,6 +51,84 @@ class RegisterDetailsModel
         ];
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         //var_dump($this);
+        return "complete";
+    }
+
+    public function storeProfilePic($app, $name, $cleaned_parameters)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->storeProfilePic();
+//        var_dump($query_string);
+        $query_parameters = [
+            ':user_email_address' => $cleaned_parameters,
+            ':name' => $name
+        ];
+//        var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+    public function deleteProfilePic($app, $email)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->deleteProfilePic();
+//        var_dump($query_string);
+        $query_parameters = [
+            ':user_email_address' => $email,
+
+        ];
+//        var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
+    public function fetchProfilePic($app,$email)
+    {
+
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->fetchProfilePic();
+        $query_parameters = [
+            ':id' => $email
+        ];
+//        var_dump($query_parameters);
+//        var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        return $value = $this->database_wrapper->safeFetchRow();
+
+
+
+    }
+
+    public function storeMeetingDoc($app, $name, $cleaned_parameters)
+    {
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->storeMeetingDoc();
+//        var_dump($query_string);
+        $query_parameters = [
+            ':meetingId' => $cleaned_parameters['sanitised_Id'],
+            ':name' => $name
+        ];
+//        var_dump($query_parameters);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+    }
+
+    public function fetchMeetingDoc($app,$Id)
+    {
+
+        $this->database_wrapper->setDatabaseConnectionSettings($this->database_connection_settings);
+        $this->database_wrapper->makeDatabaseConnection();
+        $query_string = $this->sql_queries->fetchMeetingDoc();
+        $query_parameters = [
+            ':id' => $Id
+        ];
+//        var_dump($query_parameters);
+//        var_dump($query_string);
+        $this->database_wrapper->safeQuery($query_string, $query_parameters);
+        return $value = $this->database_wrapper->safeFetchRow();
+
+
+
     }
 
     public function getUserEmailFromInput(){
@@ -80,6 +158,7 @@ class RegisterDetailsModel
             ':notes' => $cleaned_parameters['sanitised_notes']
         ];
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
+
     }
 
     public function setMeetingUserDetails($app, $cleaned_parameters,$meetingID,$user)
@@ -146,11 +225,11 @@ class RegisterDetailsModel
             ':lastname' => $cleaned_parameters['sanitised_lastname']
 
         ];
-        var_dump($query_string);
-        var_dump($query_parameters[':user_email']);
-        var_dump($query_parameters[':sim']);
-        var_dump($query_parameters[':firstname']);
-        var_dump($query_parameters[':lastname']);
+//        var_dump($query_string);
+//        var_dump($query_parameters[':user_email']);
+//        var_dump($query_parameters[':sim']);
+//        var_dump($query_parameters[':firstname']);
+//        var_dump($query_parameters[':lastname']);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
 

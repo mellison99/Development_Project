@@ -3,18 +3,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <style>
-        ul{
-            background-color: #abdde5;
-            cursor:pointer;
-        }
-        li{
-            padding:12px;
-        }
-    </style>
     <div id="page-content-div">
         <h3>{{ page_heading_2 }}</h3>
-        <form action="{{ action }}" method="{{ method }}">
+        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
 
                 <legend>New Meeting Details</legend>
                 <br>
@@ -91,6 +82,7 @@
                 <label for="annually">Annually</label>
                     <br>
     </p>
+    <input type='file' name='file' />
                 <br>
                 <input type="submit"  value="Send" href = "{{ Send }}"></a>
             </fieldset>

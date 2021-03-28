@@ -14,7 +14,7 @@
     </style>
     <div id="page-content-div">
         <h3>{{ page_heading_2 }}</h3>
-        <form action="{{ action }}" method="{{ method }}">
+        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
 
                 <legend>New Meeting Details</legend>
                 <br>
@@ -75,7 +75,10 @@
 <label for="annually">Annually</label>
 
 <br>
+
     </p>
+    <input type='file' name='file' />
+    <br>
                 <br>
                 <input type="submit"  value="Send" href = "{{ Send }}"></a>
             </fieldset>

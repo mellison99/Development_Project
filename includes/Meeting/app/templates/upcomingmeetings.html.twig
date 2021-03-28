@@ -23,7 +23,7 @@
 
         {% for code, name in upcomingMeetings %}
             <h4 value="{{code}}"> Subject: {{ name[5] }}<br> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes </h4>
-            <a href='eventAction?MiD=0{{ name[6] }}'>
+            <a href='meetingnotes?MiD={{ name[6] }}'>
                 <img src="../media/on.png"
                      alt="turn off meeting" width="70" height="20">
         {% endfor %}
