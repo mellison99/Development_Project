@@ -21,6 +21,7 @@ $app->post('/updateuser', function(Request $request, Response $response) use ($a
         'homepageform.html.twig');
         return $html_output->withHeader('Location', LANDING_PAGE);
         }
+    $fileArray = $_FILES;
     $tainted_parameters = $request->getParsedBody();
 
     $cleaned_parameters = cleanupEditParameters($app, $tainted_parameters);
@@ -52,6 +53,29 @@ $app->post('/updateuser', function(Request $request, Response $response) use ($a
 
 
     updateUser($app, $_SESSION['username'], $cleaned_parameters);
+    if(isset($fileArray['profile_image']['name'])){
+    $name = $fileArray['profile_image']['name'];
+                var_dump($name);
+        $target_dir = "profileimages/";
+        $target_file = $target_dir . basename($_FILES["profile_image"]["name"]);
+                var_dump($target_file);
+        // Select file type
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Valid file extensions
+        $extensions_arr = array("jpg", "jpeg", "png", "gif");
+
+        // Check extension
+        if (in_array($imageFileType, $extensions_arr)) {
+            var_dump($imageFileType);
+            // Insert record
+            updateUserProfileImage($app,$name, $_SESSION['username']);
+            // Upload file
+            var_dump($target_dir . $name);
+            move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+            $information = move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+
+        }}
     $error = "Success";
     $_SESSION['error2'] = $error;
     $html_output =  $this->view->render($response,
@@ -109,6 +133,23 @@ $DetailsModel->setSqlQueries($sql_queries);
 $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
 $DetailsModel->setDatabaseWrapper($database_wrapper);
 $DetailsModel->updateUser($app, $email, $cleanedparameters);
+
+
+}
+function updateUserProfileImage($app, $email, $name)
+{
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $DetailsModel->deleteProfilePic($app, $name);
+    $DetailsModel->storeProfilePic($app, $email, $name);
 
 }
 

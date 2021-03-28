@@ -153,6 +153,7 @@ $app->post(
             storeMeetingDetails($app, $cleaned_parameters, $email);
             storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
             storeMeetingRecursion($app,$cleaned_parameters);
+            $success = true;
             $amountOfNumbers = count($numbersToMessage);
             //var_dump($amountOfNumbers);
             //var_dump($numbersToMessage[0]);
@@ -168,6 +169,34 @@ $app->post(
                 'sent_message.html.twig');
             $date = $_SESSION['date'];
             return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+        }
+
+        if($success == true){
+
+//                var_dump($cleaned_parameters['sanitised_Id']);
+                $name = $cleaned_parameters['sanitised_Id'] .$_FILES['file']['name'];
+                $target_dir = "meetingdocs/";
+                $target_file = $target_dir . basename($_FILES["file"]["name"]);
+//                var_dump($target_file);
+                // Select file type
+                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+                // Valid file extensions
+                $extensions_arr = array("txt", "docx", "doc", "pdf");
+
+                // Check extension
+                if (in_array($imageFileType, $extensions_arr)) {
+
+                    // Insert record
+                    storeMeetingDoc($app, $name, $cleaned_parameters);
+//                $query = "insert into images(name) values('" . $name . "')";
+//                mysqli_query($con, $query);
+
+                    // Upload file
+                    move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+                    $information = move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
+
+            }
         }
 
         //getSimbyEmail($app, $email);
@@ -336,6 +365,27 @@ function storeMeetingDetails($app, array $cleaned_parameters, string $email)
 
 
 }
+function storeMeetingDoc($app, $name, $cleaned_parameters)
+{
+    $store_data_result = null;
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+
+    $DetailsModel->storeMeetingDoc($app, $name, $cleaned_parameters);
+
+
+
+}
+
 function storeMeetingRecursion($app,$cleaned_parameters)
 {
     $store_data_result = null;

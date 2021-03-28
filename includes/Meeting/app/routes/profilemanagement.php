@@ -23,6 +23,10 @@ $app->get('/profilemanagement', function(Request $request, Response $response) u
         return $html_output->withHeader('Location', LANDING_PAGE);
     }
 $userDetails = getUserInfo($app, $_SESSION['username']);
+$result = getUserPic($app, $_SESSION['username']);
+$image = $result[0];
+$image_src = "../profileimages/".$image;
+
 
 $html_output = $this->view->render($response,
 'profilemanagement.html.twig',
@@ -44,6 +48,7 @@ $html_output = $this->view->render($response,
 'update' => LANDING_PAGE . '/updateuser',
 'error' => $_SESSION['error2'],
 'userdetails'=>$userDetails,
+'profile_image'=>$image_src
 ]);
 
 processOutput($app, $html_output);
@@ -68,6 +73,23 @@ function getUserInfo($app, $email){
     $userDetails = $DetailsModel->getUserInfo($app, $email);
     return $userDetails;
 }
+function getUserPic($app, $email){
+    $userDetails = [];
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+
+    $userDetails = $DetailsModel->fetchProfilePic($app,$email);
+    return $userDetails;
+}
+
 
 function updateUserDetails($app, array $cleaned_parameters)
 {

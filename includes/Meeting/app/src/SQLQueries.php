@@ -472,6 +472,54 @@ public static function getMeetingNotes()
 
 }
 
+    public function storeProfilePic()
+    {
+        $query_string  = "INSERT INTO user_image ";
+        $query_string .= "SET ";
+        $query_string .= "user_email = :user_email_address , ";
+        $query_string .= "image_name = :name ;";
+        return $query_string;
+    }
+    public function deleteProfilePic()
+    {
+        $query_string  = "DELETE FROM user_image ";
+        $query_string .= "WHERE ";
+        $query_string .= "user_email = :user_email_address;";
+        return $query_string;
+    }
+
+//    public function updateProfilePic()
+//    {
+//        $query_string  = "UPDATE user_image ";
+//        $query_string .= "SET image_name = :name  ";
+//        $query_string .= "WHERE user_email = :user_email_address ;";
+//        return $query_string;
+//    }
+    public function fetchProfilePic()
+    {
+        $query_string  ="SELECT image_name ";
+        $query_string .= "FROM user_image ";
+        $query_string .="WHERE user_email = :id;";
+        return $query_string;
+    }
+
+    public function storeMeetingDoc()
+    {
+        $query_string  = "INSERT INTO meeting_docs ";
+        $query_string .= "SET ";
+        $query_string .= "doc_name = :name , ";
+        $query_string .= "meetingId = :meetingId ;";
+        return $query_string;
+    }
+
+    public function fetchMeetingDoc()
+    {
+        $query_string  ="SELECT doc_name ";
+        $query_string .= "FROM meeting_docs ";
+        $query_string .="WHERE meetingId = :id;";
+        return $query_string;
+    }
+
     public static function getMeetingByUser()
     {
         $query_string  = "SELECT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_host, meeting_user.user_email " ;
