@@ -250,7 +250,7 @@ function getRecurringMeetingParticipantDetailsD($app, $meetingIDtoSearch){
 function formatRecurringMeetingInfo($repeatMeetings){
     $count = sizeof($repeatMeetings);
 
-    for($i =0; $i<=$count-1 ; $i++){
+    for($i =0; $i<=$count ; $i++){
         $repeatInfo = getdate($repeatMeetings[$i][1]);
         if($repeatMeetings[$i][3] == "weekly") {
             $repeatMeetings[$i][1] = $repeatInfo['weekday'];

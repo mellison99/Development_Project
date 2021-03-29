@@ -40,7 +40,7 @@ $app->post(
         }
 
 
-
+var_dump($cleaned_parameters['sanitised_start']);
 
         $StartVal=getdate($cleaned_parameters['sanitised_start'])['hours'].getdate($cleaned_parameters['sanitised_start'])['minutes'];
         $EndVal=getdate($cleaned_parameters['sanitised_end'])['hours'].getdate($cleaned_parameters['sanitised_end'])['minutes'];
@@ -118,10 +118,11 @@ $app->post(
         {
             $error = 'please fill in all details to register';
             $_SESSION['error'] = $error;
-            $html_output =  $this->view->render($response,
-                'sent_message.html.twig');
-            $date = $_SESSION['date'];
-            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
+            var_dump("TEST3");
+//            $html_output =  $this->view->render($response,
+//                'sent_message.html.twig');
+//            $date = $_SESSION['date'];
+//            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
 
         }
 
@@ -155,6 +156,7 @@ $app->post(
 
 
             $meetingID = 2;
+            var_dump("TEST");
             deleteMeetingToUpdate($app, $cleaned_MiD, $email);
             storeMeetingDetails($app, $cleaned_parameters, $email);
             storeMeetingUserDetails($app,$cleaned_parameters, $meetingID);
@@ -169,10 +171,11 @@ $app->post(
     }
         else{
             $error = 'Timeslot already booked ' .$meetingsToCheck;
-            $_SESSION['error'] = $error;
-            $html_output =  $this->view->render($response,
-                'sent_message.html.twig');
-            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
+            var_dump("TEST2");
+//            $_SESSION['error'] = $error;
+//            $html_output =  $this->view->render($response,
+//                'sent_message.html.twig');
+//            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
         }
         if($success == true){
 
@@ -226,9 +229,10 @@ $app->post(
 
 function cleanupParametersForUpdate($app, $tainted_parameters, $meetingId)
 {
-    $yearInString = (substr($_SESSION['date'],0,4));
-    $monthInString=(substr($_SESSION['date'],5,2));
-    $dayInString = (substr($_SESSION['date'],8,2));
+//    var_dump($tainted_parameters['date']);
+    $yearInString = (substr($tainted_parameters['date'],0,4));
+    $monthInString=(substr($tainted_parameters['date'],5,2));
+    $dayInString = (substr($tainted_parameters['date'],8,2));
     $monthInInt = (int)$monthInString;
     $dayInInt = (int)$dayInString;
     $cleaned_parameters = [];

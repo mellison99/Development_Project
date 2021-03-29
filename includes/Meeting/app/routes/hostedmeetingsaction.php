@@ -55,7 +55,7 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
     }
     $meetingDetails = getMeetingDetailsById($app, $cleaned_MiD, $email);
     $userList = getUserDetailsById($app, $cleaned_MiD);
-
+var_dump($meetingDetails);
 
 
 

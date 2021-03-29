@@ -26,6 +26,7 @@ $app->post(
         $email = ($_SESSION['username']);
         $error = "";
         $tainted_parameters = $request->getParsedBody();
+       // var_dump($tainted_parameters);
 
 
 
@@ -173,11 +174,11 @@ $app->post(
 
         if($success == true){
 
-//                var_dump($cleaned_parameters['sanitised_Id']);
+
                 $name = $cleaned_parameters['sanitised_Id'] .$_FILES['file']['name'];
                 $target_dir = "meetingdocs/";
                 $target_file = $target_dir . basename($_FILES["file"]["name"]);
-//                var_dump($target_file);
+
                 // Select file type
                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
@@ -186,15 +187,12 @@ $app->post(
 
                 // Check extension
                 if (in_array($imageFileType, $extensions_arr)) {
-
                     // Insert record
                     storeMeetingDoc($app, $name, $cleaned_parameters);
-//                $query = "insert into images(name) values('" . $name . "')";
-//                mysqli_query($con, $query);
+//
 
                     // Upload file
                     move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
-                    $information = move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
 
             }
         }
