@@ -34,7 +34,7 @@ $app->get('/alluserslist', function (Request $request, Response $response) use (
     }
 
 $users = getAllUsers($app,$email);
-    //var_dump($users);
+    var_dump($users);
 
 
 
@@ -104,3 +104,4 @@ function getAllUsers($app,$email){
 
     return $userDetails;
 }
+

@@ -53,6 +53,8 @@
             <th>Firstname</th>
             <th>Lastname</th>
             <th>Mobile number</th>
+            <th>Role</th>
+            <th>Swap role/Delete user</th>
         </tr>
         </thead>
         <tbody id="myTable">
@@ -62,6 +64,16 @@
                 <td>{{ name[1] }}</td>
                 <td>{{name[2]}}</td>
                 <td>{{name[3]}}</td>
+                <td>{{name[4]}}</td>
+                <td><a href='userlistaction?UiD={{ name[4] }}{{ name[0] }}'>
+                        <img src="../media/edit.png"
+                             alt="edit meeting" width="20" height="20">
+                    </a>
+                    <a href='userlistaction?UiD=D{{ name[0] }}'>
+                        <img src="../media/delete.png"
+                             alt="edit meeting" width="20" height="20">
+                    </a>
+                </td>
             </tr>
         {% endfor %}
 

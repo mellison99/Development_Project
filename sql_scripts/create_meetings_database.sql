@@ -33,6 +33,7 @@ CREATE TABLE `meeting_data`(
 `meeting_end` int(12),
 `meeting_host` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 `notes`varchar(240) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+`subject`varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
 PRIMARY KEY (`meetingId`),
 CONSTRAINT `fk_host_email_address`
 FOREIGN KEY (meeting_host) REFERENCES user_data(user_email_address)
@@ -78,6 +79,21 @@ CONSTRAINT `fk_meeting_dataId`
 FOREIGN KEY (meetingId) REFERENCES meeting_data(meetingId)
 ON DELETE CASCADE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
--- ----------------------------
--- Records of company_name
--- ----------------------------
+
+CREATE TABLE `user_image`(
+                                    `imageId` int(4) NOT NULL AUTO_INCREMENT,
+                                    `image_name` varchar(300) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+                                    `user_email` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+                                    PRIMARY KEY (`imageId`)
+
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `meeting_docs`(
+                             `docId` int(4) NOT NULL AUTO_INCREMENT,
+                             `doc_name` varchar(300) CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+                             `meetingId` int(11) NOT NULL,
+                             PRIMARY KEY (`docId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+
+

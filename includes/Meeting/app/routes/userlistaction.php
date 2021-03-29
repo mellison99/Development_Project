@@ -25,15 +25,24 @@ $app->get('/userlistaction', function (Request $request, Response $response) use
     if($cleaned_UiD[0]=="D"){
         $uid = substr($cleaned_UiD,1);
         deleteUser($app,$uid);
+        $html_output = $this->view->render($response,
+            'alluserslist.html.twig');
+        return $html_output->withHeader('Location', LANDING_PAGE . "/alluserslist");
     }
     var_dump($cleaned_UiD[0]);
     if($cleaned_UiD[0]=="T"){
         $uid = substr($cleaned_UiD,7);
         setRole($app,$uid,"Student");
+        $html_output = $this->view->render($response,
+            'alluserslist.html.twig');
+        return $html_output->withHeader('Location', LANDING_PAGE . "/alluserslist");
     }
     if($cleaned_UiD[0]=="S"){
         $uid = substr($cleaned_UiD,7);
         setRole($app,$uid,"Teacher");
+        $html_output = $this->view->render($response,
+            'alluserslist.html.twig');
+        return $html_output->withHeader('Location', LANDING_PAGE . "/alluserslist");
     }
 
     $email = $_SESSION['username'];
