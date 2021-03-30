@@ -10,7 +10,7 @@ $app->get(
 
 
         $html_output =  $this->view->render($response,
-            'test.html.twig',
+            'test2.html.twig',
             [
                 'landing_page' => LANDING_PAGE . '/loginuser',
                 'css_path' => CSS_PATH,

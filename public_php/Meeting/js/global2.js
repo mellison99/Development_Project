@@ -4,15 +4,13 @@ $('input#name-submit').on('click',function(){
 
     if($.trim(name) != ''){
         $.post('../images', {
-            name: name
-        },
-        function(data){
-            $('div#name-data').text(data);
+                name: name
+            },
+            function(data){
+                $('div#name-data').text(data);
 
-        }
+            }
         );
     }
 
 })
-
-
