@@ -1,18 +1,45 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
     <div id="page-content-div">
-        <h3>{{ page_heading_2 }}</h3>
-        <form action="{{ action }}" method="{{ method }}">
-            <fieldset>
-                <legend>User details</legend>
-                <p>{{ username }} </p>
-                <p>{{ error }}{{ info }}</p>
-                <br><br>
+        <img class = "profile_image" src= {{ profile_image }} alt="Profileimage" >
+        <h3>Welcome, {{ page_heading_2 }}</h3>
+        <div id = "form_content">
+        <form id = "logout" action="{{ action }}" method="{{ method }}">
                 <input type="submit" name="logout" value="Logout" href = "{{ logout }}"></a>
-            </fieldset>
         </form>
-        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
-        <p class="curr_page"><a href="{{ send_message }}">Create Meeting</a></p>
-        <p class="curr_page"><a href="{{ view_message }}">WIP</a></p>
-    </div>
+
+
+                <p>{{ error }}</p>
+                <br><br>
+     <a class = "image_button" href='{{ logout }}'>
+            <img src="../media/logout.png"
+                 width="60" height="60">
+       Logout </a>
+
+        <a class = "image_button" href='{{ send_message }}'>
+            <img src="../media/calendar.png"
+                 width="60" height="60">
+        View calendar</a>
+
+     <a class = "image_button" href='{{ view_message }}'>
+            <img src="../media/notifications.png"
+                 width="60" height="60">
+      Meeting requests  </a>
+    <a class = "image_button" href='{{ view_upcoming }}'>
+            <img src="../media/upcoming.png"
+                 width="70" height="70">
+      Upcoming meetings  </a>
+    <a class = "image_button" href='{{ events }}'>
+            <img src="../media/event.png"
+                 width="60" height="60">
+      My events  </a>
+
+    <a class = "image_button" href='{{ settings }}'>
+            <img src="../media/settings.png"
+                 width="60" height="60">
+      Account settings  </a>
+
+
+        </div> </div>
+
 {% endblock %}

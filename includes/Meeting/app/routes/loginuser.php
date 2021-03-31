@@ -81,6 +81,12 @@ $app->any(
                 }
             }
         }
+        $result = getUserPic($app, $_SESSION['username']);
+        $image = $result[0];
+        if($image == null){
+            $image = "pic.png";
+        }
+        $image_src = "../profileimages/".$image;
 
         $info = "Welcome ". $_SESSION['username'];
 
@@ -93,11 +99,15 @@ $app->any(
                 'method' => 'post',
                 'action' => $action,
                 'page_heading_1' => 'UserLoggedIn',
-                'page_heading_2' => 'UserLoggedIn',
+                'page_heading_2' => $_SESSION['username'],
                 'send_message' => LANDING_PAGE . '/calendar',
                 'view_message' => LANDING_PAGE. '/downloadedmessageselect',
+                'view_upcoming' => LANDING_PAGE. '/upcomingmeetings',
+                'settings' => LANDING_PAGE. '/profilemanagement',
+                'events' => LANDING_PAGE. '/eventView',
                 'error' => $error,
                 'info' => $info,
+                'profile_image'=>$image_src,
                 'logout' => LANDING_PAGE . '/',
             ]);
 
