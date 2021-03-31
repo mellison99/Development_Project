@@ -1,13 +1,19 @@
 {% extends 'layout.html.twig' %}
 {% block title %}{{ page_title }}{% endblock %}
 {% block banner %}
-<div id="banner-div">
-    <h1>{{ page_heading_1 }}</h1>
-    <p class="cent">
+<div id="page-header">
+{#    id="banner-div">#}
+    <span class ="form_field">
+        <h1>MPS organiser</h1><a href="{{ landing_page }}">
+        <img src="../media/home.png" height = "50" width="50" alt="Return to homepage">
+</a>
 
-        <br />
+    </span>
+
+    <p class="cent">
     </p>
     <hr class="deepline"/>
 </div>
-<div id="clear-div"></div>
+<div>
+{#    id="clear-div"></div>#}
 {% endblock %}

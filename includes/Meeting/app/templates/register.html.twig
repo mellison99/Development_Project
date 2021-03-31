@@ -1,45 +1,50 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
     <div id="page-content-div">
-        <h3>{{ page_heading_2 }}</h3>
-        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
-            <fieldset>
-                <legend>New User Details</legend>
-                <br>
+        <form class = "login_form" method={{ method }} action={{ action}} enctype='multipart/form-data'>
+            <h2>Please login or Register</h2>
+            <span class = "form_content">
+                 <span class ="form_field">
                 <label for="firstname">First name:</label>
                 <input id="firstname" name="firstname" type="text" value="{{ initial_input_box_value }}" size="30" maxlength="50">
-                <br><br>
+                 </span>
+                 <span class ="form_field">
                 <label for="lastname">Last name:</label>
                 <input id="lastname" name="lastname" type="text" value="{{ initial_input_box_value }}" size="30" maxlength="50">
-                <br><br>
+                 </span>
+                 <span class ="form_field">
                 <label for="email">Email:</label>
                 <input id="email" name="email" type="text" value="{{ initial_input_box_value }}" size="30" maxlength="50">
-                <br><br>
+                 </span>
+                 <span class ="form_field">
                 <label for="sim">Mobile Number:</label>
                 <input id="sim" name="sim" type="text" value="{{ initial_input_box_value }}" size="30" maxlength="12">
-                <br><br>
+                 </span>
+                 <span class ="form_field">
                 <label for="password">Password:</label>
                 <input id="password" name="password" type="password" value="{{ initial_input_box_value }}" size="30" maxlength="50">
-                <br><br>
+                 </span>
+                 <span class ="form_field">
                 <label for="profile_image">Set profile picture</label>
 {#                <input type='file' name='file' />#}
                 <input type='file' id="profile_image" name='profile_image' />
-                <br><br>
-                <p>Role:
+                     </span>
+                 <span class ="form_field_radio">
+                Role:
                     <input type="radio" id="role_teacher" name="role" value="Teacher">
                     <label for="role_teacher">Teacher</label>
                     <input type="radio" id="role_student" name="role" value="Student">
                     <label for="role_student">Student</label><br>
-                </p>
 
+
+                 </span>
                 <br><br>
-                <input type="submit"  value="Register" href = "{{ register }}"></a>
+                <input type="submit" class = "submit_button" value="Register" href = "{{ register }}"></a>
                 <br><br>
 
                 <p>{{ error }}</p>
-            </fieldset>
+            </span>
         </form>
 
-        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
     </div>
 {% endblock %}

@@ -25,6 +25,9 @@ $app->get('/profilemanagement', function(Request $request, Response $response) u
 $userDetails = getUserInfo($app, $_SESSION['username']);
 $result = getUserPic($app, $_SESSION['username']);
 $image = $result[0];
+if($image == null){
+    $image = "pic.png";
+}
 $image_src = "../profileimages/".$image;
 
 
