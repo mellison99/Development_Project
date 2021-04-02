@@ -5,54 +5,60 @@
     <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
     <title></title>
 </head>
-<ul>
-    <li><a href="{{ landing_page }}">Home</a></li>
-    <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
-    <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
-    <li><a href="{{ hosted_meetings }}">Meetings hosted</a></li>
-    <li><a href="{{ edit_profile }}">Preferences and account settings</a></li>
-    <li><a href="{{ create_event }}">Create event</a></li>
-    <li><a class = "active" href="{{ view_event }}">View event</a></li>
-</ul>
+<div class = "menu-list">
+    <ul>
+        <li><a href="{{ landing_page }}">Home</a></li>
+        <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+        <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
+        <li><a href="{{ hosted_meetings }}">Meetings hosted</a></li>
+        <li><a href="{{ edit_profile }}">Account settings</a></li>
+        <li><a href="{{ create_event }}">Create event</a></li>
+        <li><a class="active" href="{{ view_event }}">View event</a></li>
+    </ul>
+</div>
 <body>
+<div class = "eventView">
 
-<div id="page-content-div">
-    <h2>{{ page_heading_2 }}</h2>
+    <h2 id="page_heading">{{ page_heading_2 }}</h2>
+    <br> <br> <br>
     <p>{{ page_text }}</p>
     <p>{{ error }}</p>
     <form action="{{ action }}" method="{{ method }}">
         {% for code, name in events %}
-        <option value="{{code}}"> {{ name[2] }}  at {{name[0] }} for {{ name[1] }} {{ name[3] }}
+            <span class="events_field">
+            <label class = "enabled_events" value="{{code}}"> {{ name[2] }}  at {{name[0] }} for {{ name[1] }} {{ name[3] }}</label>
             <a href='eventAction?MiD=0{{ name[6] }}'>
-                <img src="../media/on.png"
+                <img class = "disable_event"src="../media/on.png"
                      alt="turn off meeting" width="70" height="20">
             </a>
             <a href='eventAction?MiD=D{{ name[6] }}'>
-                <img src="../media/delete.png"
-                     alt="delete event" width="20" height="20">
-            </a>
+                <img class = "delete_event" src="../media/delete.png"
+                     alt="delete event" width="50" height="50">
+            </a></span>
             {% endfor %}
 
             {% for code, name in disabled_events %}
-        <option value="{{code}}"> {{ name[2] }}  at {{name[0] }} for {{ name[1] }} {{ name[3] }}
+        <span class="events_field">
+                <label  class = "disabled_events"value="{{code}}"> {{ name[2] }}  at {{name[0] }} for {{ name[1] }} {{ name[3] }}</label>
             <a href='eventAction?MiD=1{{ name[6] }}'>
-                <img src="../media/off.png"
+                <img class = "enable_event" src="../media/off.png"
                      alt="turn on event" width="70" height="20">
             </a>
             <a href='eventAction?MiD=D{{ name[6] }}'>
-                <img src="../media/delete.png"
-                     alt="delete event" width="20" height="20">
-            </a>
+                <img class = "delete_event" src="../media/delete.png"
+                     alt="delete event" width="50" height="50">
+            </a></span>
             {% endfor %}
 
-            </fieldset>
-            <br><br>
-            <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
-            </fieldset>
+
+
+
+
     </form>
 
 </div>
 </body>
+
 </html>
 
 

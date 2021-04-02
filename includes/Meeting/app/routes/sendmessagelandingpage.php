@@ -26,8 +26,6 @@ $error = $_SESSION['error'];
     //var_dump($_GET["date"]);
     $_SESSION['date'] = $_GET["date"];
     $test = getMeetingbyDateUser($app,$_SESSION['username'],$_SESSION['date']);
-    //var_dump($_SESSION['username']);
-        //var_dump($test);
         $yearInString = (substr($_SESSION['date'],0,4));
         $monthInString=(substr($_SESSION['date'],5,2));
         $dayInString = (substr($_SESSION['date'],8,2));
@@ -52,8 +50,10 @@ $error = $_SESSION['error'];
         $recurringWhereParticipant = sortRecurringMeetings($recurringmeetingDetails2,$starttime);
 
 
-        var_dump($weekdayVal);
+//        var_dump($weekdayVal);
         $eventsOnDay = getEventbyDayUser($app,$_SESSION['username'],$weekdayVal-1);
+//        var_dump($weekdayVal-1);
+//        var_dump($eventsOnDay);
         $eventsInMonth =getEventbyMonthUser($app,$_SESSION['username'],$monthVal);
         $eventsOnDate =getEventbyDateUser($app,$_SESSION['username'],$dateVal);
         $html_output =  $this->view->render($response,
@@ -109,7 +109,8 @@ function getMeetingbyDateUser($app,$email,$date)
     }else{
         for($i =0; $i<=$value ; $i++){
             $idstring = $DetailsModel->getMeetingbyDateUserDetails($app, $email, $date, $i);
-            array_push($downloadMessages,$idstring);
+
+            $downloadMessages[$idstring[5]] = $idstring;
         }
         array_pop($downloadMessages);
         return $downloadMessages;
@@ -119,7 +120,7 @@ function getMeetingbyDateUser($app,$email,$date)
 function getEventbyDayUser($app,$email,$day)
 {
     $store_data_result = null;
-    var_dump($day);
+//    var_dump($day);
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
     $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
@@ -130,6 +131,7 @@ function getEventbyDayUser($app,$email,$day)
     $DetailsModel->setSqlQueries($sql_queries);
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
+
     $value = $DetailsModel->checkEventByDayUser($app, $email,$day);
 
 

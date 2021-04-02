@@ -25,12 +25,12 @@ $app->get('/eventView', function (Request $request, Response $response) use ($ap
     $disabledEvents = getDisabledEventList($app,$_SESSION['username']);
     $formattedEventList = formatEventList($eventList);
     $formattedDisabledEventList = formatEventList($disabledEvents);
-    var_dump($_SESSION['error']);
+//    var_dump($_SESSION['error']);
     $html_output = $this->view->render($response,
         'eventView.html.twig',
         [
             'css_path' => CSS_PATH,
-            'landing_page' => LANDING_PAGE . '/loginuser',
+            'landing_page' => LANDING_PAGE . '/calendar',
             'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'save_event'=>LANDING_PAGE . '/eventspost',

@@ -51,6 +51,7 @@ $app->get('/meetingshosted', function (Request $request, Response $response) use
             'page_heading_1' => APP_NAME,
             'page_heading_2' => "Manage hosted meetings",
             'currentDate' =>date('Y-m-d'),
+            'edit_profile'=>LANDING_PAGE . '/profilemanagement',
             'HostedMeetings'=>$hostedRepeatMeetings,
             'disabledHostedMeetings'=> $disabledHostedRepeatMeetings,
             'OneOffHostedMeetings'=>$upcomingMeetings,
@@ -88,7 +89,7 @@ function getUpcomingMeeting($app,$email,$date)
         for($i =0; $i<=$value ; $i++){
             $idstring = $DetailsModel->getUpcomingMeetingsByUser($app, $email, $date, $i);
 
-            array_push($downloadMessages,$idstring);
+            $downloadMessages[$idstring[6]] = $idstring;
         }
         array_pop($downloadMessages);
 

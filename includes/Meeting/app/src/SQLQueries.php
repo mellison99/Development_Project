@@ -364,7 +364,7 @@ class SQLQueries
 
     public static function getMeetingByDateUser()
     {
-        $query_string  = "SELECT DISTINCT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email " ;
+        $query_string  = "SELECT DISTINCT meeting_data.meeting_time,meeting_data.meeting_date, meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.meetingId " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
         $query_string .= "AND meeting_data.meeting_date = :meeting_date ";
@@ -441,6 +441,7 @@ class SQLQueries
         meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.subject, meeting_data.meetingId  " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
+        $query_string .= "AND meeting_data.meeting_host != :user_email ";
         $query_string .= "AND meeting_data.meeting_start > :meeting_start ";
         $query_string .= "AND meeting_user.meeting_ack = :meeting_ack ";
         $query_string .= " OR meeting_data.meeting_host = :user_email_2 ";
@@ -455,6 +456,7 @@ class SQLQueries
         meeting_data.meeting_duration, meeting_data.meeting_host, meeting_user.user_email, meeting_data.subject, meeting_data.meetingId  " ;
         $query_string .= "FROM meeting_data JOIN meeting_user ON meeting_data.meetingId = meeting_user.meetingId ";
         $query_string .= "WHERE meeting_user.user_email = :user_email ";
+        $query_string .= "AND meeting_data.meeting_host != :user_email ";
         $query_string .= "AND meeting_data.meeting_start < :meeting_start ";
         $query_string .= "AND meeting_user.meeting_ack = :meeting_ack ";
         $query_string .= " OR meeting_data.meeting_host = :user_email_2 ";

@@ -455,8 +455,8 @@ class RegisterDetailsModel
             ':user_email' => $email,
             'event_active' => 1
         ];
-         //var_dump($query_parameters);
-        //var_dump($query_string);
+//         var_dump($query_parameters);
+//        var_dump($query_string);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         return $this->database_wrapper->countRows();
     }
@@ -1112,6 +1112,8 @@ class RegisterDetailsModel
             ':user_email_2' => $email,
             ':meeting_start_2' => $start
         ];
+//        var_dump($query_string);
+//        var_dump($query_parameters);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         //var_dump($this->database_wrapper->safeFetchRow());
         if ($this->database_wrapper->countRows() >= 0)
@@ -1137,7 +1139,8 @@ class RegisterDetailsModel
             ':user_email_2' => $email,
             ':meeting_start_2' => $start
         ];
-
+//var_dump($query_parameters);
+//var_dump($query_string);
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
         $results = $this->database_wrapper->countRows();
         return $results;

@@ -1,45 +1,49 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
-    <div id="page-content-div">
-        <h3>{{ page_heading_2 }}</h3>
-        <ul>
-            <li><a href="{{ landing_page }}">Home</a></li>
-            <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
-            <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
-            <li><a href="{{ hosted_meetings }}">Meetings hosted</a></li>
-            <li><a class = "active" href="{{ edit_profile }}">Preferences and account settings</a></li>
-            <li><a href="{{ create_event }}">Create event</a></li>
-            <li><a href="{{ view_event }}">View event</a></li>
-        </ul>
-        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
-            <fieldset>
-
+    <div id = "settings_page">
+{#        <h3>{{ page_heading_2 }}</h3>#}
+        <div class = "menu-list">
+            <ul>
+                <li><a href="{{ landing_page }}">Home</a></li>
+                <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+                <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
+                <li><a href="{{ hosted_meetings }}">Meetings hosted</a></li>
+                <li><a class = "active" href="{{ edit_profile }}">Account settings</a></li>
+                <li><a href="{{ create_event }}">Create event</a></li>
+                <li><a href="{{ view_event }}">View event</a></li>
+            </ul>
+        </div>
+      <span class="form_content">
+        <form class = "login_form" method={{ method }} action={{ action}} enctype='multipart/form-data'>
                 <img class = "profile_image" src= {{ profile_image }} alt="Profileimage" >
-                <legend>User Details</legend>
-                <br>
+
+            <span class ="form_field">
                 <label for="firstname">First name:</label>
                 <input id="firstname" name="firstname" type="text" value="{{ userdetails[1] }}" size="30" maxlength="50">
-                <br><br>
+            </span>
+            <span class ="form_field">
                 <label for="lastname">Last name:</label>
                 <input id="lastname" name="lastname" type="text" value="{{ userdetails[2] }}" size="30" maxlength="50">
-                <br><br>
+            </span>
+            <span class ="form_field">
                 <label for="email">Email:</label>
                 <input id="email" name="email" type="text" value="{{ userdetails[0] }}" size="30" maxlength="50" disabled="disabled">
-                <br><br>
+            </span>
+            <span class ="form_field">
                 <label for="sim">Mobile Number:</label>
                 <input id="sim" name="sim" type="text" value="{{ userdetails[3] }}" size="30" maxlength="12">
-                <br><br>
+            </span>
+            <span class ="form_field">
                 <label for="profile_image">Set profile picture</label>
                 <input type='file' id="profile_image" name='profile_image' />
-                <br><br>
+            </span>
 
-                <br><br>
+
                 <input type="submit"  value="Update" href = "{{ update }}"></a>
-                <br><br>
+
 
                 <p>{{ error }}</p>
-            </fieldset>
-        </form>
-        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
-    </div>
+        </form></div>
+
+    </span>
 {% endblock %}

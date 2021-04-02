@@ -1,134 +1,140 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <style>
-        ul{
-            background-color: #abdde5;
-            cursor:pointer;
-        }
-        li{
-            padding:12px;
-        }
-    </style>
-    <div id="page-content-div">
-        <h3>{{ page_heading_2 }}</h3>
-        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
 
-                <legend>New Meeting Details</legend>
-                <br>
+    <div id="new_meeting_form">
 
-            <input id="date" name="date" type="string" value="{{ meetingData[1] }}" size="7" maxlength="10" readonly="readonly">
-                <br>
+        <form class = 'login_form'method={{ method }} action={{ action}} enctype='multipart/form-data'>
 
-            <br><br>
-                <br>
-                <br>
+                <span class = "form_content">
+                     <span class ="form_field">
+                           <h2 class = "meetingFor">Meeting for {{ date }}</h2>
+    <input id="date" class = "uneditable_date" name="date" type="string" value="{{ meetingData[1] }}" size="7" maxlength="10" readonly="readonly">
+                </span>
+
+
+               <h4> Existing Meetings today at:</h4>
+                {% for code, name in meetingsOnDate %}
+                    <h5 class = "existing_thing" value="{{code}}">{{name[0]}} for {{ name[2] }} minutes</h5>
+                {% endfor %}
+                    {% for code, name in RepeatingmeetingsOnDate %}
+                        <h4 value="{{code}}">{{name}}</h4>
+                    {% endfor %}
+                    {% for code, name in RepeatingmeetingsOnDate2 %}
+                        <h4 value="{{code}}">{{name}}</h4>
+                    {% endfor %}
+
+
+
+
+           <h4>Events today:</h4>
+            {% for code, name in eventsOnDateByMonth %}
+                <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
+            {% endfor %}
+                    {% for code, name in eventsOnDateByDate %}
+                        <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
+                    {% endfor %}
+                    {% for code, name in eventsOnDateByDay %}
+                        <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes </h4>
+                    {% endfor %}
+
             <p>{{ error }}</p>
+                     <span class ="form_field">
                 <label for="time">Meeting start time:</label>
                 <input id="time" name="time" type="string" value="{{ meetingData[2] }}" size="4" maxlength="5">
-                <br><br>
+                     </span>
+                     <span class ="form_field">
                 <label for="time">Meeting duration (minutes):</label>
                 <input id="duration" name="duration" type="string" value="{{ meetingData[3] }}" size="4" maxlength="5">
-                <br><br>
-
+                     </span>
+                     <span class ="form_field">
                 <div class="container">
-                    <br />
-                    <br />
                     <div class="form-group">
                         <div name="add_name" id="add_name">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dynamic_field">
-
-                                    <tr>
-                                        <td><input type="text"  name="name[]" value={{ userData[0][2] }} class="form-control name_list" /></td>
-                                        <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
+                                <table  id="dynamic_field">
+                                    <tr class="non-days">
+                                        <td class="non-days"><input type="text"  name="name[]" value = {{ userData[0][2] }} class="form-control name_list" /></td>
+                                        <td class="non-days"><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
                                     </tr>
-                                    {% for code, name in userData %}
-
-                                    {% endfor %}
                                 </table>
-
-
-{#                                #}
                             </div>
+        </form>
+    </div>
+    </div>
+    </div>
+    </span>
 
-                        </form>
-                    </div>
-                </div>
-
+    <span class ="form_field">
                 <label for="subject">Subject:</label>
                 <input id="subject" name="subject" type="string" value="{{ meetingData[8] }}" size="30" maxlength="140">
-    <br><br>
-    <label for="notes">Notes:</label>
-    <input id="notes" name="notes" type="string" value="{{ meetingData[7] }}" size="50" maxlength="140">
+    </span>
+    <span class ="form_field">
+                <label for="notes">Notes:</label>
 
- <br>
-<p>Set to repeat:
-<input type="radio" id="never" name="repeat" value="never" checked="true" >
-<label for="never">Never</label>
-<input type="radio" id="weekly" name="repeat" value="weekly">
-<label for="weekly">Weekly</label>
-<input type="radio" id="monthly" name="repeat" value="monthly">
-<label for="monthly">Monthly</label>
-<input type="radio" id="annually" name="repeat" value="annually">
-<label for="annually">Annually</label>
-
-<br>
-
-    </p>
+        <textarea id="notes" name="notes" type="string"   size="30" maxlength="240">{{ meetingData[7] }}</textarea>
+    </span>
+    <span class ="form_field_radio">
+        <label>Set to repeat:</label>
+                <input type="radio" id="never" name="repeat" value="never" checked="checked">
+                <label for="never">Never</label>
+                <input type="radio" id="weekly" name="repeat" value="weekly" >
+                <label for="weekly">Weekly</label>
+                <input type="radio" id="monthly" name="repeat" value="monthly">
+                <label for="monthly">Monthly</label>
+                <input type="radio" id="annually" name="repeat" value="annually">
+                <label for="annually">Annually</label>
+    </span>
+    <span class ="form_field">
     <input type='file' name='file' />
-    <br>
-                <br>
-                <input type="submit"  value="Send" href = "{{ Send }}"></a>
-            </fieldset>
-        </form>
-        <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
-        <p class="curr_page"><a href="{{ Calendar }}">Back to calendar view</a></p>
+                <input type="submit"  value="Create meeting" href = "{{ Send }}"></a>
+    </span>
+    </span>
+    </form>
+
     </div>
+
+    <div id="schedule_check">
+<span class ="form_field">
     Check user schedule: <input type = "text" id ="name">
     <input type="submit"id="name-submit" value = "grab">
 
     <div id="name-data"></div>
+</span></div>
+    <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+
+
     <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
     <script src="../js/global2.js"></script>
     <script>
+        var loopvar = {{ loopvar }};
+        var userlist = {{ userData }};
         $(document).ready(function() {
             var i = 1;
-            var loopvar = {{ loopvar }};
-            var userlist = {{ userData }};
+
 
                 $('#add').click(function () {
 
                     i++;
-                    $('#dynamic_field').append('<tr id="row' + i + '"><td><input type="text" name="name[]" placeholder="Enter user Name" class="form-control name_list" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+                    $('#dynamic_field').append('<tr id="row' + i + '"><td class="non-days"><input type="text" name="name[]" placeholder="Enter user Name" class="form-control name_list" /></td><td class="non-days"><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
                 });
                 if(loopvar >1){
-                    $('#pop').add(function () {
-                        $('#dynamic_field').append('<tr id="row' + 2 + '"><td><input type="text" name="name[]" value= {{ userData[1][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 2 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
-                    });
+                        $('#dynamic_field').append('<tr id="row' + 2 + '"><td class="non-days"><input type="text" name="name[]" value= {{ userData[1][2] }} class="form-control name_list" /></td><td class="non-days"><button type="button" name="remove" id="' + 2 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+
                 }
             if(loopvar >2){
-                $('#pop').add(function () {
-                    $('#dynamic_field').append('<tr id="row' + 3 + '"><td><input type="text" name="name[]" value= {{ userData[2][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 3 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
-                });
+                    $('#dynamic_field').append('<tr id="row' + 3 + '"><td class="non-days"><input type="text" name="name[]" value= {{ userData[2][2] }} class="form-control name_list" /></td><td class="non-days"><button type="button" name="remove" id="' + 3 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
             }
             if(loopvar >3){
-                $('#pop').add(function () {
-                    $('#dynamic_field').append('<tr id="row' + 4 + '"><td><input type="text" name="name[]" value= {{ userData[3][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 4 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
-                });
+                    $('#dynamic_field').append('<tr id="row' + 4 + '"><td class="non-days"><input type="text" name="name[]" value= {{ userData[3][2] }} class="form-control name_list" /></td><td class="non-days"><button type="button" name="remove" id="' + 4 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
             }
             if(loopvar >4){
-                $('#pop').add(function () {
-                    $('#dynamic_field').append('<tr id="row' + 5 + '"><td><input type="text" name="name[]" value= {{ userData[4][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + 5 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
-                });
+                    $('#dynamic_field').append('<tr id="row' + 5 + '"><td class="non-days"><input type="text" name="name[]" value= {{ userData[4][2] }} class="form-control name_list" /></td><td class="non-days"><button type="button" name="remove" id="' + 5 + '" class="btn btn-danger btn_remove">X</button></td></tr>');
             }
-        {#    for (i = 0; i < loopvar-1; i++){#}
-        {#        $('#pop').add(function () {#}
-        {#            $('#dynamic_field').append('<tr id="row' + i + '"><td><input type="text" name="name[]" value= {{ userData[1][2] }} class="form-control name_list" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');#}
-        {#        });#}
-        {#}#}
+        //     for (i = 1; i < loopvar; i++){
+        //             $('#dynamic_field').append('<tr id="row' + i + '"><td><input type="text" name="name[]" value= "' + userlist[i][2] + '" class="form-control name_list" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+        // }
 
 
             $('#remove').click(function(){

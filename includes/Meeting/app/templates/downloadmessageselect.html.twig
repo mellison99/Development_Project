@@ -1,28 +1,38 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
-    <div id="page-content-div">
-        <h2>{{ page_heading_2 }}</h2>
-        <p>{{ page_text }}</p>
+    <head>
+        <title>New meeting invites</title>
+    </head>
+<div id = "calendar_page">
+    <body>
+
         {{ error }}
-        <ul>
-            <li><a href="{{ landing_page }}">Home</a></li>
-            <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
-            <li><a class = "active" href="{{ meeting_requests }}">New Meeting Requests</a></li>
-            <li><a href="{{ edit_profile }}">Preferences and account settings</a></li>
-            <li><a href="{{ create_event }}">Create event</a></li>
-            <li><a href="{{ view_event }}">View event</a></li>
+        <div class = "menu-list">
+            <ul>
+                <li><a href="{{ landing_page }}">Home</a></li>
+                <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+                <li><a  class = "active" href="{{ meeting_requests }}">New Meeting Requests</a></li>
+                <li><a href="{{ hosted_meetings }}">Meetings hosted</a></li>
+                <li><a href="{{ edit_profile }}">Account settings</a></li>
+                <li><a href="{{ create_event }}">Create event</a></li>
+                <li><a href="{{ view_event }}">View event</a></li>
             </ul>
-        <form action="{{ action }}" method="{{ method }}">
+        </div>
+        <form class="form_content" action="{{ action }}" method="{{ method }}">
+            <h2 class = "page_header">Pending meeting invites</h2>
         {% for code, name in country_names %}
-            <option value="{{code}}">Host: {{ name[4] }} On: {{name[1] }} at {{ name[2] }} for: {{ name[3] }}
-                <a href='downloadedmessagesindb?MiD={{ name[0] }}'>Accept</a>
-                <a href='downloadedmessagesindb?MiD=0{{ name[0] }}'>Reject</a>
+            <label class="meeting_request">
+                  <span class ="info_section">
+                      Host: {{ name[4] }}
+                      On: {{name[1] }}
+                      at {{ name[2] }}
+                      for: {{ name[3] }} </span>
+                 <a class="accept_meeting" href='downloadedmessagesindb?MiD={{ name[0] }}'>Accept</a>
+                 <a class ="reject_meeting" href='downloadedmessagesindb?MiD=0{{ name[0] }}'>Reject</a>
         {% endfor %}
 
-        </fieldset>
-                <br><br>
-
-            </fieldset>
         </form>
-    </div>
+    </body>
+</div>
+
 {% endblock %}

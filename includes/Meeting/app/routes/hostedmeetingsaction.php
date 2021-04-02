@@ -54,8 +54,36 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
         $_SESSION['MiD'] = substr($cleaned_MiD, 1);;
     }
     $meetingDetails = getMeetingDetailsById($app, $cleaned_MiD, $email);
+
+
     $userList = getUserDetailsById($app, $cleaned_MiD);
-var_dump($meetingDetails);
+    $_SESSION['date']=($meetingDetails[1]);
+    $test = getMeetingbyDateUser($app,$_SESSION['username'],$_SESSION['date']);
+    //var_dump($_SESSION['username']);
+    //var_dump($test);
+    $yearInString = (substr($_SESSION['date'],0,4));
+    $monthInString=(substr($_SESSION['date'],5,2));
+    $dayInString = (substr($_SESSION['date'],8,2));
+    $monthInInt = (int)$monthInString;
+    $dayInInt = (int)$dayInString;
+
+
+    $starttime = mktime(0,0,0,$monthInInt,$dayInInt,$yearInString);
+    $endtime = getdate($starttime)[0]+(60*30);
+    $weekdayVal = getdate($starttime)['wday']+1;
+    $dateVal = getdate($starttime)['mday'];
+    $monthVal = getdate($starttime)['mon'];
+    $arrayOfHostedRepeatMeetings = getRecurringMeetingHost($app,$_SESSION['username']);
+    $meetingIDtoSearch = getRecurringMeetingParticipant($app,$_SESSION['username']);
+    $recurringmeetingDetails = getRecurringMeetingParticipantDetails($app, $meetingIDtoSearch);
+    $meetingIDtoSearch = getRecurringMeetingParticipant($app,$_SESSION['username']);
+    $recurringmeetingDetails2 = getRecurringMeetingParticipantDetails($app, $meetingIDtoSearch)[0];
+    $recurringWhereHost = sortRecurringMeetings($arrayOfHostedRepeatMeetings,$starttime);
+    $recurringWhereParticipant = sortRecurringMeetings($recurringmeetingDetails2,$starttime);
+    $eventsOnDay = getEventbyDayUser($app,$_SESSION['username'],$weekdayVal-1);
+    $eventsInMonth =getEventbyMonthUser($app,$_SESSION['username'],$monthVal);
+    $eventsOnDate =getEventbyDateUser($app,$_SESSION['username'],$dateVal);
+
 
 
 
@@ -79,6 +107,12 @@ var_dump($meetingDetails);
             'currentDate' =>date('Y-m-d'),
             'meetingData'=>$meetingDetails,
             'userData' => $userList,
+            'meetingsOnDate'=>$test,
+            'RepeatingmeetingsOnDate'=>$recurringWhereHost,
+            'RepeatingmeetingsOnDate2' =>$recurringWhereParticipant,
+            'eventsOnDateByMonth'=>$eventsInMonth,
+            'eventsOnDateByDate'=>$eventsOnDate,
+            'eventsOnDateByDay'=>$eventsOnDay,
             'loopvar'=> sizeof($userList)
         ]);
     $_SESSION['error'] = "";

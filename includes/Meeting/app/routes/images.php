@@ -5,7 +5,6 @@ use \Psr\Http\Message\ResponseInterface as Response;
 $app->post('/images', function(Request $request, Response $response) use ($app)
 {
 //var_dump($_SESSION['date']);
-
     if (isset($_POST['name'])=== true && empty($_POST['name'])=== false) {
 
         $meetings = getMeetingbyDateUser($app,$_POST['name'],$_SESSION['date']);
@@ -15,6 +14,7 @@ $app->post('/images', function(Request $request, Response $response) use ($app)
         $monthInInt = (int)$monthInString;
         $dayInInt = (int)$dayInString;
         $starttime = mktime(0,0,0,$monthInInt,$dayInInt,$yearInString);
+
         $endtime = getdate($starttime)[0]+(60*30);
         //var_dump(getdate($starttime));
         $weekdayVal = getdate($starttime)['wday']+1;
@@ -30,26 +30,40 @@ $app->post('/images', function(Request $request, Response $response) use ($app)
         $eventsOnDay = getEventbyDayUser($app,$_POST['name'],$weekdayVal-1);
         $eventsInMonth =getEventbyMonthUser($app,$_POST['name'],$monthVal);
         $eventsOnDate =getEventbyDateUser($app,$_POST['name'],$dateVal);
-
+        $meetingString ='';
+//        var_dump($meetings);
+//        var_dump('test');
         foreach ($meetings as $meeting){
-            echo " meeting at " .$meeting[0]." for ". $meeting[2];
+
+            $meetingString = " meeting at " .$meeting[0]." for ". $meeting[2];
+//            var_dump($meeting);
+            echo $meetingString;
         }
         foreach ($recurringWhereHost as $meeting){
-            echo " meeting at " .$meeting[0]." for ". $meeting[1];
+            $meetingString = " meeting at " .$meeting;
+//            var_dump($meeting);
+            echo $meetingString;
         }
         foreach ($recurringWhereParticipant as $meeting){
-            echo " meeting at " .$meeting[0]." for ". $meeting[1];
+            $meetingString = " meeting at " .$meeting;
+            echo $meetingString;
         }
 
         foreach ($eventsOnDay as $meeting){
-            echo " event at ". $meeting[0]." for ". $meeting[1] ;
+            $meetingString = " event at ". $meeting[0]." for ". $meeting[1];
+//            var_dump($meeting);
+            echo $meetingString;
         }
 
         foreach ($eventsInMonth as $meeting){
-            echo " event at ". $meeting[0]." for ". $meeting[1] ;
+            $meetingString = " event at ". $meeting[0]." for ". $meeting[1];
+
+            echo $meetingString;
         }
         foreach ($eventsOnDate as $meeting){
-            echo " event at ". $meeting[0]." for ". $meeting[1]  ;
+            $meetingString = " event at ". $meeting[0]." for ". $meeting[1];
+
+            echo $meetingString;
 
         }
 
