@@ -97,16 +97,16 @@ function build_calendar($month, $year){
     $currentDate = date('Y-m-d');
 
     $calendar = "<table class= 'table table-bordered'>";
-    $calendar .="<center><h2>$nameOfMonth $year</h2></center>";
+    $calendar .="<h2 class='calendar_heading'>$nameOfMonth $year</h2>";
 
-    $calendar.= "<a class='btn btn-xs btn-primary' href='?month=".date('m', mktime(0, 0, 0, $month-1, 1, $year)).
-        "&year=".date('Y', mktime(0, 0, 0, $month-1, 1, $year))."'>Previous Month</a> ";
+    $calendar.= "<button type='button' class ='month_navigation'><a class='month_navigation' href='?month=".date('m', mktime(0, 0, 0, $month-1, 1, $year)).
+        "&year=".date('Y', mktime(0, 0, 0, $month-1, 1, $year))."'>Previous Month</a> </button> &nbsp;&nbsp;&nbsp;";
 
-    $calendar.= " <a class='btn btn-xs btn-primary' href='?month=".date('m').
-        "&year=".date('Y')."'>Current Month</a> ";
+    $calendar.= " <button type='button' class ='month_navigation'><a class='month_navigation' href='?month=".date('m').
+        "&year=".date('Y')."'>Current Month</a> </button>&nbsp;&nbsp;&nbsp;";
 
-    $calendar.= "<a class='btn btn-xs btn-primary' href='?month=".date('m', mktime(0, 0, 0, $month+1, 1, $year)).
-        "&year=".date('Y', mktime(0, 0, 0, $month+1, 1, $year))."'>Next Month</a></center><br>";
+    $calendar.= "<button type='button' class ='month_navigation'><a class='month_navigation' href='?month=".date('m', mktime(0, 0, 0, $month+1, 1, $year)).
+        "&year=".date('Y', mktime(0, 0, 0, $month+1, 1, $year))."'>Next Month</a></button><br>";
 
     $calendar .="<br>";
 
@@ -119,7 +119,7 @@ function build_calendar($month, $year){
     $calendar .= "</tr><tr>";
     if($daysInWeek>0){
         for($i=0;$i<$daysInWeek; $i++){
-            $calendar .= "<td></td>";
+            $calendar .= "<td class='non-days'></td>";
         }
     }
     $currentDay = 1;
@@ -141,7 +141,7 @@ function build_calendar($month, $year){
 
         }else{
             $_SESSION['date']= date('Y-m-d');
-            $calendar.="<td class='$today'><h4>$currentDay</h4> <a href='sendmessagelandingpage?date=".$date."'>View details</a>";
+            $calendar.="<td class='$today'><h4>$currentDay</h4> <a class='calendar_link' href='sendmessagelandingpage?date=".$date."'>View details</a>";
 
            // $_SESSION['dayOfWeek'] = ;
         }
@@ -162,7 +162,7 @@ function build_calendar($month, $year){
     if ($daysInWeek != 7){
         $leftoverDays = 7 - $daysInWeek;
         for($j=0;$j<$leftoverDays;$j++){
-            $calendar .= "<td></td>";
+            $calendar .= "<td class='non-days'></td>";
         }
     }
     $calendar .="</tr>";

@@ -33,7 +33,6 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
     $formattedRepeatMeetings2 = formatRecurringMeetingInfo($repeatMeetings2);
     $count = sizeof($repeatMeetings2);
 
-
     for($i =0; $i<=$count-1 ; $i++){
         $repeatInfo = getdate($repeatMeetings2[$i][1]);
         if($repeatMeetings2[$i][3] == "weekly") {
@@ -109,8 +108,8 @@ function getUpcomingMeetings($app,$email,$date)
     }else{
         for($i =0; $i<=$value ; $i++){
             $idstring = $DetailsModel->getUpcomingMeetingsByUser($app, $email, $date, $i);
-
-            array_push($downloadMessages,$idstring);
+//            var_dump($idstring);
+            $downloadMessages[$idstring[6]] = $idstring;
         }
         array_pop($downloadMessages);
 
@@ -142,7 +141,7 @@ function getPastMeetings($app,$email,$date)
         for($i =0; $i<=$value ; $i++){
             $idstring = $DetailsModel->getPastMeetingsByUser($app, $email, $date, $i);
 
-            array_push($downloadMessages,$idstring);
+            $downloadMessages[$idstring[6]] = $idstring;
         }
         array_pop($downloadMessages);
 
@@ -237,7 +236,7 @@ function getRecurringMeetingParticipantDetailsD($app, $meetingIDtoSearch){
             $detailstring = $DetailsModel->getStartDurationByIdDetails($app, $meetingIDtoSearch[$i], $i);
 
             array_push($recurringMeeting,getRecurringMeetingHostD($app,$detailstring[0]));
-
+//            var_dump($recurringMeeting);
 
 
         }

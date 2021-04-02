@@ -1,77 +1,78 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+{#<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />#}
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <div id="page-content-div">
-        <h3>{{ page_heading_2 }}</h3>
-        <form method={{ method }} action={{ action}} enctype='multipart/form-data'>
+    <div id="new_meeting_form">
 
-                <legend>New Meeting Details</legend>
-                <br>
+        <form class = 'login_form'method={{ method }} action={{ action}} enctype='multipart/form-data'>
+
+                <span class = "form_content">
+
                 <h2>Meeting for {{ date }}</h2>
-                <br>
+
                 Existing Meetings today at:
                 {% for code, name in meetingsOnDate %}
-                    <h4 value="{{code}}">{{name[0]}} for {{ name[2] }} minutes</h4>
+                    <h4 class = "existing_thing" value="{{code}}">{{name[0]}} for {{ name[2] }} minutes</h4>
                 {% endfor %}
             {% for code, name in RepeatingmeetingsOnDate %}
-                <h4 value="{{code}}">{{name}}</h4>
+                <h4 class = "existing_thing" value="{{code}}">{{name}}</h4>
             {% endfor %}
             {% for code, name in RepeatingmeetingsOnDate2 %}
-                <h4 value="{{code}}">{{name}}</h4>
+                <h4 class = "existing_thing" value="{{code}}">{{name}}</h4>
             {% endfor %}
 
 
 
-            <br><br>
+
             Events today
             {% for code, name in eventsOnDateByMonth %}
-                <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
+                <h4 class = "existing_thing" value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
             {% endfor %}
             {% for code, name in eventsOnDateByDate %}
-                <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
+                <h4 class = "existing_thing" value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes</h4>
             {% endfor %}
             {% for code, name in eventsOnDateByDay %}
-                <h4 value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes </h4>
+                <h4 class = "existing_thing" value="{{code}}">{{name[2]}} at {{name[0]}} for {{name[1]}} minutes </h4>
             {% endfor %}
-                <br>
-                <br>
+
             <p>{{ error }}</p>
+                     <span class ="form_field">
                 <label for="time">Meeting start time:</label>
                 <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
-                <br><br>
+                     </span>
+                     <span class ="form_field">
                 <label for="time">Meeting duration (minutes):</label>
                 <input id="duration" name="duration" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
-                <br><br>
+                     </span>
+                     <span class ="form_field">
                 <div class="container">
-                    <br />
-                    <br />
                     <div class="form-group">
                         <div name="add_name" id="add_name">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dynamic_field">
-                                    <tr>
-                                        <td><input type="text"  name="name[]" placeholder="Enter user email" class="form-control name_list" /></td>
-                                        <td><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
+                                <table  id="dynamic_field">
+                                    <tr >
+                                        <td class="non-days"><input type="text"  name="name[]" placeholder="Enter user email" class="form-control name_list" /></td>
+                                        <td class="non-days"><button type="button" name="add" id="add" class="btn btn-success">Add More</button></td>
                                     </tr>
                                 </table>
-
-
-{#                                <input type="button" name="submit" id="submit" class="btn btn-info" value="Submit" />#}
                             </div>
                         </form>
                     </div>
                 </div>
+    </div>
+    </span>
 
-                <label for="notes">Subject:</label>
+    <span class ="form_field">
+                <label for="subject">Subject:</label>
                 <input id="subject" name="subject" type="string" value="{{ initial_input_box_value }}" size="30" maxlength="140">
-    <br><br>
+    </span>
+    <span class ="form_field">
                 <label for="notes">Notes:</label>
-                <input id="notes" name="notes" type="string" value="{{ initial_input_box_value }}" size="30" maxlength="140">
-
-                <br>
-                <p>Set to repeat:
+        <textarea id="notes" name="notes" type="string"  value="{{ initial_input_box_value }}" size="30" maxlength="240"></textarea>
+    </span>
+    <span class ="form_field_radio">
+        <label>Set to repeat:</label>
                 <input type="radio" id="never" name="repeat" value="never" checked="checked">
                 <label for="never">Never</label>
                 <input type="radio" id="weekly" name="repeat" value="weekly" >
@@ -80,22 +81,23 @@
                 <label for="monthly">Monthly</label>
                 <input type="radio" id="annually" name="repeat" value="annually">
                 <label for="annually">Annually</label>
-                    <br>
-    </p>
+    </span>
+    <span class ="form_field">
     <input type='file' name='file' />
-                <br>
-                <input type="submit"  value="Send" href = "{{ Send }}"></a>
-            </fieldset>
+                <input type="submit"  value="Create meeting" href = "{{ Send }}"></a>
+    </span>
+            </span>
         </form>
 
     </div>
+
+    <div id="schedule_check">
+<span class ="form_field">
     Check user schedule: <input type = "text" id ="name">
     <input type="submit"id="name-submit" value = "grab">
 
     <div id="name-data"></div>
-
-    <p class="curr_page"><a href="{{ landing_page }}">Home</a></p>
-    <p class="curr_page"><a href="{{ Calendar }}">Back to calendar view</a></p>
+</span></div>
     <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
     <script src="../js/global2.js"></script>
 
@@ -104,7 +106,7 @@
             var i=1;
             $('#add').click(function(){
                 i++;
-                $('#dynamic_field').append('<tr id="row'+i+'"><td><input type="text" name="name[]" placeholder="Enter your Name" class="form-control name_list" /></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
+                $('#dynamic_field').append('<tr id="row'+i+'" class="non-days"><td class="non-days"><input type="text" name="name[]" placeholder="Enter your Name" class="form-control name_list" /></td><td class="non-days"><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
             });
             $(document).on('click', '.btn_remove', function(){
                 var button_id = $(this).attr("id");
