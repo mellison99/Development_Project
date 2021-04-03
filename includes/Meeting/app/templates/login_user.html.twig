@@ -1,7 +1,7 @@
 {% extends 'banner.html.twig' %}
 {% block content %}
     <div id="page-content-div">
-        <img class = "profile_image" src= {{ profile_image }} alt="Profileimage" >
+        <img id="homepage_profile_image" class = "profile_image" src= {{ profile_image }} alt="Profileimage" >
         <h3>Welcome, {{ page_heading_2 }}</h3>
         <div id = "form_content">
         <form id = "logout" action="{{ action }}" method="{{ method }}">
@@ -28,7 +28,7 @@
     <a class = "image_button" href='{{ view_upcoming }}'>
             <img src="../media/upcoming.png"
                  width="70" height="70">
-      Upcoming meetings  </a>
+      Meetings schedule  </a>
     <a class = "image_button" href='{{ events }}'>
             <img src="../media/event.png"
                  width="60" height="60">

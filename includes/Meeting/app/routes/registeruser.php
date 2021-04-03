@@ -76,15 +76,14 @@ $app->post(
         if($error == '')
         {
 
-           $result = storeUserDetails($app, $cleaned_parameters, $hashed_password);
-var_dump($result);
 
 
-            try {
+
+
+            try { $result = storeUserDetails($app, $cleaned_parameters, $hashed_password);
 
                        try {
                            $stored = true;
-                           //StoreMetaData($app, $cleaned_parameters);
                            if($stored == true)
                            {
                                $e = "Thank you for registering you can now login ";

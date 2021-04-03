@@ -33,45 +33,49 @@
         </style>
     </head>
     <body>
-    <ul>
-        <li><a href="{{ landing_page }}">Home</a></li>
-        <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
-        <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
-        <li><a href="{{ edit_profile }}">Preferences and account settings</a></li>
-        <li><a href="{{ create_event }}">Create event</a></li>
-        <li><a href="{{ view_event }}">View event</a></li>
-    </ul>
+    <div class = "menu-list">
+        <ul>
+            <li><a href="{{ landing_page }}">Home</a></li>
+            <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+            <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
+            <li><a href="{{ hosted_meetings }}">Meetings hosted</a></li>
+            <li><a href="{{ edit_profile }}">Account settings</a></li>
+            <li><a href="{{ create_event }}">Create event</a></li>
+            <li><a href="{{ view_event }}">View event</a></li>
+        </ul>
+    </div>
     <h2>Users list</h2>
 
-    <input id="myInput" type="text" placeholder="Search..">
-    <br><br>
 
+
+<div class="table_content">
+    <input id="myInput" type="text" placeholder="Search..">
     <table>
         <thead>
         <tr>
-            <th>Email</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Mobile number</th>
-            <th>Role</th>
-            <th>Swap role/Delete user</th>
+            <th class="non-days">Email</th>
+            <th class="non-days">Firstname</th>
+            <th class="non-days">Lastname</th>
+            <th class="non-days">Mobile number</th>
+            <th class="non-days">Role</th>
+            <th class="non-days">Swap role/Delete user</th>
         </tr>
         </thead>
         <tbody id="myTable">
         {% for code, name in userslist %}
             <tr>
-                <td>{{ name[0] }}</td>
-                <td>{{ name[1] }}</td>
-                <td>{{name[2]}}</td>
-                <td>{{name[3]}}</td>
-                <td>{{name[4]}}</td>
-                <td><a href='userlistaction?UiD={{ name[4] }}{{ name[0] }}'>
-                        <img src="../media/edit.png"
-                             alt="edit meeting" width="20" height="20">
+                <td class="non-days">{{ name[0] }}</td>
+                <td class="non-days">{{ name[1] }}</td>
+                <td class="non-days">{{name[2]}}</td>
+                <td class="non-days">{{name[3]}}</td>
+                <td class="non-days">{{name[4]}}</td>
+                <td class="non-days"><a class="user_action_text" href='userlistaction?UiD={{ name[4] }}{{ name[0] }}'>
+                        <img class = "user_action" src="../media/edit.png"
+                             alt="delete meeting" width="20" height="20">Swap role
                     </a>
-                    <a href='userlistaction?UiD=D{{ name[0] }}'>
-                        <img src="../media/delete.png"
-                             alt="edit meeting" width="20" height="20">
+                    <a class = "user_action_text" href='userlistaction?UiD=D{{ name[0] }}'>
+                        <img class = "user_action" src="../media/delete.png"
+                             alt="edit meeting" width="20" height="20">Delete account
                     </a>
                 </td>
             </tr>
@@ -80,7 +84,7 @@
 
         </tbody>
     </table>
-
+    </div>
 
 
     </body>

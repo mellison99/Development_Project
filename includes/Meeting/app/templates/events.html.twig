@@ -18,28 +18,34 @@
 </div>
 <body>
 
-<div id="page-content-div">
+<div class="event_creation">
     <h3>{{ page_heading_2 }}</h3>
     {{ error }}
-    <br>
+
     <form action="{{ action }}" method="{{ method }}">
-        <br>
+<span class = "form_content">
+     <span class ="form_field">
     <label for="time">Event start time:</label>
     <input id="time" name="time" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
-    <br><br>
+     </span>
+     <span class ="form_field">
     <label for="time">Event duration (minutes):</label>
     <input id="duration" name="duration" type="string" value="{{ initial_input_box_value }}" size="4" maxlength="5">
-    <br><br>
+     </span>
+     <span class ="form_field">
     <label for="description">Event description:</label>
     <input id="description" name="description" type="string" value="{{ initial_input_box_value }}" size="15" maxlength="30">
-    <br><br>
-    <button type="button" class="collapsible">Set event for date</button>
+     </span>
+    <br>
+     <span class ="form_field">
+    <button type="button" class="collapsiblev2">Set event for date</button>
     <div class="content">
         <p>Sets event to repeat by the date specified</p>
         <input id="date" name="date" type="int" value="{{ initial_input_box_value }}" size="4" maxlength="2">
     </div>
-    <br><br>
-    <button type="button" class="collapsible">Set event for day</button>
+     </span>
+ <span class ="form_field">
+    <button type="button" class="collapsiblev2">Set event for day</button>
     <div class="content">
         <p>Sets event to repeat by the day of the week specified</p>
         <select name="dayOfWeek">
@@ -50,8 +56,9 @@
         </select>
 
     </div>
-    <br><br>
-    <button type="button" class="collapsible">Set event for month</button>
+ </span>
+ <span class ="form_field">
+    <button type="button" class="collapsiblev2">Set event for month</button>
     <div class="content">
         <p>Sets event to repeat on entire month specified</p>
         <select name="monthInYear">
@@ -62,16 +69,17 @@
         </select>
 
     </div>
-    <br><br>
+ </span>
 
-    <input type="submit"  value="Save Event" href = "{{save_event}}"></a>
+    <input class="submit_button"type="submit"  value="Save Event" href = "{{save_event}}"></a>
+</span>
     </form>
 
 </div>
 </body>
 </html>
     <script>
-        var coll = document.getElementsByClassName("collapsible");
+        var coll = document.getElementsByClassName("collapsiblev2");
         var i;
 
         for (i = 0; i < coll.length; i++) {
