@@ -12,7 +12,7 @@
 <div class = "menu-list">
     <ul>
         <li><a href="{{ landing_page }}">Home</a></li>
-        <li><a href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
+        <li><a class ="active" href="{{ upcoming_meetings }}">Scheduled Meetings</a></li>
         <li><a href="{{ meeting_requests }}">New Meeting Requests</a></li>
         <li><a href="{{ hosted_meetings }}">Meetings hosted</a></li>
         <li><a href="{{ edit_profile }}">Account settings</a></li>
@@ -22,36 +22,68 @@
 </div>
 <body>
 
-<div id="page-content-div">
-
+<div class="meeting_list">
+    <button type="button" class="collapsible">Upcoming Meetings</button>
+    <div class="content">
         {% for code, name in upcomingMeetings %}
-            <h4 value="{{code}}">
-
-                Subject: {{ name[5] }}<br> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes </h4>
-            <a href='meetingnotes?MiD={{ name[6] }}'>
-                <img src="../media/on.png"
-                     alt="turn off meeting" width="70" height="20">
+    <div class ="meeting_details">
+        <span class ="meeting_field"> Subject: {{ name[5] }}</span>
+        <span class ="meeting_field">Host: {{name[3]}} </span>
+        <span class ="meeting_field">On: {{name[1]}}</span>
+        <span class ="meeting_field">At: {{name[0]}} </span>
+        <span class ="meeting_field">For: {{ name[2] }} minutes </span>
+        <span class ="meeting_field"> <a href='meetingnotes?MiD={{ name[6] }}'>
+            <img class = "info_icon" src="../media/info.png"
+                 alt="turn off meeting" width="20" height="20">
+        </a>
+        </span>
+    </div>
         {% endfor %}
-    <br>
+    </div>
+    <button type="button" class="collapsible">Repeating Meetings</button>
+    <div class="content">
         {% for code, name in repeatMeetings1 %}
-            <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
-            <a href='meetingnotes?MiD={{ name[0] }}'>
-                 <img src="../media/on.png"
-                    alt="turn off meeting" width="70" height="20">
+    <div class ="meeting_details">
+        <span class ="meeting_field">Subject: {{ name[4] }}</span>
+        <span class ="meeting_field">Repeats: {{name[3]}} ({{name[1]}}) </span>
+        <span class ="meeting_field">At: {{ name[5] }} </span>
+        <span class ="meeting_field"> For: {{ name[2] }} minutes </span>
+        <a href='meetingnotes?MiD={{ name[0] }}'>
+            <img  class = "info_icon" src="../media/info.png"
+                 alt="turn off meeting" width="20" height="20">
+            </a>
+    </div>
         {% endfor %}
+
         {% for code, name in repeatMeetings2 %}
-            <h4 value="{{code}}"> Subject: {{ name[4] }}<br> Repeats: {{name[3]}} ({{name[1]}}) <br>  For: {{ name[2] }} minutes at: {{ name[5] }} </h4>
+    <div class ="meeting_details">
+        <span class ="meeting_field"> Subject: {{ name[4] }}</span>
+        <span class ="meeting_field">Repeats: {{name[3]}} ({{name[1]}}) </span>
+        <span class ="meeting_field"> At: {{ name[5] }} </span>
+        <span class ="meeting_field">For: {{ name[2] }} minutes </span>
                 <a href='meetingnotes?MiD={{ name[0] }}'>
-                    <img src="../media/on.png"
-                         alt="turn off meeting" width="70" height="20">
+                    <img class = "info_icon" src="../media/info.png"
+                         alt="turn off meeting" width="20" height="20">
+                </a>
+    </div>
                     {% endfor %}
-{#    <br>#}
+    </div>
+    <button type="button" class="collapsible">Expired Meetings</button>
+    <div class="content">
         {% for code, name in pastMeetings %}
-         <h4 value="{{code}}"> Subject: {{ name[5] }}<br> Host: {{name[3]}} <br> On: {{name[1]}} <br> At: {{name[0]}} <br> For: {{ name[2] }} minutes </h4>
+    <div class ="meeting_details">
+        <span class ="meeting_field"> Subject: {{ name[5] }}</span>
+        <span class ="meeting_field">Host: {{name[3]}} </span>
+        <span class ="meeting_field"> On: {{name[1]}} </span>
+        <span class ="meeting_field">At: {{name[0]}} </span>
+        <span class ="meeting_field"> For: {{ name[2] }} minutes </span>
           <a href='meetingnotes?MiD={{ name[6] }}'>
-           <img src="../media/on.png"
-            alt="turn off meeting" width="70" height="20">
+           <img class = "info_icon" src="../media/info.png"
+            alt="turn off meeting" width="20" height="20">
+          </a>
+    </div>
             {% endfor %}
+    </div>
 </div>
 </body>
 </html>

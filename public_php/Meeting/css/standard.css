@@ -33,20 +33,21 @@ legend {
 }
 #calendar_page {
     width: 100%;
-    margin-left: 2%;
+    margin-left: 0%;
     text-align: left;
     display: compact;
     white-space: nowrap;
     min-width: 1040px;
 }
-#calendar_page {
+#settings_page {
     width: 100%;
-    margin-left: 2%;
+    margin-left: 0%;
     text-align: left;
     display: compact;
-
+    /*white-space: nowrap;*/
     min-width: 1040px;
 }
+
 
 
 #form_content {
@@ -231,6 +232,16 @@ textarea{
 
 
 .submit_button{
+    /*width: 100px;*/
+    /*height: 50px;*/
+    border-radius: 10px;
+    color: #000000;
+    background-color: #ffffff;
+    font-weight: bold;
+    cursor:pointer;
+
+}
+#login_homepage{
     width: 100px;
     height: 50px;
     border-radius: 10px;
@@ -240,6 +251,17 @@ textarea{
     cursor:pointer;
 
 }
+#login_homepage:hover{
+    transition: 0.5s all ease;
+    left: 0;
+    right: 0;
+    opacity: 1;
+    z-index: -1;
+    color: #ffffff;
+    background-color: #3d6eac;
+    font-weight: bold;
+}
+
 .image_button{
 
     transition: 0.5s all ease;
@@ -293,7 +315,7 @@ textarea{
     opacity: 1;
     z-index: -1;
     color: #ffffff;
-    background-color: #787aee;
+    background-color: #3d6eac;
     font-weight: bold;
 
 }
@@ -304,7 +326,7 @@ textarea{
     opacity: 1;
     z-index: -1;
     color: #ffffff;
-    background-color: #787aee;
+    background-color: #3d6eac;
     font-weight: bold;
 
 }
@@ -437,6 +459,33 @@ textarea{
     animation: shake 0.5s;
     animation-iteration-count: infinite;
 }
+.user_action{
+    transition: 0.5s;
+    padding-left: 2%;
+    width: 20px;
+    height: 20px;
+    font-size: 0pt;
+}
+.user_action:hover{
+    transition: 0.5s;
+    padding-left: 2%;
+    width: 20px;
+    height: 20px;
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+    font-size: 12pt;
+}
+.user_action_text{
+    transition: 0.5s;
+    color: transparent;
+    font-size: 0;
+}
+.user_action_text:hover{
+    transition: 0.5s;
+    font-size: 14pt;
+    color: black;
+    font-weight: bold;
+}
 
 .enabled_events{
     transition: 0.5s;
@@ -517,22 +566,63 @@ textarea{
     float: left;
     padding-left: 15%;
 }
+#homepage_profile_image {
+    margin-left: 4%;
+}
+
+.table_content{
+    display: inline-block;
+    width : 75%;
+    padding-top: 2%;
+}
 
 .cent {text-align:center;}
 .heads {font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;font-size:1.2em;text-align:left;}
 .curr_page {color: #ffffff;font-weight:bolder;text-shadow:black;border:1px #bfbdc6;}
 .result {color:inherit;font-weight:bold;text-shadow:black;}
 .collapsible {
+    transition: 0.5s;
     cursor: pointer;
     padding: 20px;
-    color: black;
-    background: rgba(195, 195, 219, 0.5);
-    border-radius: 12px;
+    color: white;
+    background: rgb(61, 110, 172);
+    border-radius: 6px;
     text-align: center;
-    font-size: 15px;
+    font-size: 20pt;
 }
-.collapsible:active, .collapsible:hover {
+
+.collapsible:active{
+    background-color: #80bdff;
 }
+
+.collapsible:hover {
+    transition: 0.5s;
+    border-width: thick;
+    border-color: #30588a;
+
+}
+.collapsiblev2 {
+    transition: 0.5s;
+    cursor: pointer;
+    padding: 5px;
+    color: white;
+    background: rgb(61, 110, 172);
+    border-radius: 6px;
+    text-align: center;
+    font-size: 12pt;
+}
+
+.collapsiblev2:active{
+    background-color: #80bdff;
+}
+
+.collapsiblev2:hover {
+    transition: 0.5s;
+    border-width: thick;
+    border-color: #30588a;
+
+}
+
 .content {
     display: none;
     overflow: hidden;
@@ -662,8 +752,104 @@ font-size: 18pt;
     border-color: #d9534f;
 }
 
+.meeting_list{
+    margin-top: 7%;
+    margin-left: 5%;
+    width: 50%;
+    float: left;
+}
+.meeting_details{
+    transition: 0.8s;
+    font-size: 14pt;
+    font-weight: normal;
+    color: #ffffff;
+    padding: 2%;
+    width:40%;
+    background-color: #3d6eac;
+    margin-top:1%;
+    margin-left: 20%;
+    border-radius: 8px;
+}
+.meeting_details:hover{
+    transition: 0.8s;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 2%;
+    width:40%;
+    background-color: #3d6eac;
+    margin-top:1%;
+    margin-left: 20%;
+    border-radius: 8px;
+}
+.meeting_field{
+    white-space: nowrap;
+    padding-right: 10%;
+}
+.info_icon{
+    transition: 0.8s;
+    width: 20px;
+    height: 20px;
+    float: right;
+}
+.info_icon:hover{
+    transition: 0.8s;
+    width: 30px;
+    height: 30px;
+}
+.download_file{
+    float: left;
+    margin-top: 20%;
+    margin-left: 30%;
+    padding: 8px;
+    background-color: #79818d;
+    border-radius: 4px;
+}
+.download_file:hover{
+    float: left;
+    margin-top: 20%;
+    margin-left: 30%;
+    padding: 8px;
+    background-color: #79818d;
+    border-radius: 4px;
+    font-size: 20pt;
+}
+.download_icon{
+    transition: 0.8s;
+    width: 50px;
+    height: 50px;
 
+}
+.download_icon:hover{
+    transition: 0.8s;
+    width: 60px;
+    height: 60px;
+}
 
+.download_text:hover{
+   color: #000000;
+}
+.meeting_notes{
+    float: left;
+    font-size: 20pt;
+}
+
+.note_content{
+    margin-top: 5px;
+    float: left;
+    font-size: 16pt;
+}
+
+.event_creation{
+    font-size: 14pt;
+    font-weight: normal;
+    color: #000000;
+    padding: 2%;
+    width:70%;
+    margin-top:1%;
+    margin-left: 20%;
+    border-radius: 8px;
+}
 
 td{
     transition: 0.5s all ease;
@@ -694,7 +880,7 @@ li a {
     color: #000;
     padding: 8px 16px;
     text-decoration: none;
-    font-size: 170%;
+    font-size: 160%;
 }
 
 li a.active {

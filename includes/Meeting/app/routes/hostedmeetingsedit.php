@@ -40,7 +40,7 @@ $app->post(
         }
 
 
-var_dump($cleaned_parameters['sanitised_start']);
+//var_dump($cleaned_parameters['sanitised_start']);
 
         $StartVal=getdate($cleaned_parameters['sanitised_start'])['hours'].getdate($cleaned_parameters['sanitised_start'])['minutes'];
         $EndVal=getdate($cleaned_parameters['sanitised_end'])['hours'].getdate($cleaned_parameters['sanitised_end'])['minutes'];
@@ -60,6 +60,12 @@ var_dump($cleaned_parameters['sanitised_start']);
         $meetingIDtoSearch = getRecurringMeetingParticipantEx($app,$_SESSION['username'],$cleaned_MiD);
         $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
         $recurringmeetingDetails = $recurringmeetingDetails[0];
+        if($StartVal < time() ){
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            return $html_output->withHeader('Location', LANDING_PAGE . "/hostedmeetingsaction?MiD=E".$_SESSION['MiD']);
+        }
         if($eventCountInTimeslot != NULL ){
             $html_output =  $this->view->render($response,
                 'sent_message.html.twig');

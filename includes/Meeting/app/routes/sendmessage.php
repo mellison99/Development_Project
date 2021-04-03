@@ -32,8 +32,10 @@ $app->post(
 
 
         $cleaned_parameters = cleanupParameters1($app, $tainted_parameters);
+//        var_dump($cleaned_parameters);
         $StartVal=getdate($cleaned_parameters['sanitised_start'])['hours'].getdate($cleaned_parameters['sanitised_start'])['minutes'];
         $EndVal=getdate($cleaned_parameters['sanitised_end'])['hours'].getdate($cleaned_parameters['sanitised_end'])['minutes'];
+//        var_dump($StartVal);
         $StartVal = str_pad($StartVal,4,"0",STR_PAD_RIGHT);
         $EndVal = str_pad($EndVal,4,"0",STR_PAD_RIGHT);
         $weekdayVal = (getdate($cleaned_parameters['sanitised_start'])['weekday']);
@@ -50,10 +52,33 @@ $app->post(
         $meetingIDtoSearch = getRecurringMeetingParticipant2($app,$_SESSION['username']);
         $recurringmeetingDetails = getRecurringMeetingParticipantDetails2($app, $meetingIDtoSearch);
         $recurringmeetingDetails = $recurringmeetingDetails[0];
+//        var_dump($StartVal);
         if($eventCountInTimeslot != NULL ){
             $html_output =  $this->view->render($response,
                 'sent_message.html.twig');
             $date = $_SESSION['date'];
+            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+        }
+        if($cleaned_parameters['sanitised_start'] < $cleaned_parameters['sanitised_Id']){
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            $error="cannot create a meeting where the specified start time has passed";
+            $_SESSION['error'] = $error;
+            return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
+        }
+        $startTime = ($cleaned_parameters['sanitised_time'][0].$cleaned_parameters['sanitised_time'][1].$cleaned_parameters['sanitised_time'][3].$cleaned_parameters['sanitised_time'][4]);
+        $startTime =  (int)$startTime;
+
+
+        $openingTime = 830;
+        $closingTime = 1730;
+        if($startTime < $openingTime || $startTime >= $closingTime){
+            $html_output =  $this->view->render($response,
+                'sent_message.html.twig');
+            $date = $_SESSION['date'];
+            $error="This is outside of office hours";
+            $_SESSION['error'] = $error;
             return $html_output->withHeader('Location', LANDING_PAGE . "/sendmessagelandingpage?date=".$date);
         }
         for ($i =0; $i<sizeOf($usersToCheck); $i++){
@@ -194,14 +219,19 @@ $app->post(
                     // Upload file
                     move_uploaded_file($_FILES['file']['tmp_name'], $target_dir . $name);
 
+                    $html_output =  $this->view->render($response,
+                        'upcomingmeetings.html.twig');
+                    $date = $_SESSION['date'];
+                    return $html_output->withHeader('Location', LANDING_PAGE . "/upcomingmeetings");
             }
+
         }
 
         //getSimbyEmail($app, $email);
         $html_output =  $this->view->render($response,
             'sent_message.html.twig',
             [
-                'landing_page' => LANDING_PAGE . '/loginuser',
+                'landing_page' => LANDING_PAGE . '/calendar',
                 'css_path' => CSS_PATH,
                 'page_title' => APP_NAME,
                 'method' => 'post',

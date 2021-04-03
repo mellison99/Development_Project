@@ -35,7 +35,7 @@ $error = $_SESSION['error'];
 
         $starttime = mktime(0,0,0,$monthInInt,$dayInInt,$yearInString);
         $endtime = getdate($starttime)[0]+(60*30);
-        //var_dump(getdate($starttime));
+//        var_dump(getdate($starttime));
         $weekdayVal = getdate($starttime)['wday']+1;
         $dateVal = getdate($starttime)['mday'];
         $monthVal = getdate($starttime)['mon'];
@@ -60,7 +60,7 @@ $error = $_SESSION['error'];
             'sendmessage.html.twig',
             [
                 'css_path' => CSS_PATH,
-                'landing_page' => LANDING_PAGE . '/loginuser',
+                'landing_page' => LANDING_PAGE . '/calendar',
                 'page_title' => APP_NAME,
                 'method' => 'post',
                 'action' => 'sendmessage',
