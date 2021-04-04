@@ -92,7 +92,7 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
         [
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/loginuser',
-            'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
+            'meeting_requests' => LANDING_PAGE . '/meetingack',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'save_event'=>LANDING_PAGE . '/eventspost',
             'Send' => LANDING_PAGE . '/hostedmeetingsedit',
@@ -127,7 +127,7 @@ $app->get('/hostedmeetingsaction', function (Request $request, Response $respons
 function getMeetingDetailsById($app, $MiD, $email){
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -143,7 +143,7 @@ function getMeetingDetailsById($app, $MiD, $email){
 function getMeetingRecursionTypeById($app, $MiD){
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -159,7 +159,7 @@ function getMeetingRecursionTypeById($app, $MiD){
 function getUserDetailsById($app, $MiD){
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveUserModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -188,7 +188,7 @@ function deleteMeetingFromDatabase($app, $MiD, $email)
 {
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('DeleteMeetingsModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -204,7 +204,7 @@ function toggleRecurringState($app, $MiD, $email)
 {
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('UpdateMeetingsModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];

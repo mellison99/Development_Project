@@ -31,14 +31,14 @@ $app->get('/eventView', function (Request $request, Response $response) use ($ap
         [
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/calendar',
-            'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
+            'meeting_requests' => LANDING_PAGE . '/meetingack',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'save_event'=>LANDING_PAGE . '/eventspost',
             'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
             'edit_profile'=> LANDING_PAGE . '/profilemanagement',
             'create_event'=> LANDING_PAGE . '/events',
             'view_event'=> LANDING_PAGE . '/eventView',
-            'Send' => LANDING_PAGE . '/sendmessage',
+            'Send' => LANDING_PAGE . '/createmeeting',
             'action' => 'eventEdit',
             'error' => $_SESSION['error'],
             'method' => 'post',
@@ -65,7 +65,8 @@ function getEventList($app,$email)
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('CheckTimesModel');
+    $DetailsModel2 = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -73,6 +74,9 @@ function getEventList($app,$email)
     $DetailsModel->setSqlQueries($sql_queries);
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $DetailsModel2->setSqlQueries($sql_queries);
+    $DetailsModel2->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel2->setDatabaseWrapper($database_wrapper);
     $value = $DetailsModel->checkAllEventsByUser($app, $email);
 
 
@@ -81,7 +85,7 @@ function getEventList($app,$email)
         return "no  meetings";
     }else{
         for($i =0; $i<=$value ; $i++){
-            $idstring = $DetailsModel->getAllEventDetails($app, $email, $i);
+            $idstring = $DetailsModel2->getAllEventDetails($app, $email, $i);
             array_push($event,$idstring);
 
         }
@@ -96,7 +100,8 @@ function getDisabledEventList($app,$email)
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
+    $DetailsModel2 = $app->getContainer()->get('CheckTimesModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -104,7 +109,10 @@ function getDisabledEventList($app,$email)
     $DetailsModel->setSqlQueries($sql_queries);
     $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
     $DetailsModel->setDatabaseWrapper($database_wrapper);
-    $value = $DetailsModel->checkAllNonActiveEvents($app, $email);
+    $DetailsModel2->setSqlQueries($sql_queries);
+    $DetailsModel2->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel2->setDatabaseWrapper($database_wrapper);
+    $value = $DetailsModel2->checkAllNonActiveEvents($app, $email);
 
 
     $event = [];

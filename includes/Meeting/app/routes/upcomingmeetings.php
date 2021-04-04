@@ -61,7 +61,7 @@ $app->get('/upcomingmeetings', function (Request $request, Response $response) u
         [
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/calendar',
-            'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
+            'meeting_requests' => LANDING_PAGE . '/meetingack',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'edit_profile'=> LANDING_PAGE . '/profilemanagement',
             'create_event'=> LANDING_PAGE . '/events',
@@ -91,7 +91,7 @@ function getUpcomingMeetings($app,$email,$date)
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -123,7 +123,7 @@ function getPastMeetings($app,$email,$date)
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -155,7 +155,7 @@ function getRecurringMeetingHostD($app,$email)
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -186,7 +186,7 @@ function getRecurringMeetingParticipantD($app, $email)
 
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -215,7 +215,7 @@ function getRecurringMeetingParticipantD($app, $email)
 function getRecurringMeetingParticipantDetailsD($app, $meetingIDtoSearch){
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];

@@ -2,10 +2,10 @@
 /**
  * registeruser.php
  *
- * Author: Hasan
- * Date: 17/01/2021
+ * Author: Matthew
+ * Date: 23/01/2021
  *
- * @author Hasan
+ * @author Matthew
  */
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -206,41 +206,7 @@ function storeProfilePic($app,$name,$cleaned_parameters)
     return $value;
 }
 
-function StoreMetaData($app, array $cleaned_parameters)
-{
-    $store_data_result = null;
-
-    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-    $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-
-    $settings = $app->getContainer()->get('settings');
-    $database_connection_settings = $settings['pdo_settings'];
-
-    $DetailsModel->setSqlQueries($sql_queries);
-    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-    $DetailsModel->setDatabaseWrapper($database_wrapper);
-    $DetailsModel->setRegisterMetaDetails($app, $cleaned_parameters);
-}
 
 
-function checkNumber($app, $cleaned_parameters)
-
-{
-    $result = false;
 
 
-    $database_wrapper = $app->getContainer()->get('databaseWrapper');
-    $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
-
-    $settings = $app->getContainer()->get('settings');
-    $database_connection_settings = $settings['pdo_settings'];
-
-    $DetailsModel->setSqlQueries($sql_queries);
-    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
-    $DetailsModel->setDatabaseWrapper($database_wrapper);
-    $result = $DetailsModel->checkNumber($app, $cleaned_parameters);
-
-    return $result;
-}

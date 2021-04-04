@@ -11,12 +11,12 @@
 require 'routes/homepage.php';
 require 'routes/registeruserlandingpage.php';
 require 'routes/registeruser.php';
-require 'routes/downloadedmessagesindb.php';
-require 'routes/sendmessage.php';
-require 'routes/sendmessagelandingpage.php';
+require 'routes/meetingackpost.php';
+require 'routes/createmeeting.php';
+require 'routes/createmeetingform.php';
 require 'routes/loginuser.php';
 require 'routes/logoutuser.php';
-require 'routes/downloadmessageselect.php';
+require 'routes/meetingack.php';
 require 'routes/calendar.php';
 require 'routes/upcomingmeetings.php';
 require 'routes/events.php';
@@ -32,9 +32,7 @@ require 'routes/userlistaction.php';
 require  'routes/profilemanagement.php';
 require 'routes/updateuser.php';
 require  'routes/meetingnotes.php';
-
-require  'routes/test.php';
-require  'routes/images.php';
+require 'routes/schedulechecker.php';
 
 
 

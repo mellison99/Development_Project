@@ -2,10 +2,10 @@
 /**
  * LogoutModel.php
  *
- * Author: Hasan
+ * Author: Matthew
  * Date: 17/01/2021
  *
- * @author Hasan
+ * @author Matthew
  */
 
 namespace Meeting;

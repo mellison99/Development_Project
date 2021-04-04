@@ -2,10 +2,9 @@
 /**
  * SQLQueries.php
  *
- * Authors: Hasan, Matthew
+ * Authors:Matthew
  * Date: 17/01/2021
  *
- * @author Hasan
  * @author Matthew
  */
 
