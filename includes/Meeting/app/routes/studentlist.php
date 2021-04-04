@@ -48,7 +48,7 @@ $users = getAllStudents($app);
         [
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/loginuser',
-            'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
+            'meeting_requests' => LANDING_PAGE . '/meetingack',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
             'method' => 'post',
@@ -70,7 +70,7 @@ function checkIfTeacher($app,$email)
 {
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveUserModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -88,7 +88,7 @@ function getAllStudents($app){
     $userDetails = [];
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('RetrieveUserModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];

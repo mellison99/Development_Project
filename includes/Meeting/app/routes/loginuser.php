@@ -2,10 +2,10 @@
 /**
  * loginuser.php
  *
- * Author: Hasan
- * Date: 17/01/2021
+ * Author: Matthew
+ * Date: 23/01/2021
  *
- * @author Hasan
+ * @author Matthew
  */
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -101,7 +101,7 @@ $app->any(
                 'page_heading_1' => 'UserLoggedIn',
                 'page_heading_2' => $_SESSION['username'],
                 'send_message' => LANDING_PAGE . '/calendar',
-                'view_message' => LANDING_PAGE. '/downloadedmessageselect',
+                'view_message' => LANDING_PAGE. '/meetingack',
                 'view_upcoming' => LANDING_PAGE. '/upcomingmeetings',
                 'settings' => LANDING_PAGE. '/profilemanagement',
                 'events' => LANDING_PAGE. '/eventView',

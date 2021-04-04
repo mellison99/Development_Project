@@ -57,7 +57,7 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
         [
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/loginuser',
-            'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
+            'meeting_requests' => LANDING_PAGE . '/meetingack',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
             'edit_profile'=> LANDING_PAGE . '/profilemanagement',
@@ -141,7 +141,7 @@ function build_calendar($month, $year){
 
         }else{
             $_SESSION['date']= date('Y-m-d');
-            $calendar.="<td class='$today'><h4>$currentDay</h4> <a class='calendar_link' href='sendmessagelandingpage?date=".$date."'>View details</a>";
+            $calendar.="<td class='$today'><h4>$currentDay</h4> <a class='calendar_link' href='createmeetingform?date=".$date."'>View details</a>";
 
            // $_SESSION['dayOfWeek'] = ;
         }

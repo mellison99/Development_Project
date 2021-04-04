@@ -54,10 +54,10 @@ $app->get('/eventAction', function (Request $request, Response $response) use ($
         [
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/loginuser',
-            'meeting_requests' => LANDING_PAGE . '/downloadedmessageselect',
+            'meeting_requests' => LANDING_PAGE . '/meetingack',
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'save_event'=>LANDING_PAGE . '/eventspost',
-            'Send' => LANDING_PAGE . '/sendmessage',
+            'Send' => LANDING_PAGE . '/createmeeting',
             'action' => 'eventEdit',
             'error' => $_SESSION['error'],
             'method' => 'post',
@@ -81,7 +81,7 @@ function deleteEventFromDatabase($app, $MiD, $email)
 {
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('DeleteMeetingsModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];
@@ -96,7 +96,7 @@ function toggleEventState($app, $MiD, $email)
 {
     $database_wrapper = $app->getContainer()->get('databaseWrapper');
     $sql_queries = $app->getContainer()->get('SQLQueries');
-    $DetailsModel = $app->getContainer()->get('RegisterDetailsModel');
+    $DetailsModel = $app->getContainer()->get('UpdateMeetingsModel');
 
     $settings = $app->getContainer()->get('settings');
     $database_connection_settings = $settings['pdo_settings'];

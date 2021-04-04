@@ -231,6 +231,7 @@ textarea{
 }
 
 
+
 .submit_button{
     /*width: 100px;*/
     /*height: 50px;*/
@@ -500,15 +501,18 @@ textarea{
     transition: 0.5s;
     float: left;
     font-weight: bold;
-    font-size: 20pt;
+    font-size: 16pt;
     background-color: #449d44;
     color: white;
     padding:14px;
     border-radius: 6px;
+    /*margin-bottom: 30px;*/
 
 }
 .events_field{
     margin-top: 20%;
+    margin-right: 50%;
+    margin-bottom: 30px;
 }
 
 .disabled_events{
@@ -523,7 +527,7 @@ textarea{
     transition: 0.5s;
     float: left;
     font-weight: bold;
-    font-size: 20pt;
+    font-size: 16pt;
     background-color: #d9534f;
     color: white;
     padding:14px;

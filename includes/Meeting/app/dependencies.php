@@ -35,6 +35,44 @@ $container['RegisterDetailsModel'] = function ($container) {
     return $registerDetailsModel;
 };
 
+$container['CheckTimesModel'] = function ($container) {
+    $checkTimesModel = new \Meeting\CheckTimesModel();
+    return $checkTimesModel;
+};
+$container['CreateMeetingsModel'] = function ($container) {
+    $createMeetingsModel = new \Meeting\CreateMeetingsModel();
+    return $createMeetingsModel;
+};
+$container['DeleteMeetingsModel'] = function ($container) {
+    $deleteMeetingsModel = new \Meeting\DeleteMeetingsModel();
+    return $deleteMeetingsModel;
+};
+
+$container['DeleteUserModel'] = function ($container) {
+    $deleteUserModel = new \Meeting\DeleteUserModel();
+    return $deleteUserModel;
+};
+
+$container['RetrieveMeetingModel'] = function ($container) {
+    $retrieveMeetingModel = new \Meeting\RetrieveMeetingModel();
+    return $retrieveMeetingModel;
+};
+
+$container['RetrieveUserModel'] = function ($container) {
+    $retrieveUserModel = new \Meeting\RetrieveUserModel();
+    return $retrieveUserModel;
+};
+
+$container['UpdateMeetingsModel'] = function ($container) {
+    $updateMeetingModel = new \Meeting\UpdateMeetingsModel();
+    return $updateMeetingModel;
+};
+
+$container['UpdateUserModel'] = function ($container) {
+    $updateUserModel = new \Meeting\UpdateUserModel();
+    return $updateUserModel;
+};
+
 $container['databaseWrapper'] = function ($container) {
     $database_wrapper = new \Meeting\DatabaseWrapper();
     return $database_wrapper;
