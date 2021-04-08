@@ -90,6 +90,14 @@ $app->any(
 
         $info = "Welcome ". $_SESSION['username'];
 
+        $alertvalue = SetAlertImage($app, $_SESSION['username']);
+        if($alertvalue > 0){
+            $image_alert_src =  "../media/newnotifications.png";
+        }
+        else{
+            $image_alert_src = "../media/notifications.png";
+        }
+
         $html_output =  $this->view->render($response,
             'login_user.html.twig',
             [
@@ -108,6 +116,7 @@ $app->any(
                 'error' => $error,
                 'info' => $info,
                 'profile_image'=>$image_src,
+                'notif_image'=>$image_alert_src,
                 'logout' => LANDING_PAGE . '/',
             ]);
 
@@ -233,4 +242,22 @@ function selectHashedPassword($app, array $cleaned_parameters)
     return $result;
 }
 
+function SetAlertImage($app, $email)
+{
+
+    $database_wrapper = $app->getContainer()->get('databaseWrapper');
+    $sql_queries = $app->getContainer()->get('SQLQueries');
+    $DetailsModel = $app->getContainer()->get('RetrieveMeetingModel');
+
+    $settings = $app->getContainer()->get('settings');
+    $database_connection_settings = $settings['pdo_settings'];
+
+    $DetailsModel->setSqlQueries($sql_queries);
+    $DetailsModel->setDatabaseConnectionSettings($database_connection_settings);
+    $DetailsModel->setDatabaseWrapper($database_wrapper);
+    $time = time();
+
+    $value = $DetailsModel->getUnacceptedMeeting($app, $email);
+    return $value;
+}
 

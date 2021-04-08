@@ -75,7 +75,7 @@ function RetrieveNumUnacknowledgedmeetings($app, $email)
     $time = time();
 
     $value = $DetailsModel->getUnacceptedMeeting($app, $email);
-    //var_dump($value);
+//    var_dump($value);
     $downloadMessages = [];
     if($value<0){
         return "no  messages";

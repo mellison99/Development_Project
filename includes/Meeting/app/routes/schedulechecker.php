@@ -2,9 +2,8 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->post('/images', function(Request $request, Response $response) use ($app)
+$app->post('/schedulechecker', function(Request $request, Response $response) use ($app)
 {
-//var_dump($_SESSION['date']);
     if (isset($_POST['name'])=== true && empty($_POST['name'])=== false) {
 
         $meetings = getMeetingbyDateUser($app,$_POST['name'],$_SESSION['date']);

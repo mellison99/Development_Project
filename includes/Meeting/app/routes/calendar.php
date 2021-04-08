@@ -34,7 +34,13 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
 
     //var_dump($currentYear);
     //var_dump($_SESSION);
-
+    $alertvalue = SetAlertImage($app, $_SESSION['username']);
+    if ($alertvalue > 0){
+        $alertvalue = "*";
+    }
+    else{
+        $alertvalue = "";
+    }
     $startDay =  mktime(0,0,0,$monthInt,1,$currentYear);
     //var_dump(getdate());
     $dateComponents = getdate($startDay);
@@ -58,6 +64,7 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
             'css_path' => CSS_PATH,
             'landing_page' => LANDING_PAGE . '/loginuser',
             'meeting_requests' => LANDING_PAGE . '/meetingack',
+            'meeting_requests_value'=> $alertvalue,
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
             'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
             'edit_profile'=> LANDING_PAGE . '/profilemanagement',
