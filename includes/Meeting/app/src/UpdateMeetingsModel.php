@@ -57,8 +57,8 @@ class UpdateMeetingsModel
             ':State'=> $state,
 
         ];
-        var_dump($query_string);
-        var_dump($query_parameters);
+//        var_dump($query_string);
+//        var_dump($query_parameters);
 
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }
@@ -73,8 +73,8 @@ class UpdateMeetingsModel
             ':State'=> $state,
 
         ];
-        var_dump($query_string);
-        var_dump($query_parameters);
+//        var_dump($query_string);
+//        var_dump($query_parameters);
 
         $this->database_wrapper->safeQuery($query_string, $query_parameters);
     }

@@ -11,10 +11,10 @@
 
                 <p>{{ error }}</p>
                 <br><br>
-     <a class = "image_button" href='{{ logout }}'>
-            <img src="../media/logout.png"
-                 width="60" height="60">
-       Logout </a>
+{#     <a class = "image_button" href='{{ logout }}'>#}
+{#            <img src="../media/logout.png"#}
+{#                 width="60" height="60">#}
+{#       Logout </a>#}
 
         <a class = "image_button" href='{{ send_message }}'>
             <img src="../media/calendar.png"
@@ -22,7 +22,7 @@
         View calendar</a>
 
      <a class = "image_button" href='{{ view_message }}'>
-            <img src="../media/notifications.png"
+            <img src= {{ notif_image }}
                  width="60" height="60">
       Meeting requests  </a>
     <a class = "image_button" href='{{ view_upcoming }}'>
