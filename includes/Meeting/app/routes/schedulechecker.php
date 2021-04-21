@@ -4,8 +4,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 $app->post('/schedulechecker', function(Request $request, Response $response) use ($app)
 {
-    if (isset($_POST['name'])=== true && empty($_POST['name'])=== false) {
 
+    if (isset($_POST['name'])=== true && empty($_POST['name'])=== false) {
+//        var_dump($_POST['name']);
         $meetings = getMeetingbyDateUser($app,$_POST['name'],$_SESSION['date']);
         $yearInString = (substr($_SESSION['date'],0,4));
         $monthInString=(substr($_SESSION['date'],5,2));
@@ -37,28 +38,34 @@ $app->post('/schedulechecker', function(Request $request, Response $response) us
         foreach ($meetings as $meeting){
             $meetingString = " meeting at " .$meeting[0]." for ". $meeting[2];
             echo $meetingString;
+
         }
         foreach ($recurringWhereHost as $meeting){
             $meetingString = " meeting at " .$meeting;
             echo $meetingString;
+
         }
         foreach ($recurringWhereParticipant as $meeting){
             $meetingString = " meeting at " .$meeting;
             echo $meetingString;
+
         }
 
         foreach ($eventsOnDay as $meeting){
             $meetingString = " event at ". $meeting[0]." for ". $meeting[1];
             echo $meetingString;
+
         }
 
         foreach ($eventsInMonth as $meeting){
             $meetingString = " event at ". $meeting[0]." for ". $meeting[1];
             echo $meetingString;
+
         }
         foreach ($eventsOnDate as $meeting){
             $meetingString = " event at ". $meeting[0]." for ". $meeting[1];
             echo $meetingString;
+
 
         }
 

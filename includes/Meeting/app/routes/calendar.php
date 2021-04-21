@@ -52,7 +52,29 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
        $month = $dateComponents['mon'];
        $year = $dateComponents['year'];
    }
+    $permissions = checkUserRole($app,$email)[0];
 
+    if ($permissions == "admin") {
+        $linkVal = '/alluserslist';
+          $linkName = "View all users";
+
+    }
+    else if ($permissions == "Teacher") {
+        $linkVal = '/studentlist';
+        $linkName = "View students";
+    }
+    else if ($permissions == "Student") {
+        $linkVal = ' ';
+        $linkName = " ";
+    }
+
+    else{
+        $linkVal = ' ';
+        $linkName = ' ';
+    }
+
+
+//
     // var_dump($dateComponents);
 //    $_SESSION['month']=$month;
 //    $_SESSION['year']=$year;
@@ -66,11 +88,12 @@ $app->get('/calendar', function (Request $request, Response $response) use ($app
             'meeting_requests' => LANDING_PAGE . '/meetingack',
             'meeting_requests_value'=> $alertvalue,
             'upcoming_meetings'=>LANDING_PAGE . '/upcomingmeetings',
-            'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
             'edit_profile'=> LANDING_PAGE . '/profilemanagement',
             'create_event'=> LANDING_PAGE . '/events',
             'view_event'=> LANDING_PAGE . '/eventView',
             'hosted_meetings'=>LANDING_PAGE . '/meetingshosted',
+            'view_users'=>LANDING_PAGE . $linkVal,
+            'list_name'=> $linkName,
             'method' => 'post',
             'method2' => 'post',
             'initial_input_box_value' => null,
